@@ -190,22 +190,93 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
     );
   }
 
-  return (
-    <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-950 via-slate-900 to-zinc-950 p-3">
-      <div className={`w-full max-w-[220px] rounded-xl border border-sky-400/30 bg-sky-950/60 text-sky-100 shadow-lg ${compact ? 'p-2 text-[9px]' : 'p-4 text-xs'}`}>
-        <div className="flex items-center justify-between border-b border-sky-400/20 pb-1.5">
-          <span className="flex items-center gap-1 font-bold text-sky-300">
-            <Train className={compact ? 'h-3 w-3' : 'h-4 w-4'} /> E-TICKET KAI
-          </span>
-          <span className="font-mono text-[10px] text-emerald-300">BOARDED</span>
-        </div>
-        {!compact && (
-          <div className="mt-2.5 space-y-1 font-mono text-[11px]">
-            <p className="text-sky-200/80">Penumpang: RARA A.</p>
-            <p className="font-bold text-white">GMR ➔ BD (19:00 WIB)</p>
-            <p className="text-[10px] text-sky-300/80">Kode: KA-7721-BANDUNG</p>
+  if (compact) {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-950 via-slate-900 to-zinc-950 p-2">
+        <div className="w-full rounded-lg bg-white p-2 text-zinc-900 shadow-md">
+          <div className="flex items-center justify-between border-b border-zinc-200 pb-1 text-[8px] font-extrabold text-sky-700">
+            <span className="flex items-center gap-1">
+              <Train className="h-2.5 w-2.5" /> E-BOARDING PASS
+            </span>
+            <span className="text-emerald-600">BOARDED</span>
           </div>
-        )}
+          <div className="mt-1.5 flex items-center justify-between font-mono text-[9px] font-black text-zinc-900">
+            <span>GMR</span>
+            <span className="text-zinc-400">➔</span>
+            <span>BD</span>
+          </div>
+          <p className="mt-0.5 truncate font-mono text-[8px] text-zinc-500">RARA A. • 19:00</p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative flex h-full w-full items-center justify-center bg-zinc-900 p-2.5">
+      <div className="w-full max-w-[260px] overflow-hidden rounded-xl bg-white text-zinc-900 shadow-xl">
+        {/* App Header */}
+        <div className="flex items-center justify-between bg-gradient-to-r from-sky-700 to-blue-800 px-3 py-2 text-white">
+          <div className="flex items-center gap-1.5">
+            <Train className="h-3.5 w-3.5 text-amber-300" />
+            <span className="text-[10px] font-extrabold tracking-wide">E-BOARDING PASS</span>
+          </div>
+          <span className="rounded bg-emerald-400/20 px-1.5 py-0.5 font-mono text-[9px] font-bold text-emerald-200">
+            BOARDED
+          </span>
+        </div>
+
+        {/* Route */}
+        <div className="px-3 pt-2.5">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-mono text-base font-black leading-none text-zinc-900">GMR</p>
+              <p className="text-[8px] text-zinc-500">Gambir</p>
+            </div>
+            <div className="flex flex-1 flex-col items-center px-2">
+              <span className="font-mono text-[8px] font-bold text-sky-700">19:00 WIB</span>
+              <div className="my-0.5 flex w-full items-center gap-1">
+                <div className="h-1.5 w-1.5 rounded-full bg-sky-600" />
+                <div className="h-[1px] flex-1 border-b border-dashed border-zinc-300" />
+                <div className="h-1.5 w-1.5 rounded-full bg-amber-500" />
+              </div>
+              <span className="text-[8px] text-zinc-400">KA Argo Parahyangan</span>
+            </div>
+            <div className="text-right">
+              <p className="font-mono text-base font-black leading-none text-zinc-900">BD</p>
+              <p className="text-[8px] text-zinc-500">Bandung</p>
+            </div>
+          </div>
+
+          {/* Passenger & Seat */}
+          <div className="mt-2 grid grid-cols-2 gap-2 border-t border-dashed border-zinc-200 pt-2 font-mono text-[9px]">
+            <div>
+              <p className="text-[8px] text-zinc-400">PENUMPANG</p>
+              <p className="font-bold text-zinc-800">RARA ANINDITA</p>
+            </div>
+            <div className="text-right">
+              <p className="text-[8px] text-zinc-400">KURSI</p>
+              <p className="font-bold text-zinc-800">EKS-2 / 08A</p>
+            </div>
+          </div>
+
+          {/* Barcode */}
+          <div className="mt-2 flex flex-col items-center border-t border-zinc-100 pb-2 pt-1.5">
+            <div className="flex h-5 w-full items-stretch justify-center gap-[2px] opacity-85">
+              {[2, 1, 3, 1, 2, 1, 1, 3, 2, 1, 2, 3, 1, 1, 2, 1, 3, 2, 1, 2, 1, 3, 1, 2].map(
+                (w, idx) => (
+                  <div
+                    key={idx}
+                    className="bg-zinc-900"
+                    style={{ width: `${w * 1.6}px` }}
+                  />
+                )
+              )}
+            </div>
+            <span className="mt-1 font-mono text-[8px] tracking-widest text-zinc-500">
+              KA-7721-BDG
+            </span>
+          </div>
+        </div>
       </div>
     </div>
   );
