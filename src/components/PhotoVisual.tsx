@@ -16,7 +16,25 @@ interface PhotoVisualProps {
   compact?: boolean;
 }
 
+const REAL_PHOTO_MAP: Partial<Record<PhotoEvidence['visualType'], { file: string; alt: string }>> = {
+  'room-key': { file: 'images/room-key.jpg', alt: 'Foto gantungan kunci Kamar 07' },
+  'cafe-receipt': { file: 'images/cafe-receipt.jpg', alt: 'Foto struk Kopi Sudut' },
+  'side-gate': { file: 'images/side-gate.jpg', alt: 'Foto gembok gudang belakang rusak' },
+};
+
 export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = false }) => {
+  const realPhoto = REAL_PHOTO_MAP[visualType];
+  if (realPhoto) {
+    return (
+      <img
+        src={`${import.meta.env.BASE_URL}${realPhoto.file}`}
+        alt={realPhoto.alt}
+        className="h-full w-full object-cover"
+        loading="lazy"
+      />
+    );
+  }
+
   if (visualType === 'room-key') {
     return (
       <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-br from-amber-950 via-stone-900 to-zinc-950 p-4 text-amber-100">
