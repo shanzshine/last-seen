@@ -190,6 +190,29 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
     );
   }
 
+  if (visualType === 'taxi-plate') {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-zinc-900 via-slate-950 to-black p-4">
+        <div
+          className={`flex flex-col items-center rounded-lg border-2 border-zinc-300 bg-zinc-950 font-mono text-white shadow-2xl ${
+            compact ? 'px-3 py-2' : 'px-6 py-4'
+          }`}
+        >
+          <span
+            className={`font-black tracking-[0.18em] ${compact ? 'text-xs' : 'text-2xl'}`}
+          >
+            B 2841 KJL
+          </span>
+          <span
+            className={`mt-1 tracking-widest text-zinc-400 ${compact ? 'text-[7px]' : 'text-[10px]'}`}
+          >
+            11 • 28
+          </span>
+        </div>
+      </div>
+    );
+  }
+
   if (compact) {
     return (
       <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-950 via-slate-900 to-zinc-950 p-2">

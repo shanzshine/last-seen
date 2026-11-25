@@ -40,7 +40,8 @@ export interface PhotoEvidence {
     | 'access-card'
     | 'audit-transfer'
     | 'office-cctv'
-    | 'toll-receipt';
+    | 'toll-receipt'
+    | 'taxi-plate';
   caption: string;
   clueId?: string;
   clueLabel?: string;
@@ -80,6 +81,14 @@ export interface DeductionQuestion {
   correctOptionId: string;
 }
 
+export interface LiveAlert {
+  threadId: string;
+  delayMs: number;
+  senderName: string;
+  text: string;
+  time: string;
+}
+
 export interface CaseData {
   id: string;
   number: number;
@@ -94,6 +103,7 @@ export interface CaseData {
   photos: PhotoEvidence[];
   notes: NoteItem[];
   locations?: LocationLog[];
+  liveAlert?: LiveAlert;
   hints: string[];
   totalClues: number;
   deductions: DeductionQuestion[];

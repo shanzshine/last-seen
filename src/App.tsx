@@ -74,6 +74,7 @@ export function App() {
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [showDeduction, setShowDeduction] = useState(false);
   const [mobileCluesOpen, setMobileCluesOpen] = useState(false);
+  const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -112,10 +113,38 @@ export function App() {
     setMuted(sound.toggleMute());
   };
 
-  const activeCase: CaseData | null = useMemo(
+  const baseCase: CaseData | null = useMemo(
     () => cases.find((c) => c.id === activeCaseId) ?? null,
     [cases, activeCaseId]
   );
+
+  const activeCase: CaseData | null = useMemo(() => {
+    if (!baseCase) return null;
+    if (!baseCase.liveAlert || !liveTriggeredCases.includes(baseCase.id)) return baseCase;
+
+    const alert = baseCase.liveAlert;
+    return {
+      ...baseCase,
+      chats: baseCase.chats.map((thread) =>
+        thread.id === alert.threadId
+          ? {
+              ...thread,
+              unreadCount: (thread.unreadCount ?? 0) + 1,
+              messages: [
+                ...thread.messages,
+                {
+                  id: `live-${baseCase.id}`,
+                  senderName: alert.senderName,
+                  senderType: 'contact',
+                  text: alert.text,
+                  time: alert.time,
+                },
+              ],
+            }
+          : thread
+      ),
+    };
+  }, [baseCase, liveTriggeredCases]);
 
   const clueLabelsMap = useMemo(() => {
     if (!activeCase) return new Map<string, string>();
@@ -236,6 +265,24 @@ export function App() {
     };
   }, [activeCaseId, muted]);
 
+  useEffect(() => {
+    if (!baseCase?.liveAlert || liveTriggeredCases.includes(baseCase.id)) return;
+    const alert = baseCase.liveAlert;
+    const timer = window.setTimeout(() => {
+      sound.playPinError();
+      setLiveTriggeredCases((prev) =>
+        prev.includes(baseCase.id) ? prev : [...prev, baseCase.id]
+      );
+      showToast(
+        lang === 'en'
+          ? `New message from ${alert.senderName}!`
+          : `Pesan baru dari ${alert.senderName}!`
+      );
+    }, alert.delayMs);
+
+    return () => window.clearTimeout(timer);
+  }, [baseCase, liveTriggeredCases, lang]);
+
   if (!activeCase) {
     const solvedCount = Object.keys(progress.solvedRanks).length;
     const totalCluesFound = Object.values(progress.discoveredClues).reduce(
@@ -301,7 +348,7 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-black text-white">
                     {solvedCount}
-                    <span className="text-xs font-normal text-zinc-500">/2</span>
+                    <span className="text-xs font-normal text-zinc-500">/3</span>
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-4 py-2.5 backdrop-blur-sm">

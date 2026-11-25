@@ -2,6 +2,8 @@ import { CASE_1 } from './case1';
 import { CASE_1_EN } from './case1.en';
 import { CASE_2 } from './case2';
 import { CASE_2_EN } from './case2.en';
+import { CASE_3 } from './case3';
+import { CASE_3_EN } from './case3.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -16,12 +18,13 @@ export interface CasePreview {
 }
 
 export const getCases = (lang: Language): CaseData[] =>
-  lang === 'en' ? [CASE_1_EN, CASE_2_EN] : [CASE_1, CASE_2];
+  lang === 'en' ? [CASE_1_EN, CASE_2_EN, CASE_3_EN] : [CASE_1, CASE_2, CASE_3];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
   const c1 = cases[0];
   const c2 = cases[1];
+  const c3 = cases[2];
 
   return [
     {
@@ -45,23 +48,20 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       isUnlocked: true,
       newMechanicHint:
         lang === 'en'
-          ? 'New Mechanics: Location History (Maps) & Deleted Chat Recovery'
-          : 'Mekanik Baru: Riwayat Lokasi (Maps) & Pemulihan Chat Terhapus',
+          ? 'Location History (Maps) & Deleted Chat Recovery'
+          : 'Riwayat Lokasi (Maps) & Pemulihan Chat Terhapus',
     },
     {
-      id: 'case-03-penumpang',
+      id: c3.id,
       number: 3,
-      title: lang === 'en' ? 'The Last Passenger' : 'Penumpang Terakhir',
-      subtitle:
-        lang === 'en'
-          ? 'Midnight Trap & Victim Impersonation'
-          : 'Jebakan Malam & Peniruan Identitas Korban',
-      difficulty: 'Sulit',
-      isUnlocked: false,
+      title: c3.title,
+      subtitle: c3.subtitle,
+      difficulty: c3.difficulty,
+      isUnlocked: true,
       newMechanicHint:
         lang === 'en'
-          ? 'Coming Soon: Typing Style Analysis & Live Chat Traps'
-          : 'Segera Hadir: Analisis Gaya Ketik & Jebakan Chat Live',
+          ? 'New Mechanics: Typing Style Analysis & Live Incoming Chat'
+          : 'Mekanik Baru: Analisis Gaya Ketik & Jebakan Chat Live',
     },
   ];
 };
