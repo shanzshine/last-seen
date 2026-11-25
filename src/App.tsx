@@ -237,63 +237,117 @@ export function App() {
   }, [activeCaseId, muted]);
 
   if (!activeCase) {
+    const solvedCount = Object.keys(progress.solvedRanks).length;
+    const totalCluesFound = Object.values(progress.discoveredClues).reduce(
+      (sum, arr) => sum + arr.length,
+      0
+    );
+
     return (
       <div className="forensic-grid relative min-h-screen overflow-hidden bg-[#05070a] text-zinc-100">
         {/* Ambient Lighting Orbs */}
-        <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-[120px]" />
-        <div className="pointer-events-none fixed -bottom-32 -right-32 h-96 w-96 rounded-full bg-rose-500/10 blur-[120px]" />
+        <div className="pointer-events-none fixed -left-32 -top-32 h-[460px] w-[460px] rounded-full bg-emerald-500/12 blur-[140px]" />
+        <div className="pointer-events-none fixed -bottom-32 -right-32 h-[460px] w-[460px] rounded-full bg-rose-500/12 blur-[140px]" />
 
-        <div className="relative z-10 mx-auto max-w-4xl px-5 py-10 sm:py-12">
+        <div className="relative z-10 mx-auto max-w-5xl px-5 py-8 sm:py-12">
           {/* Forensic Terminal Strip */}
-          <div className="mb-6 flex items-center justify-between rounded-xl border border-zinc-800/80 bg-zinc-900/40 px-3.5 py-2 font-mono text-[10px] text-zinc-400 backdrop-blur-md">
+          <div className="mb-8 flex items-center justify-between rounded-xl border border-zinc-800/80 bg-zinc-900/50 px-4 py-2.5 font-mono text-[10px] text-zinc-400 backdrop-blur-md">
             <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+              <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
               FORENSIC DESK // ENCRYPTED CLONE v2.4
             </span>
-            <span className="hidden sm:inline text-zinc-500">SESSION: ACTIVE</span>
-          </div>
-          {/* Header */}
-          <div className="flex flex-col items-start justify-between gap-4 border-b border-zinc-800/80 pb-8 sm:flex-row sm:items-end">
-            <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
-                <span className="h-2 w-2 animate-pulse rounded-full bg-emerald-400" />
-                {t.statusTag}
-              </div>
-              <h1 className="mt-4 text-4xl font-black tracking-tight text-white sm:text-5xl">
-                Last Seen
-              </h1>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-zinc-400">
-                {t.heroDesc}
-              </p>
-            </div>
-
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleLanguage}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                className="inline-flex items-center gap-1 rounded-lg border border-zinc-800 bg-zinc-950/70 px-2.5 py-1 text-[11px] font-semibold text-zinc-300 transition hover:border-zinc-700 hover:text-white"
                 title={t.switchLang}
               >
-                <Globe className="h-3.5 w-3.5 text-emerald-400" />
+                <Globe className="h-3 w-3 text-emerald-400" />
                 {lang.toUpperCase()}
               </button>
               <button
                 onClick={toggleMute}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                className="inline-flex items-center rounded-lg border border-zinc-800 bg-zinc-950/70 p-1 text-zinc-300 transition hover:border-zinc-700 hover:text-white"
                 title={muted ? t.muteOn : t.muteOff}
               >
                 {muted ? (
-                  <VolumeX className="h-4 w-4 text-zinc-500" />
+                  <VolumeX className="h-3.5 w-3.5 text-zinc-500" />
                 ) : (
-                  <Volume2 className="h-4 w-4 text-emerald-400" />
+                  <Volume2 className="h-3.5 w-3.5 text-emerald-400" />
                 )}
               </button>
+            </div>
+          </div>
+
+          {/* Cinematic Hero + Live Device Teaser */}
+          <div className="grid items-center gap-8 border-b border-zinc-800/80 pb-10 md:grid-cols-[1.35fr_0.9fr]">
+            <div>
+              <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/30 bg-rose-500/10 px-3 py-1 font-mono text-[11px] font-medium text-rose-300">
+                <span className="h-2 w-2 animate-ping rounded-full bg-rose-400" />
+                {t.statusTag}
+              </div>
+              <h1 className="mt-4 bg-gradient-to-r from-white via-zinc-100 to-emerald-300 bg-clip-text text-5xl font-black tracking-tight text-transparent sm:text-6xl">
+                Last Seen
+              </h1>
+              <p className="mt-3 max-w-xl text-sm leading-relaxed text-zinc-400">
+                {t.heroDesc}
+              </p>
+
+              {/* Detective Stats */}
+              <div className="mt-6 flex flex-wrap gap-3">
+                <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-4 py-2.5 backdrop-blur-sm">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+                    {lang === 'en' ? 'Cases Solved' : 'Kasus Selesai'}
+                  </p>
+                  <p className="mt-0.5 font-mono text-lg font-black text-white">
+                    {solvedCount}
+                    <span className="text-xs font-normal text-zinc-500">/2</span>
+                  </p>
+                </div>
+                <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-4 py-2.5 backdrop-blur-sm">
+                  <p className="font-mono text-[10px] uppercase tracking-wider text-zinc-500">
+                    {lang === 'en' ? 'Clues Pinned' : 'Bukti Tercatat'}
+                  </p>
+                  <p className="mt-0.5 font-mono text-lg font-black text-emerald-400">
+                    {totalCluesFound}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Decorative Evidence Phone Preview */}
+            <div className="hidden justify-end md:flex">
+              <div className="relative w-[240px] rotate-2 rounded-[30px] border-4 border-zinc-800 bg-gradient-to-b from-slate-900 via-zinc-950 to-black p-4 shadow-[0_0_60px_-15px_rgba(16,185,129,0.28)] ring-1 ring-white/10 transition duration-500 hover:rotate-0">
+                <div className="flex items-center justify-between font-mono text-[10px] text-zinc-400">
+                  <span>01:47</span>
+                  <span className="text-rose-400">4% BAT</span>
+                </div>
+                <div className="mt-4 text-center">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.2em] text-emerald-400/80">
+                    {t.phoneCloned}
+                  </p>
+                  <p className="mt-1 font-mono text-3xl font-black text-white">01:47</p>
+                </div>
+                <div className="mt-4 space-y-2">
+                  <div className="rounded-xl border border-rose-500/30 bg-rose-950/30 p-2.5 text-[10px] text-rose-100">
+                    <p className="font-bold text-rose-300">Mas Dimas ❤️</p>
+                    <p className="mt-0.5 truncate text-zinc-300">
+                      {lang === 'en' ? 'Nadia: Mas help m...' : 'Nadia: Mas tolong j...'}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-zinc-800 bg-zinc-900/80 p-2.5 text-[10px] text-zinc-300">
+                    <p className="font-bold text-amber-300">🔒 Note Locked</p>
+                    <p className="mt-0.5 font-mono text-[9px] text-zinc-500">PIN: • • • •</p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
           {/* Case Roadmap */}
           <div className="mt-8">
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wider text-zinc-400">
+              <h2 className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-zinc-400">
                 {t.caseListTitle}
               </h2>
               <span className="text-xs text-zinc-500">{t.autoSaved}</span>
@@ -303,17 +357,29 @@ export function App() {
               {roadmap.map((item) => {
                 const rank = progress.solvedRanks[item.id];
                 const cluesCount = progress.discoveredClues[item.id]?.length ?? 0;
+                const caseObj = cases.find((c) => c.id === item.id);
+                const totalClues = caseObj?.totalClues ?? 6;
+                const accentBorder =
+                  item.difficulty === 'Mudah'
+                    ? 'border-l-emerald-500'
+                    : item.difficulty === 'Menengah'
+                      ? 'border-l-amber-500'
+                      : 'border-l-rose-500';
 
                 return (
                   <div
                     key={item.id}
-                    className={`group relative overflow-hidden rounded-2xl border p-5 transition ${
+                    className={`group relative overflow-hidden rounded-2xl border border-zinc-800/90 border-l-4 ${accentBorder} p-5 backdrop-blur-md transition ${
                       item.isUnlocked
-                        ? 'border-zinc-800 bg-zinc-900/60 hover:border-emerald-500/40 hover:bg-zinc-900'
-                        : 'border-zinc-900 bg-zinc-950/60 opacity-65'
+                        ? 'bg-zinc-900/60 hover:-translate-y-0.5 hover:border-zinc-700 hover:bg-zinc-900/85 hover:shadow-[0_12px_35px_-15px_rgba(16,185,129,0.25)]'
+                        : 'bg-zinc-950/60 opacity-60'
                     }`}
                   >
-                    <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
+                    <span className="pointer-events-none absolute right-6 top-2 font-mono text-6xl font-black text-white/[0.03]">
+                      0{item.number}
+                    </span>
+
+                    <div className="relative flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                       <div className="space-y-1.5">
                         <div className="flex flex-wrap items-center gap-2">
                           <span className="font-mono text-xs font-bold text-emerald-400">
@@ -343,6 +409,22 @@ export function App() {
                           <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
                           {item.newMechanicHint}
                         </p>
+
+                        {item.isUnlocked && cluesCount > 0 && (
+                          <div className="flex items-center gap-2 pt-1.5">
+                            <div className="h-1.5 w-32 overflow-hidden rounded-full bg-zinc-800">
+                              <div
+                                className="h-full rounded-full bg-emerald-400 transition-all"
+                                style={{
+                                  width: `${Math.min(100, (cluesCount / totalClues) * 100)}%`,
+                                }}
+                              />
+                            </div>
+                            <span className="font-mono text-[10px] text-emerald-400">
+                              {cluesCount}/{totalClues}
+                            </span>
+                          </div>
+                        )}
                       </div>
 
                       <div className="flex shrink-0 items-center gap-3">
@@ -358,7 +440,7 @@ export function App() {
                             {cluesCount > 0 ? t.continueCase : t.startCase}
                           </button>
                         ) : (
-                          <div className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/50 px-4 py-2.5 text-xs font-semibold text-zinc-500">
+                          <div className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 font-mono text-[11px] font-semibold text-zinc-500">
                             <Lock className="h-3.5 w-3.5" /> {t.locked}
                           </div>
                         )}
