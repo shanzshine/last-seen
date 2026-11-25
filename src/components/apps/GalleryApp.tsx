@@ -9,7 +9,6 @@ import {
   BookmarkPlus,
   Clock,
   MapPin,
-  Maximize2,
   X,
 } from 'lucide-react';
 
@@ -99,13 +98,9 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
             sound.playTap();
             setZoomOpen(true);
           }}
-          className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-950"
+          className="block aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-950 transition active:scale-[0.99]"
         >
           <PhotoVisual visualType={selectedPhoto.visualType} />
-          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/75 px-2.5 py-1 text-[10px] font-medium text-zinc-200 backdrop-blur-sm transition group-hover:bg-black/90">
-            <Maximize2 className="h-3 w-3 text-emerald-400" />
-            {t.tapToZoom}
-          </span>
         </button>
 
         <div className="mt-3 space-y-2 rounded-xl bg-zinc-900/80 p-3">
@@ -158,15 +153,9 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
 
           <div
             onClick={(e) => e.stopPropagation()}
-            className="relative flex max-h-[82vh] w-full max-w-xl flex-col items-center overflow-hidden rounded-2xl bg-zinc-950 p-2 ring-1 ring-white/15"
+            className="relative h-[78vh] w-full max-w-xl overflow-hidden rounded-2xl bg-black"
           >
-            <div className="h-[62vh] w-full overflow-hidden rounded-xl bg-black">
-              <PhotoVisual visualType={selectedPhoto.visualType} />
-            </div>
-            <div className="w-full px-2 py-2.5 text-center">
-              <p className="font-mono text-xs font-semibold text-zinc-200">{selectedPhoto.title}</p>
-              <p className="mt-0.5 text-[11px] text-zinc-400">{selectedPhoto.caption}</p>
-            </div>
+            <PhotoVisual visualType={selectedPhoto.visualType} />
           </div>
         </div>
       )}
