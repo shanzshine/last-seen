@@ -105,7 +105,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
               onClick={() => onDiscoverClue(selectedPhoto.clueId!)}
               className={`mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition ${
                 isClueFound
-                  ? 'border border-emerald-500/30 bg-emerald-500/15 text-emerald-300'
+                  ? 'bg-emerald-500/15 text-emerald-300'
                   : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
               }`}
             >

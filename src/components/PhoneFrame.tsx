@@ -64,7 +64,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const totalUnread = caseData.chats.reduce((acc, c) => acc + (c.unreadCount ?? 0), 0);
 
   return (
-    <div className="relative mx-auto flex h-[640px] w-full max-w-[340px] flex-col overflow-hidden rounded-[42px] border-[6px] border-zinc-800/90 bg-zinc-950 shadow-[0_0_80px_-18px_rgba(16,185,129,0.28),0_25px_70px_-15px_rgba(0,0,0,0.95)] ring-1 ring-emerald-400/15">
+    <div className="relative mx-auto flex h-[calc(100dvh-84px)] min-h-[520px] max-h-[680px] w-full max-w-[380px] flex-col overflow-hidden rounded-[28px] bg-zinc-950 shadow-[0_0_80px_-18px_rgba(16,185,129,0.25),0_20px_50px_-12px_rgba(0,0,0,0.95)] ring-1 ring-white/10 sm:h-[640px] sm:max-w-[340px] sm:rounded-[42px] sm:border-[6px] sm:border-zinc-800/90">
       {/* Subtle Cracked Glass, Scanlines & Vignette Overlay */}
       <svg
         className="pointer-events-none absolute right-0 top-0 z-30 h-36 w-36 opacity-25"
@@ -194,7 +194,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     sound.playTap();
                     onOpenDeduction();
                   }}
-                  className="flex w-full items-center justify-center gap-2 rounded-2xl border border-emerald-400/30 bg-emerald-500/20 px-4 py-3 text-xs font-bold text-emerald-200 backdrop-blur-md transition hover:bg-emerald-500/30 active:scale-[0.98]"
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-emerald-500/20 px-4 py-3 text-xs font-bold text-emerald-200 backdrop-blur-md transition hover:bg-emerald-500/30 active:scale-[0.98]"
                 >
                   <FileCheck2 className="h-4 w-4" />
                   {t.reportBtn}

@@ -51,7 +51,7 @@ export const MapsApp: React.FC<MapsAppProps> = ({
                     onClick={() => onDiscoverClue(loc.clueId!)}
                     className={`mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-semibold transition ${
                       isFound
-                        ? 'border border-emerald-500/30 bg-emerald-500/15 text-emerald-300'
+                        ? 'bg-emerald-500/15 text-emerald-300'
                         : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
                     }`}
                   >

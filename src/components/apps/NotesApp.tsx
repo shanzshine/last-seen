@@ -147,7 +147,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               <button
                 key={digit}
                 onClick={() => handleDigit(digit)}
-                className="flex h-11 w-14 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-sm font-bold text-zinc-100 transition hover:bg-zinc-800 active:scale-95"
+                className="flex h-11 w-14 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-zinc-100 transition hover:bg-zinc-800 active:scale-95"
               >
                 {digit}
               </button>
@@ -155,13 +155,13 @@ export const NotesApp: React.FC<NotesAppProps> = ({
             <div />
             <button
               onClick={() => handleDigit('0')}
-              className="flex h-11 w-14 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-sm font-bold text-zinc-100 transition hover:bg-zinc-800 active:scale-95"
+              className="flex h-11 w-14 items-center justify-center rounded-xl bg-zinc-900 text-sm font-bold text-zinc-100 transition hover:bg-zinc-800 active:scale-95"
             >
               0
             </button>
             <button
               onClick={() => setPinInput((p) => p.slice(0, -1))}
-              className="flex h-11 w-14 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition hover:bg-zinc-800 active:scale-95"
+              className="flex h-11 w-14 items-center justify-center rounded-xl bg-zinc-900 text-zinc-400 transition hover:bg-zinc-800 active:scale-95"
               aria-label="Delete"
             >
               <Delete className="h-4 w-4" />
@@ -182,7 +182,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               onClick={() => onDiscoverClue(selectedNote.clueId!)}
               className={`mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg py-2.5 text-xs font-semibold transition ${
                 isClueFound
-                  ? 'border border-emerald-500/30 bg-emerald-500/15 text-emerald-300'
+                  ? 'bg-emerald-500/15 text-emerald-300'
                   : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
               }`}
             >

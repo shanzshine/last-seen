@@ -259,7 +259,7 @@ export function App() {
             <div className="flex items-center gap-2">
               <button
                 onClick={toggleLanguage}
-                className="inline-flex items-center gap-1 rounded-lg border border-zinc-800 bg-zinc-950/70 px-2.5 py-1 text-[11px] font-semibold text-zinc-300 transition hover:border-zinc-700 hover:text-white"
+                className="inline-flex items-center gap-1 rounded-lg bg-zinc-950/70 px-2.5 py-1 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
                 title={t.switchLang}
               >
                 <Globe className="h-3 w-3 text-emerald-400" />
@@ -267,7 +267,7 @@ export function App() {
               </button>
               <button
                 onClick={toggleMute}
-                className="inline-flex items-center rounded-lg border border-zinc-800 bg-zinc-950/70 p-1 text-zinc-300 transition hover:border-zinc-700 hover:text-white"
+                className="inline-flex items-center rounded-lg bg-zinc-950/70 p-1.5 text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
                 title={muted ? t.muteOn : t.muteOff}
               >
                 {muted ? (
@@ -460,17 +460,18 @@ export function App() {
     <div className="forensic-grid relative min-h-screen overflow-hidden bg-[#05070a] text-zinc-100">
       <div className="pointer-events-none fixed left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/8 blur-[140px]" />
       {/* Top Bar */}
-      <header className="relative z-20 border-b border-zinc-800/80 bg-zinc-950/80 px-4 py-3 backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
+      <header className="relative z-20 border-b border-zinc-800/60 bg-zinc-950/85 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => {
                 sound.playTap();
                 setActiveCaseId(null);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900/90 px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-3"
             >
-              <ArrowLeft className="h-3.5 w-3.5" /> {t.backToDesk}
+              <ArrowLeft className="h-3.5 w-3.5" />
+              <span className="hidden sm:inline">{t.backToDesk}</span>
             </button>
             <div className="hidden sm:block">
               <p className="text-xs font-bold text-white">
@@ -482,10 +483,10 @@ export function App() {
             </div>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={toggleLanguage}
-              className="inline-flex items-center gap-1 rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+              className="inline-flex items-center gap-1 rounded-lg bg-zinc-900/90 px-2 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-2.5"
               title={t.switchLang}
             >
               <Globe className="h-3.5 w-3.5 text-emerald-400" />
@@ -493,7 +494,7 @@ export function App() {
             </button>
             <button
               onClick={toggleMute}
-              className="rounded-lg border border-zinc-800 bg-zinc-900 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
+              className="rounded-lg bg-zinc-900/90 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
               title={muted ? t.muteOn : t.muteOff}
             >
               {muted ? (
@@ -504,17 +505,17 @@ export function App() {
             </button>
             <button
               onClick={() => setMobileCluesOpen((v) => !v)}
-              className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-1.5 text-xs font-semibold text-emerald-300 lg:hidden"
+              className="inline-flex items-center gap-1 rounded-lg bg-zinc-900/90 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:bg-zinc-800 lg:hidden"
             >
               <ClipboardList className="h-3.5 w-3.5" />
-              {t.evidenceBtn} ({activeClues.length}/{activeCase.totalClues})
+              {activeClues.length}/{activeCase.totalClues}
             </button>
             <button
               onClick={() => {
                 sound.playTap();
                 setShowDeduction(true);
               }}
-              className="rounded-lg bg-emerald-500 px-3.5 py-1.5 text-xs font-bold text-zinc-950 transition hover:bg-emerald-400"
+              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-[11px] font-bold text-zinc-950 transition hover:bg-emerald-400 sm:px-3.5 sm:text-xs"
             >
               {t.solveCaseBtn}
             </button>
@@ -524,7 +525,7 @@ export function App() {
 
       {/* Mobile Clue & Hint Drawer */}
       {mobileCluesOpen && (
-        <div className="border-b border-zinc-800 bg-zinc-900/90 p-4 lg:hidden">
+        <div className="relative z-20 border-b border-zinc-800/80 bg-zinc-900/95 p-4 backdrop-blur-md lg:hidden">
           <p className="text-xs font-bold text-white">{t.briefingTitle}</p>
           <p className="mt-1 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
 
@@ -535,7 +536,7 @@ export function App() {
             <button
               disabled={activeHintsUsed >= MAX_HINTS}
               onClick={handleUseHint}
-              className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
+              className="inline-flex items-center gap-1 rounded-lg bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
             >
               <Lightbulb className="h-3.5 w-3.5" />
               {t.deduction.hintLabel} ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
@@ -571,7 +572,7 @@ export function App() {
       )}
 
       {/* Main Workspace */}
-      <main className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
+      <main className="relative z-10 mx-auto grid max-w-6xl gap-6 px-2.5 py-3 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
@@ -611,7 +612,7 @@ export function App() {
             <button
               disabled={activeHintsUsed >= MAX_HINTS}
               onClick={handleUseHint}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Lightbulb className="h-3.5 w-3.5" />
               {activeHintsUsed >= MAX_HINTS
