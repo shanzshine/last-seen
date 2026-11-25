@@ -64,7 +64,11 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const totalUnread = caseData.chats.reduce((acc, c) => acc + (c.unreadCount ?? 0), 0);
 
   return (
-    <div className="relative mx-auto flex h-[calc(100dvh-84px)] min-h-[520px] max-h-[680px] w-full max-w-[380px] flex-col overflow-hidden rounded-[28px] bg-zinc-950 shadow-[0_0_80px_-18px_rgba(16,185,129,0.25),0_20px_50px_-12px_rgba(0,0,0,0.95)] ring-1 ring-white/10 sm:h-[640px] sm:max-w-[340px] sm:rounded-[42px] sm:border-[6px] sm:border-zinc-800/90">
+    <div className="relative mx-auto flex h-[calc(100dvh-84px)] min-h-[520px] max-h-[680px] w-full max-w-[380px] flex-col overflow-hidden rounded-[30px] bg-zinc-950 shadow-[0_0_80px_-18px_rgba(16,185,129,0.28),0_24px_60px_-12px_rgba(0,0,0,0.95)] ring-1 ring-white/15 sm:h-[640px] sm:max-w-[340px] sm:rounded-[44px] sm:border-[6px] sm:border-zinc-800/95">
+      {/* Side Hardware Buttons (Desktop) */}
+      <div className="pointer-events-none absolute -left-[9px] top-28 hidden h-10 w-[3px] rounded-l bg-zinc-700 sm:block" />
+      <div className="pointer-events-none absolute -left-[9px] top-42 hidden h-10 w-[3px] rounded-l bg-zinc-700 sm:block" />
+      <div className="pointer-events-none absolute -right-[9px] top-32 hidden h-14 w-[3px] rounded-r bg-zinc-700 sm:block" />
       {/* Subtle Cracked Glass, Scanlines & Vignette Overlay */}
       <svg
         className="pointer-events-none absolute right-0 top-0 z-30 h-36 w-36 opacity-25"
@@ -136,12 +140,12 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 </span>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 px-1">
+              <div className="grid grid-cols-3 gap-4 rounded-3xl bg-white/[0.04] p-4 backdrop-blur-md ring-1 ring-white/10">
                 <button
                   onClick={() => openApp('chat')}
                   className="group flex flex-col items-center gap-1.5"
                 >
-                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500 text-white shadow-lg shadow-emerald-950/50 transition group-hover:scale-105 group-active:scale-95">
+                  <div className="relative flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-400 to-emerald-600 text-white shadow-lg shadow-emerald-950/60 ring-1 ring-white/25 transition group-hover:scale-105 group-active:scale-95">
                     <MessageSquare className="h-7 w-7" />
                     {totalUnread > 0 && (
                       <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-rose-500 px-1 text-[10px] font-bold text-white ring-2 ring-zinc-950">
@@ -159,7 +163,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                   }}
                   className="group flex flex-col items-center gap-1.5"
                 >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-sky-500 text-white shadow-lg shadow-sky-950/50 transition group-hover:scale-105 group-active:scale-95">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-blue-600 text-white shadow-lg shadow-sky-950/60 ring-1 ring-white/25 transition group-hover:scale-105 group-active:scale-95">
                     <ImageIcon className="h-7 w-7" />
                   </div>
                   <span className="text-[11px] font-medium text-zinc-200">{t.appGallery}</span>
@@ -169,7 +173,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                   onClick={() => openApp('notes')}
                   className="group flex flex-col items-center gap-1.5"
                 >
-                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500 text-zinc-950 shadow-lg shadow-amber-950/50 transition group-hover:scale-105 group-active:scale-95">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-300 to-amber-500 text-zinc-950 shadow-lg shadow-amber-950/60 ring-1 ring-white/30 transition group-hover:scale-105 group-active:scale-95">
                     <StickyNote className="h-7 w-7" />
                   </div>
                   <span className="text-[11px] font-medium text-zinc-200">{t.appNotes}</span>
@@ -180,7 +184,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     onClick={() => openApp('maps')}
                     className="group flex flex-col items-center gap-1.5"
                   >
-                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg shadow-rose-950/50 transition group-hover:scale-105 group-active:scale-95">
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-400 to-rose-600 text-white shadow-lg shadow-rose-950/60 ring-1 ring-white/25 transition group-hover:scale-105 group-active:scale-95">
                       <MapPin className="h-7 w-7" />
                     </div>
                     <span className="text-[11px] font-medium text-zinc-200">{t.appMaps}</span>
@@ -285,7 +289,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
       </div>
 
       {/* Bottom Home Navigation */}
-      <div className="z-20 flex items-center justify-center border-t border-zinc-900 bg-black/80 py-2.5 backdrop-blur-md">
+      <div className="z-20 flex flex-col items-center justify-center gap-1 bg-black/85 pb-2 pt-1.5 backdrop-blur-md">
         <button
           onClick={() => openApp('home')}
           className="flex items-center gap-1.5 rounded-full px-5 py-1 text-[11px] font-medium text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
@@ -293,6 +297,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           <Home className="h-3.5 w-3.5" />
           <span>{t.homeScreen}</span>
         </button>
+        <div className="h-1 w-24 rounded-full bg-zinc-700/80" />
       </div>
     </div>
   );

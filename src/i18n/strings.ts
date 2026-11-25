@@ -65,6 +65,7 @@ export const UI_STRINGS = {
       clueRecorded: '✓ Bukti tercatat',
       alreadyRecorded: 'Sudah Dicatat sebagai Bukti',
       recordPhoto: 'Catat Foto sebagai Bukti',
+      tapToZoom: 'Ketuk foto untuk perbesar',
     },
     notes: {
       title: 'Catatan',
@@ -165,6 +166,7 @@ export const UI_STRINGS = {
       clueRecorded: '✓ Clue pinned',
       alreadyRecorded: 'Already Pinned as Evidence',
       recordPhoto: 'Pin Photo as Evidence',
+      tapToZoom: 'Tap photo to enlarge',
     },
     notes: {
       title: 'Notes',

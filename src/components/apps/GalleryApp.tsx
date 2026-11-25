@@ -3,7 +3,15 @@ import type { PhotoEvidence } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { PhotoVisual } from '../PhotoVisual';
 import { sound } from '../../utils/sound';
-import { ArrowLeft, BookmarkCheck, BookmarkPlus, MapPin, Clock } from 'lucide-react';
+import {
+  ArrowLeft,
+  BookmarkCheck,
+  BookmarkPlus,
+  Clock,
+  MapPin,
+  Maximize2,
+  X,
+} from 'lucide-react';
 
 interface GalleryAppProps {
   lang: Language;
@@ -21,6 +29,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
   onDiscoverClue,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(initialPhotoId);
+  const [zoomOpen, setZoomOpen] = useState(false);
   const selectedPhoto = photos.find((p) => p.id === selectedId) ?? null;
   const t = UI_STRINGS[lang].gallery;
 
@@ -44,7 +53,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
                   sound.playTap();
                   setSelectedId(photo.id);
                 }}
-                className="group relative aspect-square overflow-hidden rounded-xl border border-zinc-800 bg-zinc-900 text-left transition hover:border-zinc-600"
+                className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900 text-left ring-1 ring-white/10 transition hover:ring-white/25"
               >
                 <PhotoVisual visualType={photo.visualType} compact />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-2">
@@ -73,7 +82,10 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
     <div className="flex h-full flex-col bg-zinc-950">
       <div className="flex items-center gap-2 border-b border-zinc-800/80 px-3 py-2.5">
         <button
-          onClick={() => setSelectedId(null)}
+          onClick={() => {
+            setZoomOpen(false);
+            setSelectedId(null);
+          }}
           className="rounded-lg p-1 text-zinc-300 transition hover:bg-zinc-800"
           aria-label="Back"
         >
@@ -85,11 +97,22 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
       </div>
 
       <div className="phone-scroll flex-1 overflow-y-auto p-3">
-        <div className="aspect-[4/3] w-full overflow-hidden rounded-xl border border-zinc-800">
+        <button
+          type="button"
+          onClick={() => {
+            sound.playTap();
+            setZoomOpen(true);
+          }}
+          className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10"
+        >
           <PhotoVisual visualType={selectedPhoto.visualType} />
-        </div>
+          <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/75 px-2.5 py-1 text-[10px] font-medium text-zinc-200 backdrop-blur-sm transition group-hover:bg-black/90">
+            <Maximize2 className="h-3 w-3 text-emerald-400" />
+            {t.tapToZoom}
+          </span>
+        </button>
 
-        <div className="mt-3 space-y-2 rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-3">
+        <div className="mt-3 space-y-2 rounded-xl bg-zinc-900/70 p-3">
           <p className="text-xs leading-relaxed text-zinc-200">{selectedPhoto.caption}</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[11px] text-zinc-400">
             <span className="inline-flex items-center gap-1">
@@ -122,6 +145,35 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
           )}
         </div>
       </div>
+
+      {/* Fullscreen Lightbox Popup */}
+      {zoomOpen && (
+        <div
+          onClick={() => setZoomOpen(false)}
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/90 p-4 backdrop-blur-md"
+        >
+          <button
+            onClick={() => setZoomOpen(false)}
+            className="absolute right-4 top-4 rounded-full bg-zinc-900/90 p-2 text-zinc-200 transition hover:bg-zinc-800 hover:text-white"
+            aria-label="Close"
+          >
+            <X className="h-5 w-5" />
+          </button>
+
+          <div
+            onClick={(e) => e.stopPropagation()}
+            className="relative flex max-h-[82vh] w-full max-w-xl flex-col items-center overflow-hidden rounded-2xl bg-zinc-950 p-2 ring-1 ring-white/15"
+          >
+            <div className="h-[62vh] w-full overflow-hidden rounded-xl bg-black">
+              <PhotoVisual visualType={selectedPhoto.visualType} />
+            </div>
+            <div className="w-full px-2 py-2.5 text-center">
+              <p className="font-mono text-xs font-semibold text-zinc-200">{selectedPhoto.title}</p>
+              <p className="mt-0.5 text-[11px] text-zinc-400">{selectedPhoto.caption}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -29,7 +29,7 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
       <img
         src={`${import.meta.env.BASE_URL}${realPhoto.file}`}
         alt={realPhoto.alt}
-        className="h-full w-full object-cover"
+        className={`h-full w-full ${compact ? 'object-cover' : 'bg-black object-contain'}`}
         loading="lazy"
       />
     );
