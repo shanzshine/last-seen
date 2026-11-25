@@ -6,6 +6,7 @@ import {
   ArrowLeft,
   BookmarkCheck,
   BookmarkPlus,
+  CheckCheck,
   Image as ImageIcon,
   RotateCcw,
   Trash2,
@@ -56,13 +57,13 @@ export const ChatApp: React.FC<ChatAppProps> = ({
 
   if (!activeThread) {
     return (
-      <div className="flex h-full flex-col bg-zinc-950">
-        <div className="border-b border-zinc-800/80 px-4 py-3">
-          <h2 className="text-base font-bold text-white">{t.title}</h2>
+      <div className="flex h-full flex-col bg-[#0b141a]">
+        <div className="bg-[#111b21] px-4 pb-3 pt-3.5">
+          <h2 className="text-lg font-bold tracking-tight text-white">{t.title}</h2>
           <p className="text-[11px] text-zinc-400">{t.subtitle}</p>
         </div>
 
-        <div className="phone-scroll flex-1 divide-y divide-zinc-900 overflow-y-auto">
+        <div className="phone-scroll flex-1 divide-y divide-white/[0.06] overflow-y-auto">
           {threads.map((thread) => {
             const isRecovered = recoveredThreadIds.includes(thread.id);
             const allMsgs =
@@ -84,16 +85,16 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                   setKeywordInput('');
                   setKeywordError(false);
                 }}
-                className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-zinc-900/70 active:bg-zinc-900"
+                className="flex w-full items-center gap-3 px-4 py-3 text-left transition hover:bg-white/[0.04] active:bg-white/[0.07]"
               >
                 <div
-                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full border text-xs font-bold ${thread.avatarColor}`}
+                  className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-xs font-bold ${thread.avatarColor}`}
                 >
                   {thread.isGroup ? <Users className="h-5 w-5" /> : thread.avatarInitials}
                 </div>
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate text-sm font-semibold text-zinc-100">
+                    <span className="truncate text-[13px] font-semibold text-zinc-100">
                       {thread.name}
                     </span>
                     <span className="shrink-0 text-[10px] text-zinc-500">{lastMsg?.time}</span>
@@ -134,12 +135,12 @@ export const ChatApp: React.FC<ChatAppProps> = ({
     return (
       <div key={msg.id} className={`flex flex-col ${isOwner ? 'items-end' : 'items-start'}`}>
         <div
-          className={`max-w-[85%] rounded-2xl px-3 py-2 text-xs leading-relaxed shadow-sm ${
+          className={`max-w-[84%] rounded-2xl px-3 py-2 text-[12px] leading-snug shadow-sm ${
             isDeleted
-              ? 'border border-rose-500/40 bg-rose-950/40 text-rose-100'
+              ? 'bg-rose-950/60 text-rose-100 ring-1 ring-rose-500/40'
               : isOwner
-                ? 'rounded-br-sm bg-emerald-600/90 text-white'
-                : 'rounded-bl-sm border border-zinc-800 bg-zinc-900 text-zinc-100'
+                ? 'rounded-tr-sm bg-[#005c4b] text-zinc-50'
+                : 'rounded-tl-sm bg-[#202c33] text-zinc-100'
           }`}
         >
           {isDeleted && (
@@ -148,13 +149,13 @@ export const ChatApp: React.FC<ChatAppProps> = ({
             </p>
           )}
           {activeThread.isGroup && !isOwner && (
-            <p className="mb-0.5 text-[10px] font-bold text-amber-300">{msg.senderName}</p>
+            <p className="mb-0.5 text-[10px] font-semibold text-amber-300">{msg.senderName}</p>
           )}
 
           {attachedPhoto && (
             <button
               onClick={() => onOpenPhoto(attachedPhoto.id)}
-              className="mb-1.5 flex w-full items-center gap-2 rounded-lg border border-white/15 bg-black/30 px-2.5 py-1.5 text-left text-[11px] text-sky-300 transition hover:bg-black/50"
+              className="mb-1.5 flex w-full items-center gap-2 rounded-lg bg-black/25 px-2.5 py-1.5 text-left text-[11px] text-sky-300 transition hover:bg-black/40"
             >
               <ImageIcon className="h-3.5 w-3.5 shrink-0" />
               <span className="truncate underline">{attachedPhoto.title}</span>
@@ -163,30 +164,29 @@ export const ChatApp: React.FC<ChatAppProps> = ({
 
           <p>{msg.text}</p>
 
-          <div className="mt-1 flex items-center justify-end gap-2">
+          <div className="mt-1 flex items-center justify-end gap-1.5">
             {msg.clueId && (
               <button
                 onClick={() => onDiscoverClue(msg.clueId!)}
-                className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-semibold transition ${
+                className={`mr-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-semibold transition ${
                   isClueFound
                     ? 'bg-emerald-400/20 text-emerald-200'
-                    : 'bg-amber-400/20 text-amber-200 hover:bg-amber-400/30'
+                    : 'bg-amber-400/20 text-amber-200 hover:bg-amber-400/35'
                 }`}
               >
                 {isClueFound ? (
                   <>
-                    <BookmarkCheck className="h-3 w-3" /> {t.recorded}
+                    <BookmarkCheck className="h-2.5 w-2.5" /> {t.recorded}
                   </>
                 ) : (
                   <>
-                    <BookmarkPlus className="h-3 w-3" /> {t.recordClue}
+                    <BookmarkPlus className="h-2.5 w-2.5" /> {t.recordClue}
                   </>
                 )}
               </button>
             )}
-            <span className={`text-[10px] ${isOwner ? 'text-emerald-100/80' : 'text-zinc-500'}`}>
-              {msg.time}
-            </span>
+            <span className="text-[9.5px] text-white/55">{msg.time}</span>
+            {isOwner && <CheckCheck className="h-3 w-3 text-sky-400" />}
           </div>
         </div>
       </div>
@@ -194,33 +194,33 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   };
 
   return (
-    <div className="flex h-full flex-col bg-zinc-950">
-      <div className="flex items-center gap-2.5 border-b border-zinc-800/80 bg-zinc-900/60 px-3 py-2.5">
+    <div className="flex h-full flex-col bg-[#0b141a]">
+      <div className="flex items-center gap-2.5 bg-[#111b21] px-3 py-2.5 shadow-sm">
         <button
           onClick={() => setActiveThreadId(null)}
-          className="rounded-lg p-1 text-zinc-300 transition hover:bg-zinc-800"
-          aria-label="Kembali ke daftar pesan"
+          className="rounded-lg p-1 text-zinc-300 transition hover:bg-white/10"
+          aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
         <div
-          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full border text-[11px] font-bold ${activeThread.avatarColor}`}
+          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${activeThread.avatarColor}`}
         >
           {activeThread.isGroup ? <Users className="h-4 w-4" /> : activeThread.avatarInitials}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="truncate text-xs font-bold text-white">{activeThread.name}</p>
+          <p className="truncate text-xs font-semibold text-white">{activeThread.name}</p>
           <p className="truncate text-[10px] text-zinc-400">{activeThread.statusText}</p>
         </div>
       </div>
 
-      <div className="phone-scroll flex-1 space-y-2.5 overflow-y-auto px-3 py-3">
+      <div className="phone-scroll flex-1 space-y-2 overflow-y-auto bg-[radial-gradient(rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:18px_18px] px-3 py-3">
         {activeThread.messages.map((msg) => renderMessageBubble(msg, false))}
 
         {activeThread.deletedMessages && !isRecovered && (
           <form
             onSubmit={handleRecoverSubmit}
-            className="mt-3 rounded-xl border border-rose-500/30 bg-rose-950/25 p-3"
+            className="mt-3 rounded-xl bg-rose-950/40 p-3 ring-1 ring-rose-500/30"
           >
             <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-300">
               <Trash2 className="h-3.5 w-3.5" />
@@ -240,7 +240,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                   setKeywordError(false);
                 }}
                 placeholder={t.keywordPlaceholder}
-                className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 font-mono text-[11px] text-white placeholder:text-zinc-500 focus:border-rose-400 focus:outline-none"
+                className="min-w-0 flex-1 rounded-lg bg-black/50 px-2.5 py-1.5 font-mono text-[11px] text-white placeholder:text-zinc-500 ring-1 ring-white/10 focus:outline-none focus:ring-rose-400"
               />
               <button
                 type="submit"

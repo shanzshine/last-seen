@@ -35,15 +35,16 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
 
   if (!selectedPhoto) {
     return (
-      <div className="flex h-full flex-col bg-zinc-950">
-        <div className="border-b border-zinc-800/80 px-4 py-3">
-          <h2 className="text-base font-bold text-white">{t.title}</h2>
+      <div className="flex h-full flex-col bg-black">
+        <div className="px-4 pb-2.5 pt-3.5">
+          <h2 className="text-lg font-bold tracking-tight text-white">{t.title}</h2>
           <p className="text-[11px] text-zinc-400">
             {photos.length} {t.filesFound}
           </p>
         </div>
 
-        <div className="phone-scroll grid flex-1 grid-cols-2 gap-2.5 overflow-y-auto p-3 content-start">
+        {/* Clean 3-column mobile Photos grid */}
+        <div className="phone-scroll grid flex-1 grid-cols-3 gap-0.5 overflow-y-auto content-start">
           {photos.map((photo) => {
             const isFound = photo.clueId ? discoveredClues.includes(photo.clueId) : false;
             return (
@@ -53,19 +54,14 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
                   sound.playTap();
                   setSelectedId(photo.id);
                 }}
-                className="group relative aspect-square overflow-hidden rounded-xl bg-zinc-900 text-left ring-1 ring-white/10 transition hover:ring-white/25"
+                className="group relative aspect-square overflow-hidden bg-zinc-900"
               >
                 <PhotoVisual visualType={photo.visualType} compact />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent p-2">
-                  <p className="truncate font-mono text-[10px] font-medium text-zinc-200">
-                    {photo.title}
-                  </p>
-                  {isFound && (
-                    <span className="text-[9px] font-semibold text-emerald-400">
-                      {t.clueRecorded}
-                    </span>
-                  )}
-                </div>
+                {isFound && (
+                  <span className="absolute right-1 top-1 flex h-4 w-4 items-center justify-center rounded-full bg-emerald-500 text-zinc-950 shadow">
+                    <BookmarkCheck className="h-2.5 w-2.5" />
+                  </span>
+                )}
               </button>
             );
           })}
@@ -79,19 +75,19 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
     : false;
 
   return (
-    <div className="flex h-full flex-col bg-zinc-950">
-      <div className="flex items-center gap-2 border-b border-zinc-800/80 px-3 py-2.5">
+    <div className="flex h-full flex-col bg-black">
+      <div className="flex items-center gap-2 bg-zinc-950/90 px-3 py-2.5">
         <button
           onClick={() => {
             setZoomOpen(false);
             setSelectedId(null);
           }}
-          className="rounded-lg p-1 text-zinc-300 transition hover:bg-zinc-800"
+          className="rounded-lg p-1 text-zinc-300 transition hover:bg-white/10"
           aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
-        <p className="truncate font-mono text-xs font-semibold text-zinc-200">
+        <p className="truncate font-mono text-xs font-medium text-zinc-200">
           {selectedPhoto.title}
         </p>
       </div>
@@ -103,7 +99,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
             sound.playTap();
             setZoomOpen(true);
           }}
-          className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-black ring-1 ring-white/10"
+          className="group relative block aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-950"
         >
           <PhotoVisual visualType={selectedPhoto.visualType} />
           <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 rounded-full bg-black/75 px-2.5 py-1 text-[10px] font-medium text-zinc-200 backdrop-blur-sm transition group-hover:bg-black/90">
@@ -112,7 +108,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
           </span>
         </button>
 
-        <div className="mt-3 space-y-2 rounded-xl bg-zinc-900/70 p-3">
+        <div className="mt-3 space-y-2 rounded-xl bg-zinc-900/80 p-3">
           <p className="text-xs leading-relaxed text-zinc-200">{selectedPhoto.caption}</p>
           <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[11px] text-zinc-400">
             <span className="inline-flex items-center gap-1">
