@@ -81,6 +81,16 @@ export interface DeductionQuestion {
   correctOptionId: string;
 }
 
+export interface BrowserHistoryItem {
+  id: string;
+  time: string;
+  title: string;
+  url: string;
+  snippet: string;
+  clueId?: string;
+  clueLabel?: string;
+}
+
 export interface LiveAlert {
   threadId: string;
   delayMs: number;
@@ -103,10 +113,12 @@ export interface CaseData {
   photos: PhotoEvidence[];
   notes: NoteItem[];
   locations?: LocationLog[];
+  browserHistory?: BrowserHistoryItem[];
   liveAlert?: LiveAlert;
   hints: string[];
   totalClues: number;
   deductions: DeductionQuestion[];
   epilogueSuccess: string;
   epiloguePartial: string;
+  customEpilogues?: Record<string, string>;
 }

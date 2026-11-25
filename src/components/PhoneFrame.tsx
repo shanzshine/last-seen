@@ -6,7 +6,9 @@ import { ChatApp } from './apps/ChatApp';
 import { GalleryApp } from './apps/GalleryApp';
 import { NotesApp } from './apps/NotesApp';
 import { MapsApp } from './apps/MapsApp';
+import { BrowserApp } from './apps/BrowserApp';
 import {
+  BrowserAppIcon,
   GalleryAppIcon,
   MapsAppIcon,
   MessagesAppIcon,
@@ -16,7 +18,7 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { BookmarkCheck, Wifi } from 'lucide-react';
 
-type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps';
+type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser';
 
 interface PhoneFrameProps {
   caseData: CaseData;
@@ -184,6 +186,20 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     </button>
                   )}
 
+                  {caseData.browserHistory && caseData.browserHistory.length > 0 && (
+                    <button
+                      onClick={() => openApp('browser')}
+                      className="group flex flex-col items-center gap-1"
+                    >
+                      <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                        <BrowserAppIcon />
+                      </div>
+                      <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                        {t.appBrowser}
+                      </span>
+                    </button>
+                  )}
+
                   <button
                     onClick={() => {
                       sound.playTap();
@@ -328,6 +344,24 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               <MapsApp
                 lang={lang}
                 locations={caseData.locations}
+                discoveredClues={discoveredClues}
+                onDiscoverClue={onDiscoverClue}
+              />
+            </motion.div>
+          )}
+
+          {activeApp === 'browser' && caseData.browserHistory && (
+            <motion.div
+              key="browser"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 16 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <BrowserApp
+                lang={lang}
+                history={caseData.browserHistory}
                 discoveredClues={discoveredClues}
                 onDiscoverClue={onDiscoverClue}
               />

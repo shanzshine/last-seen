@@ -4,6 +4,8 @@ import { CASE_2 } from './case2';
 import { CASE_2_EN } from './case2.en';
 import { CASE_3 } from './case3';
 import { CASE_3_EN } from './case3.en';
+import { CASE_4 } from './case4';
+import { CASE_4_EN } from './case4.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -18,13 +20,16 @@ export interface CasePreview {
 }
 
 export const getCases = (lang: Language): CaseData[] =>
-  lang === 'en' ? [CASE_1_EN, CASE_2_EN, CASE_3_EN] : [CASE_1, CASE_2, CASE_3];
+  lang === 'en'
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
   const c1 = cases[0];
   const c2 = cases[1];
   const c3 = cases[2];
+  const c4 = cases[3];
 
   return [
     {
@@ -60,8 +65,20 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       isUnlocked: true,
       newMechanicHint:
         lang === 'en'
-          ? 'New Mechanics: Typing Style Analysis & Live Incoming Chat'
-          : 'Mekanik Baru: Analisis Gaya Ketik & Jebakan Chat Live',
+          ? 'Typing Style Analysis & Live Incoming Chat'
+          : 'Analisis Gaya Ketik & Jebakan Chat Live',
+    },
+    {
+      id: c4.id,
+      number: 4,
+      title: c4.title,
+      subtitle: c4.subtitle,
+      difficulty: c4.difficulty,
+      isUnlocked: true,
+      newMechanicHint:
+        lang === 'en'
+          ? 'New Mechanics: Browser History & Multiple Endings'
+          : 'Mekanik Baru: Browser History & Multiple Endings',
     },
   ];
 };

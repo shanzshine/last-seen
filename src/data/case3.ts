@@ -245,3 +245,4 @@ export const CASE_3: CaseData = {
   epiloguePartial:
     'Laporanmu membantu polisi mencurigai rute Tol Cikunir, namun beberapa detail yang terlewat membuat proses pelacakan plat B 2841 KJL memakan waktu lebih lama sebelum Keisha akhirnya ditemukan.',
 };
+

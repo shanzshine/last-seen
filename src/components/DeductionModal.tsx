@@ -159,7 +159,16 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
             </div>
 
             <div className="rounded-xl border border-zinc-800 bg-zinc-900/60 p-4 text-xs leading-relaxed text-zinc-200">
-              {isAllCorrect ? caseData.epilogueSuccess : caseData.epiloguePartial}
+              {(() => {
+                if (caseData.customEpilogues) {
+                  for (const ans of Object.values(answers)) {
+                    if (caseData.customEpilogues[ans]) {
+                      return caseData.customEpilogues[ans];
+                    }
+                  }
+                }
+                return isAllCorrect ? caseData.epilogueSuccess : caseData.epiloguePartial;
+              })()}
             </div>
 
             <div className="space-y-2">

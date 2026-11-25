@@ -87,6 +87,23 @@ export const MapsAppIcon: React.FC = () => (
   </svg>
 );
 
+export const BrowserAppIcon: React.FC = () => (
+  <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
+    <rect width="64" height="64" rx="16" fill="#ffffff" />
+    <circle cx="32" cy="32" r="22" fill="url(#brwGrad)" />
+    <path d="M38 26L26 38L23 41L35 29L38 26Z" fill="white" />
+    <path d="M38 26L35 29L29 29L38 26Z" fill="#ef4444" />
+    <polygon points="38,26 29,29 35,35" fill="#ef4444" />
+    <polygon points="26,38 35,35 29,29" fill="#ffffff" />
+    <defs>
+      <linearGradient id="brwGrad" x1="32" y1="10" x2="32" y2="54" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#38bdf8" />
+        <stop offset="1" stopColor="#2563eb" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
 export const ReportAppIcon: React.FC = () => (
   <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
     <rect width="64" height="64" rx="16" fill="url(#repGrad)" />
@@ -110,3 +127,4 @@ export const ReportAppIcon: React.FC = () => (
     </defs>
   </svg>
 );
+

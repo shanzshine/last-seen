@@ -166,6 +166,9 @@ export function App() {
     activeCase.locations?.forEach((l) => {
       if (l.clueId && l.clueLabel) map.set(l.clueId, l.clueLabel);
     });
+    activeCase.browserHistory?.forEach((b) => {
+      if (b.clueId && b.clueLabel) map.set(b.clueId, b.clueLabel);
+    });
     return map;
   }, [activeCase]);
 
@@ -348,7 +351,7 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-black text-white">
                     {solvedCount}
-                    <span className="text-xs font-normal text-zinc-500">/3</span>
+                    <span className="text-xs font-normal text-zinc-500">/4</span>
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-4 py-2.5 backdrop-blur-sm">
