@@ -6,16 +6,15 @@ import { ChatApp } from './apps/ChatApp';
 import { GalleryApp } from './apps/GalleryApp';
 import { NotesApp } from './apps/NotesApp';
 import { MapsApp } from './apps/MapsApp';
-import { AnimatePresence, motion } from 'framer-motion';
 import {
-  BookmarkCheck,
-  FileSearch,
-  Image as ImageIcon,
-  MapPin,
-  MessageCircle,
-  StickyNote,
-  Wifi,
-} from 'lucide-react';
+  GalleryAppIcon,
+  MapsAppIcon,
+  MessagesAppIcon,
+  NotesAppIcon,
+  ReportAppIcon,
+} from './AppIcons';
+import { AnimatePresence, motion } from 'framer-motion';
+import { BookmarkCheck, Wifi } from 'lucide-react';
 
 type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps';
 
@@ -83,7 +82,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         />
       </svg>
 
-      {/* Toast Notification Banner (iOS-style pill) */}
+      {/* Toast Notification Banner */}
       <AnimatePresence>
         {toastMessage && (
           <motion.div
@@ -136,91 +135,39 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.15 }}
-              className={`relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-b ${caseData.wallpaperGradient} px-5 pb-4 pt-5`}
+              className={`relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-br ${caseData.wallpaperGradient} px-4 pb-3 pt-4`}
             >
-              {/* Organic Wallpaper Bokeh */}
-              <div className="pointer-events-none absolute -left-10 top-12 h-44 w-44 rounded-full bg-emerald-400/15 blur-3xl" />
-              <div className="pointer-events-none absolute -right-10 bottom-24 h-48 w-48 rounded-full bg-sky-400/15 blur-3xl" />
+              {/* Soft Wallpaper Depth */}
+              <div className="pointer-events-none absolute -left-12 top-6 h-52 w-52 rounded-full bg-emerald-400/15 blur-3xl" />
+              <div className="pointer-events-none absolute -right-12 bottom-16 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl" />
 
-              {/* Top Clock & Date (Natural Lock/Home Widget) */}
-              <div className="relative z-10 text-center">
-                <p className="text-[11px] font-medium text-white/70">
-                  {lang === 'en' ? 'Device Owner' : 'Milik'} • {caseData.ownerName}
-                </p>
-                <p className="mt-0.5 text-5xl font-extralight tracking-tight text-white">
-                  {timeStr}
-                </p>
-                <p className="mt-1 text-[10px] font-medium text-rose-300/90">
-                  Last Seen {caseData.lastSeenTime}
-                </p>
-              </div>
-
-              {/* Realistic Widget + App Grid */}
+              {/* Top Natural Home Grid & Widgets */}
               <div className="relative z-10 space-y-5">
-                {/* Notification / Case Widget */}
-                <div className="rounded-2xl bg-black/35 p-3.5 backdrop-blur-xl ring-1 ring-white/10">
-                  <div className="flex items-center justify-between text-[10px] text-white/60">
-                    <span className="font-semibold uppercase tracking-wider">
-                      {lang === 'en' ? 'Forensic Mirror' : 'Kloningan Aktif'}
-                    </span>
-                    <span>
-                      {discoveredClues.length}/{caseData.totalClues}{' '}
-                      {lang === 'en' ? 'clues' : 'bukti'}
+                {/* Minimalist Clock / Owner Widget */}
+                <div className="rounded-3xl bg-black/25 px-4 py-3.5 backdrop-blur-xl">
+                  <div className="flex items-baseline justify-between">
+                    <span className="text-3xl font-light tracking-tight text-white">{timeStr}</span>
+                    <span className="text-[10px] font-medium text-white/60">
+                      {caseData.ownerName}
                     </span>
                   </div>
-                  <p className="mt-1 text-xs font-medium text-white/95">
-                    Case #{caseData.number}: {caseData.title}
+                  <p className="mt-1 text-[10px] text-rose-300/90">
+                    Last Seen {caseData.lastSeenTime}
                   </p>
-                  <button
-                    onClick={() => {
-                      sound.playTap();
-                      onOpenDeduction();
-                    }}
-                    className="mt-2.5 flex w-full items-center justify-center gap-1.5 rounded-xl bg-white/15 py-2 text-[11px] font-semibold text-white transition hover:bg-white/25 active:scale-[0.98]"
-                  >
-                    <FileSearch className="h-3.5 w-3.5 text-emerald-300" />
-                    {t.reportBtn}
-                  </button>
                 </div>
 
-                {/* Bottom Frosted Dock */}
-                <div className="flex items-center justify-around rounded-[26px] bg-white/10 px-2 py-3 backdrop-blur-2xl ring-1 ring-white/15">
-                  <button
-                    onClick={() => openApp('chat')}
-                    className="group flex flex-col items-center gap-1"
-                  >
-                    <div className="relative flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-b from-emerald-400 to-green-600 text-white shadow-md transition group-hover:scale-105 group-active:scale-95">
-                      <MessageCircle className="h-6 w-6 fill-white/20" />
-                      {totalUnread > 0 && (
-                        <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow">
-                          {totalUnread}
-                        </span>
-                      )}
-                    </div>
-                    <span className="text-[10px] font-medium text-white/85">{t.appMessages}</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setGalleryTargetPhotoId(null);
-                      openApp('gallery');
-                    }}
-                    className="group flex flex-col items-center gap-1"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-b from-sky-400 to-blue-600 text-white shadow-md transition group-hover:scale-105 group-active:scale-95">
-                      <ImageIcon className="h-6 w-6" />
-                    </div>
-                    <span className="text-[10px] font-medium text-white/85">{t.appGallery}</span>
-                  </button>
-
+                {/* App Grid (4 columns) */}
+                <div className="grid grid-cols-4 gap-y-4 px-1">
                   <button
                     onClick={() => openApp('notes')}
                     className="group flex flex-col items-center gap-1"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-b from-amber-300 to-amber-500 text-zinc-950 shadow-md transition group-hover:scale-105 group-active:scale-95">
-                      <StickyNote className="h-6 w-6" />
+                    <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                      <NotesAppIcon />
                     </div>
-                    <span className="text-[10px] font-medium text-white/85">{t.appNotes}</span>
+                    <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                      {t.appNotes}
+                    </span>
                   </button>
 
                   {caseData.locations && caseData.locations.length > 0 && (
@@ -228,13 +175,82 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                       onClick={() => openApp('maps')}
                       className="group flex flex-col items-center gap-1"
                     >
-                      <div className="flex h-12 w-12 items-center justify-center rounded-[14px] bg-gradient-to-b from-rose-400 to-red-600 text-white shadow-md transition group-hover:scale-105 group-active:scale-95">
-                        <MapPin className="h-6 w-6" />
+                      <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                        <MapsAppIcon />
                       </div>
-                      <span className="text-[10px] font-medium text-white/85">{t.appMaps}</span>
+                      <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                        {t.appMaps}
+                      </span>
                     </button>
                   )}
+
+                  <button
+                    onClick={() => {
+                      sound.playTap();
+                      onOpenDeduction();
+                    }}
+                    className="group flex flex-col items-center gap-1"
+                  >
+                    <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                      <ReportAppIcon />
+                    </div>
+                    <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                      {lang === 'en' ? 'Report' : 'Lapor'}
+                    </span>
+                  </button>
                 </div>
+              </div>
+
+              {/* Bottom Frosted Dock */}
+              <div className="relative z-10 flex items-center justify-around rounded-[26px] bg-white/15 px-3 py-2.5 backdrop-blur-2xl">
+                <button
+                  onClick={() => openApp('chat')}
+                  className="group flex flex-col items-center gap-1"
+                >
+                  <div className="relative h-12 w-12 transition group-hover:scale-105 group-active:scale-95">
+                    <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
+                      <MessagesAppIcon />
+                    </div>
+                    {totalUnread > 0 && (
+                      <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow">
+                        {totalUnread}
+                      </span>
+                    )}
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    setGalleryTargetPhotoId(null);
+                    openApp('gallery');
+                  }}
+                  className="group flex flex-col items-center gap-1"
+                >
+                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                    <GalleryAppIcon />
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => openApp('notes')}
+                  className="group flex flex-col items-center gap-1"
+                >
+                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                    <NotesAppIcon />
+                  </div>
+                </button>
+
+                <button
+                  onClick={() => {
+                    sound.playTap();
+                    onOpenDeduction();
+                  }}
+                  className="group flex flex-col items-center gap-1"
+                >
+                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                    <ReportAppIcon />
+                  </div>
+                </button>
               </div>
             </motion.div>
           )}
