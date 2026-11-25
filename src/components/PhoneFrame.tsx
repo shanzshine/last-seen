@@ -205,6 +205,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               className="h-full"
             >
               <ChatApp
+                lang={lang}
                 threads={caseData.chats}
                 photos={caseData.photos}
                 discoveredClues={discoveredClues}
@@ -226,6 +227,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               className="h-full"
             >
               <GalleryApp
+                lang={lang}
                 photos={caseData.photos}
                 initialPhotoId={galleryTargetPhotoId}
                 discoveredClues={discoveredClues}
@@ -244,6 +246,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               className="h-full"
             >
               <NotesApp
+                lang={lang}
                 notes={caseData.notes}
                 unlockedNoteIds={unlockedNoteIds}
                 discoveredClues={discoveredClues}
@@ -263,6 +266,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               className="h-full"
             >
               <MapsApp
+                lang={lang}
                 locations={caseData.locations}
                 discoveredClues={discoveredClues}
                 onDiscoverClue={onDiscoverClue}

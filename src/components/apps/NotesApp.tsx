@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import type { NoteItem } from '../../types/case';
+import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
 import { motion } from 'framer-motion';
 import { ArrowLeft, BookmarkCheck, BookmarkPlus, Delete, Lock, Unlock } from 'lucide-react';
 
 interface NotesAppProps {
+  lang: Language;
   notes: NoteItem[];
   unlockedNoteIds: string[];
   discoveredClues: string[];
@@ -13,6 +15,7 @@ interface NotesAppProps {
 }
 
 export const NotesApp: React.FC<NotesAppProps> = ({
+  lang,
   notes,
   unlockedNoteIds,
   discoveredClues,
@@ -23,6 +26,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
 
+  const t = UI_STRINGS[lang].notes;
   const selectedNote = notes.find((n) => n.id === selectedNoteId) ?? null;
 
   const handleDigit = (digit: string) => {
@@ -52,8 +56,8 @@ export const NotesApp: React.FC<NotesAppProps> = ({
     return (
       <div className="flex h-full flex-col bg-zinc-950">
         <div className="border-b border-zinc-800/80 px-4 py-3">
-          <h2 className="text-base font-bold text-white">Catatan</h2>
-          <p className="text-[11px] text-zinc-400">Memo & catatan pribadi pemilik HP</p>
+          <h2 className="text-base font-bold text-white">{t.title}</h2>
+          <p className="text-[11px] text-zinc-400">{t.subtitle}</p>
         </div>
 
         <div className="phone-scroll flex-1 space-y-2.5 overflow-y-auto p-3">
@@ -63,6 +67,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               <button
                 key={note.id}
                 onClick={() => {
+                  sound.playTap();
                   setSelectedNoteId(note.id);
                   setPinInput('');
                   setPinError(false);
@@ -72,7 +77,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
                 <div className="min-w-0 flex-1">
                   <p className="truncate text-xs font-bold text-zinc-100">{note.title}</p>
                   <p className="mt-1 line-clamp-2 text-[11px] text-zinc-400">
-                    {isUnlocked ? note.content : 'Catatan ini dilindungi PIN 4 digit.'}
+                    {isUnlocked ? note.content : t.lockedPreview}
                   </p>
                   <p className="mt-1.5 text-[10px] text-zinc-500">{note.updatedAt}</p>
                 </div>
@@ -100,7 +105,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
         <button
           onClick={() => setSelectedNoteId(null)}
           className="rounded-lg p-1 text-zinc-300 transition hover:bg-zinc-800"
-          aria-label="Kembali ke catatan"
+          aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -112,7 +117,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
           <div className="flex h-11 w-11 items-center justify-center rounded-full border border-amber-500/30 bg-amber-500/10 text-amber-300">
             <Lock className="h-5 w-5" />
           </div>
-          <p className="mt-2.5 text-xs font-semibold text-white">Masukkan PIN 4 Digit</p>
+          <p className="mt-2.5 text-xs font-semibold text-white">{t.enterPin}</p>
           {selectedNote.pinHint && (
             <p className="mt-1 text-[11px] text-zinc-400">{selectedNote.pinHint}</p>
           )}
@@ -135,7 +140,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               />
             ))}
           </motion.div>
-          {pinError && <p className="mt-2 text-[11px] text-rose-400">PIN salah, coba lagi!</p>}
+          {pinError && <p className="mt-2 text-[11px] text-rose-400">{t.wrongPin}</p>}
 
           <div className="mt-5 grid grid-cols-3 gap-2.5">
             {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
@@ -157,7 +162,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
             <button
               onClick={() => setPinInput((p) => p.slice(0, -1))}
               className="flex h-11 w-14 items-center justify-center rounded-xl border border-zinc-800 bg-zinc-900 text-zinc-400 transition hover:bg-zinc-800 active:scale-95"
-              aria-label="Hapus digit"
+              aria-label="Delete"
             >
               <Delete className="h-4 w-4" />
             </button>
@@ -165,7 +170,9 @@ export const NotesApp: React.FC<NotesAppProps> = ({
         </div>
       ) : (
         <div className="phone-scroll flex-1 overflow-y-auto p-4">
-          <p className="text-[11px] text-zinc-500">Diperbarui: {selectedNote.updatedAt}</p>
+          <p className="text-[11px] text-zinc-500">
+            {t.updatedAt} {selectedNote.updatedAt}
+          </p>
           <div className="mt-3 whitespace-pre-line rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-3.5 text-xs leading-relaxed text-zinc-200">
             {selectedNote.content}
           </div>
@@ -181,11 +188,11 @@ export const NotesApp: React.FC<NotesAppProps> = ({
             >
               {isClueFound ? (
                 <>
-                  <BookmarkCheck className="h-3.5 w-3.5" /> Sudah Dicatat sebagai Bukti
+                  <BookmarkCheck className="h-3.5 w-3.5" /> {t.alreadyRecorded}
                 </>
               ) : (
                 <>
-                  <BookmarkPlus className="h-3.5 w-3.5" /> Catat Isi Catatan sebagai Bukti
+                  <BookmarkPlus className="h-3.5 w-3.5" /> {t.recordNote}
                 </>
               )}
             </button>

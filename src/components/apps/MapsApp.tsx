@@ -1,26 +1,31 @@
 import React from 'react';
 import type { LocationLog } from '../../types/case';
+import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { BookmarkCheck, BookmarkPlus, MapPin, Navigation } from 'lucide-react';
 
 interface MapsAppProps {
+  lang: Language;
   locations: LocationLog[];
   discoveredClues: string[];
   onDiscoverClue: (clueId: string) => void;
 }
 
 export const MapsApp: React.FC<MapsAppProps> = ({
+  lang,
   locations,
   discoveredClues,
   onDiscoverClue,
 }) => {
+  const t = UI_STRINGS[lang].maps;
+
   return (
     <div className="flex h-full flex-col bg-zinc-950">
       <div className="border-b border-zinc-800/80 px-4 py-3">
         <div className="flex items-center gap-2">
           <Navigation className="h-4 w-4 text-rose-400" />
-          <h2 className="text-base font-bold text-white">Riwayat Lokasi</h2>
+          <h2 className="text-base font-bold text-white">{t.title}</h2>
         </div>
-        <p className="text-[11px] text-zinc-400">Pelacakan GPS perangkat malam terakhir</p>
+        <p className="text-[11px] text-zinc-400">{t.subtitle}</p>
       </div>
 
       <div className="phone-scroll flex-1 overflow-y-auto p-4">
@@ -52,11 +57,11 @@ export const MapsApp: React.FC<MapsAppProps> = ({
                   >
                     {isFound ? (
                       <>
-                        <BookmarkCheck className="h-3.5 w-3.5" /> Bukti Tercatat
+                        <BookmarkCheck className="h-3.5 w-3.5" /> {t.recorded}
                       </>
                     ) : (
                       <>
-                        <BookmarkPlus className="h-3.5 w-3.5" /> Catat Lokasi sebagai Bukti
+                        <BookmarkPlus className="h-3.5 w-3.5" /> {t.recordLocation}
                       </>
                     )}
                   </button>
@@ -69,4 +74,3 @@ export const MapsApp: React.FC<MapsAppProps> = ({
     </div>
   );
 };
-

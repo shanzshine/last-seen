@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import type { PhotoEvidence } from '../../types/case';
+import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { PhotoVisual } from '../PhotoVisual';
 import { sound } from '../../utils/sound';
 import { ArrowLeft, BookmarkCheck, BookmarkPlus, MapPin, Clock } from 'lucide-react';
 
 interface GalleryAppProps {
+  lang: Language;
   photos: PhotoEvidence[];
   initialPhotoId?: string | null;
   discoveredClues: string[];
@@ -12,6 +14,7 @@ interface GalleryAppProps {
 }
 
 export const GalleryApp: React.FC<GalleryAppProps> = ({
+  lang,
   photos,
   initialPhotoId = null,
   discoveredClues,
@@ -19,13 +22,16 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(initialPhotoId);
   const selectedPhoto = photos.find((p) => p.id === selectedId) ?? null;
+  const t = UI_STRINGS[lang].gallery;
 
   if (!selectedPhoto) {
     return (
       <div className="flex h-full flex-col bg-zinc-950">
         <div className="border-b border-zinc-800/80 px-4 py-3">
-          <h2 className="text-base font-bold text-white">Galeri Foto</h2>
-          <p className="text-[11px] text-zinc-400">{photos.length} file media ditemukan</p>
+          <h2 className="text-base font-bold text-white">{t.title}</h2>
+          <p className="text-[11px] text-zinc-400">
+            {photos.length} {t.filesFound}
+          </p>
         </div>
 
         <div className="phone-scroll grid flex-1 grid-cols-2 gap-2.5 overflow-y-auto p-3 content-start">
@@ -46,7 +52,9 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
                     {photo.title}
                   </p>
                   {isFound && (
-                    <span className="text-[9px] font-semibold text-emerald-400">✓ Bukti tercatat</span>
+                    <span className="text-[9px] font-semibold text-emerald-400">
+                      {t.clueRecorded}
+                    </span>
                   )}
                 </div>
               </button>
@@ -67,7 +75,7 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
         <button
           onClick={() => setSelectedId(null)}
           className="rounded-lg p-1 text-zinc-300 transition hover:bg-zinc-800"
-          aria-label="Kembali ke galeri"
+          aria-label="Back"
         >
           <ArrowLeft className="h-4 w-4" />
         </button>
@@ -103,11 +111,11 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
             >
               {isClueFound ? (
                 <>
-                  <BookmarkCheck className="h-3.5 w-3.5" /> Sudah Dicatat sebagai Bukti
+                  <BookmarkCheck className="h-3.5 w-3.5" /> {t.alreadyRecorded}
                 </>
               ) : (
                 <>
-                  <BookmarkPlus className="h-3.5 w-3.5" /> Catat Foto sebagai Bukti
+                  <BookmarkPlus className="h-3.5 w-3.5" /> {t.recordPhoto}
                 </>
               )}
             </button>

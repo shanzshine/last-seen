@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import type { ChatMessage, ChatThread, PhotoEvidence } from '../../types/case';
+import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
 import {
   ArrowLeft,
@@ -12,6 +13,7 @@ import {
 } from 'lucide-react';
 
 interface ChatAppProps {
+  lang: Language;
   threads: ChatThread[];
   photos: PhotoEvidence[];
   discoveredClues: string[];
@@ -22,6 +24,7 @@ interface ChatAppProps {
 }
 
 export const ChatApp: React.FC<ChatAppProps> = ({
+  lang,
   threads,
   photos,
   discoveredClues,
@@ -30,6 +33,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   onRecoverThread,
   onOpenPhoto,
 }) => {
+  const t = UI_STRINGS[lang].chat;
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [keywordInput, setKeywordInput] = useState('');
   const [keywordError, setKeywordError] = useState(false);
@@ -54,8 +58,8 @@ export const ChatApp: React.FC<ChatAppProps> = ({
     return (
       <div className="flex h-full flex-col bg-zinc-950">
         <div className="border-b border-zinc-800/80 px-4 py-3">
-          <h2 className="text-base font-bold text-white">Pesan</h2>
-          <p className="text-[11px] text-zinc-400">Ketuk percakapan untuk memeriksa bukti</p>
+          <h2 className="text-base font-bold text-white">{t.title}</h2>
+          <p className="text-[11px] text-zinc-400">{t.subtitle}</p>
         </div>
 
         <div className="phone-scroll flex-1 divide-y divide-zinc-900 overflow-y-auto">
@@ -95,18 +99,18 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                     <span className="shrink-0 text-[10px] text-zinc-500">{lastMsg?.time}</span>
                   </div>
                   <p className="mt-0.5 truncate text-xs text-zinc-400">
-                    {lastMsg?.senderType === 'owner' ? 'Pemilik: ' : ''}
+                    {lastMsg?.senderType === 'owner' ? `${t.ownerPrefix} ` : ''}
                     {lastMsg?.text}
                   </p>
                   <div className="mt-1 flex items-center gap-2">
                     {cluesInThread > 0 && (
                       <span className="text-[10px] font-medium text-emerald-400/90">
-                        Bukti: {foundInThread}/{cluesInThread}
+                        {t.evidencePrefix} {foundInThread}/{cluesInThread}
                       </span>
                     )}
                     {thread.deletedMessages && !isRecovered && (
                       <span className="inline-flex items-center gap-1 rounded bg-rose-500/15 px-1.5 py-0.5 text-[9px] font-semibold text-rose-300">
-                        <Trash2 className="h-2.5 w-2.5" /> {thread.deletedMessages.length} Terhapus
+                        <Trash2 className="h-2.5 w-2.5" /> {thread.deletedMessages.length} {t.deletedBadge}
                       </span>
                     )}
                   </div>
@@ -140,7 +144,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
         >
           {isDeleted && (
             <p className="mb-1 flex items-center gap-1 text-[9px] font-bold uppercase tracking-wider text-rose-300">
-              <RotateCcw className="h-2.5 w-2.5" /> Pesan Dipulihkan
+              <RotateCcw className="h-2.5 w-2.5" /> {t.recoveredTag}
             </p>
           )}
           {activeThread.isGroup && !isOwner && (
@@ -171,11 +175,11 @@ export const ChatApp: React.FC<ChatAppProps> = ({
               >
                 {isClueFound ? (
                   <>
-                    <BookmarkCheck className="h-3 w-3" /> Tercatat
+                    <BookmarkCheck className="h-3 w-3" /> {t.recorded}
                   </>
                 ) : (
                   <>
-                    <BookmarkPlus className="h-3 w-3" /> Catat Bukti
+                    <BookmarkPlus className="h-3 w-3" /> {t.recordClue}
                   </>
                 )}
               </button>
@@ -220,7 +224,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
           >
             <div className="flex items-center gap-1.5 text-[11px] font-bold text-rose-300">
               <Trash2 className="h-3.5 w-3.5" />
-              {activeThread.deletedMessages.length} Pesan Terhapus Terdeteksi
+              {activeThread.deletedMessages.length} {t.deletedDetected}
             </div>
             {activeThread.recoveryHint && (
               <p className="mt-1 text-[10px] leading-relaxed text-zinc-300">
@@ -235,20 +239,18 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                   setKeywordInput(e.target.value);
                   setKeywordError(false);
                 }}
-                placeholder="Kata kunci..."
+                placeholder={t.keywordPlaceholder}
                 className="min-w-0 flex-1 rounded-lg border border-zinc-700 bg-zinc-900 px-2.5 py-1.5 font-mono text-[11px] text-white placeholder:text-zinc-500 focus:border-rose-400 focus:outline-none"
               />
               <button
                 type="submit"
                 className="shrink-0 rounded-lg bg-rose-500 px-3 py-1.5 text-[11px] font-bold text-white transition hover:bg-rose-400"
               >
-                Pulihkan
+                {t.recoverBtn}
               </button>
             </div>
             {keywordError && (
-              <p className="mt-1.5 text-[10px] text-rose-400">
-                Kata kunci tidak cocok di log backup.
-              </p>
+              <p className="mt-1.5 text-[10px] text-rose-400">{t.keywordMismatch}</p>
             )}
           </form>
         )}

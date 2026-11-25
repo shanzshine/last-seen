@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { ALL_CASES, CASE_ROADMAP } from './data/cases';
+import { getCaseRoadmap, getCases } from './data/cases';
 import type { CaseData } from './types/case';
 import { UI_STRINGS, type Language } from './i18n/strings';
 import { sound } from './utils/sound';
@@ -78,6 +78,8 @@ export function App() {
   const toastTimerRef = useRef<number | null>(null);
 
   const t = UI_STRINGS[lang];
+  const cases = useMemo(() => getCases(lang), [lang]);
+  const roadmap = useMemo(() => getCaseRoadmap(lang), [lang]);
 
   useEffect(() => {
     try {
@@ -111,8 +113,8 @@ export function App() {
   };
 
   const activeCase: CaseData | null = useMemo(
-    () => ALL_CASES.find((c) => c.id === activeCaseId) ?? null,
-    [activeCaseId]
+    () => cases.find((c) => c.id === activeCaseId) ?? null,
+    [cases, activeCaseId]
   );
 
   const clueLabelsMap = useMemo(() => {
@@ -246,7 +248,7 @@ export function App() {
               <button
                 onClick={toggleLanguage}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-                title="Ganti Bahasa"
+                title={t.switchLang}
               >
                 <Globe className="h-3.5 w-3.5 text-emerald-400" />
                 {lang.toUpperCase()}
@@ -254,7 +256,7 @@ export function App() {
               <button
                 onClick={toggleMute}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-                title={muted ? 'Nyalakan Suara' : 'Matikan Suara'}
+                title={muted ? t.muteOn : t.muteOff}
               >
                 {muted ? (
                   <VolumeX className="h-4 w-4 text-zinc-500" />
@@ -275,7 +277,7 @@ export function App() {
             </div>
 
             <div className="mt-4 grid gap-4">
-              {CASE_ROADMAP.map((item) => {
+              {roadmap.map((item) => {
                 const rank = progress.solvedRanks[item.id];
                 const cluesCount = progress.discoveredClues[item.id]?.length ?? 0;
 
@@ -303,7 +305,7 @@ export function App() {
                                   : 'bg-rose-500/15 text-rose-300'
                             }`}
                           >
-                            {item.difficulty}
+                            {t.difficulty[item.difficulty]}
                           </span>
                           {rank && (
                             <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300">
@@ -376,9 +378,17 @@ export function App() {
 
           <div className="flex items-center gap-2">
             <button
+              onClick={toggleLanguage}
+              className="inline-flex items-center gap-1 rounded-lg border border-zinc-800 bg-zinc-900 px-2.5 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+              title={t.switchLang}
+            >
+              <Globe className="h-3.5 w-3.5 text-emerald-400" />
+              {lang.toUpperCase()}
+            </button>
+            <button
               onClick={toggleMute}
               className="rounded-lg border border-zinc-800 bg-zinc-900 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
-              title={muted ? 'Nyalakan Suara' : 'Matikan Suara'}
+              title={muted ? t.muteOn : t.muteOff}
             >
               {muted ? (
                 <VolumeX className="h-4 w-4 text-zinc-500" />
@@ -422,7 +432,7 @@ export function App() {
               className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
             >
               <Lightbulb className="h-3.5 w-3.5" />
-              Hint ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
+              {t.deduction.hintLabel} ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
             </button>
           </div>
 
@@ -472,10 +482,10 @@ export function App() {
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
             <div className="flex items-center justify-between">
               <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-300">
-                <Lightbulb className="h-4 w-4" /> Petunjuk (Hint)
+                <Lightbulb className="h-4 w-4" /> {t.hintTitle}
               </span>
               <span className="font-mono text-[11px] text-zinc-400">
-                Sisa {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
+                {t.hintRemaining} {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
               </span>
             </div>
 
@@ -499,8 +509,8 @@ export function App() {
             >
               <Lightbulb className="h-3.5 w-3.5" />
               {activeHintsUsed >= MAX_HINTS
-                ? 'Kuota Hint Habis'
-                : `Buka Hint #${activeHintsUsed + 1} (Memengaruhi Rank S)`}
+                ? t.hintExhausted
+                : `${t.hintOpenPrefix}${activeHintsUsed + 1} ${t.hintRankNote}`}
             </button>
           </div>
         </section>
@@ -554,6 +564,7 @@ export function App() {
 
       {showDeduction && (
         <DeductionModal
+          lang={lang}
           caseData={activeCase}
           discoveredCluesCount={activeClues.length}
           hintsUsed={activeHintsUsed}

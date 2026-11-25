@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import type { CaseData } from '../types/case';
+import { UI_STRINGS, type Language } from '../i18n/strings';
 import { sound } from '../utils/sound';
 import { CheckCircle2, RotateCcw, ShieldAlert, Trophy, X } from 'lucide-react';
 
 interface DeductionModalProps {
+  lang: Language;
   caseData: CaseData;
   discoveredCluesCount: number;
   hintsUsed: number;
@@ -13,6 +15,7 @@ interface DeductionModalProps {
 }
 
 export const DeductionModal: React.FC<DeductionModalProps> = ({
+  lang,
   caseData,
   discoveredCluesCount,
   hintsUsed,
@@ -23,6 +26,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
 
+  const t = UI_STRINGS[lang].deduction;
   const allAnswered = caseData.deductions.every((q) => Boolean(answers[q.id]));
 
   const correctCount = caseData.deductions.filter(
@@ -51,7 +55,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
         <div className="flex items-start justify-between gap-4 border-b border-zinc-800 pb-4">
           <div>
             <p className="font-mono text-[11px] uppercase tracking-widest text-emerald-400">
-              Laporan Investigasi
+              {t.headerTag}
             </p>
             <h2 className="mt-1 text-lg font-bold text-white">
               Case #{caseData.number}: {caseData.title}
@@ -60,7 +64,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
           <button
             onClick={onClose}
             className="rounded-lg p-1.5 text-zinc-400 transition hover:bg-zinc-900 hover:text-white"
-            aria-label="Tutup"
+            aria-label={t.closeBtn}
           >
             <X className="h-5 w-5" />
           </button>
@@ -99,15 +103,18 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
 
             <div className="flex items-center justify-between gap-3 border-t border-zinc-800 pt-4">
               <span className="text-xs text-zinc-400">
-                Bukti: <strong className="text-white">{discoveredCluesCount}/{caseData.totalClues}</strong> • Hint:{' '}
-                <strong className="text-white">{hintsUsed}/2</strong>
+                {t.cluesLabel}:{' '}
+                <strong className="text-white">
+                  {discoveredCluesCount}/{caseData.totalClues}
+                </strong>{' '}
+                • {t.hintLabel}: <strong className="text-white">{hintsUsed}/2</strong>
               </span>
               <button
                 disabled={!allAnswered}
                 onClick={handleSubmit}
                 className="rounded-xl bg-emerald-500 px-5 py-2.5 text-xs font-bold text-zinc-950 transition hover:bg-emerald-400 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Kirim Laporan Polisi
+                {t.submitBtn}
               </button>
             </div>
           </div>
@@ -133,20 +140,20 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                 <h3 className="flex items-center gap-1.5 text-base font-bold text-white">
                   {isAllCorrect ? (
                     <>
-                      <Trophy className="h-4 w-4 text-emerald-400" /> Kasus Terpecahkan!
+                      <Trophy className="h-4 w-4 text-emerald-400" /> {t.solvedTitle}
                     </>
                   ) : (
                     <>
-                      <ShieldAlert className="h-4 w-4 text-amber-400" /> Kasus Ditutup (Sebagian Tepat)
+                      <ShieldAlert className="h-4 w-4 text-amber-400" /> {t.partialTitle}
                     </>
                   )}
                 </h3>
                 <p className="mt-0.5 text-xs text-zinc-300">
                   {rank === 'S'
-                    ? 'Sempurna (Tanpa Hint • Bukti Lengkap)'
+                    ? t.rankSDesc
                     : rank === 'A'
-                      ? `Tepat (${hintsUsed} Hint Dipakai • Bukti ${discoveredCluesCount}/${caseData.totalClues})`
-                      : `Benar ${correctCount}/${caseData.deductions.length} (Ada Deduksi Kurang Tepat)`}
+                      ? `${t.rankADescPrefix} (${hintsUsed} ${t.hintsUsedLabel} • ${t.cluesLabel} ${discoveredCluesCount}/${caseData.totalClues})`
+                      : `${t.rankBPrefix} ${correctCount}/${caseData.deductions.length} ${t.rankBSuffix}`}
                 </p>
               </div>
             </div>
@@ -156,7 +163,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
             </div>
 
             <div className="space-y-2">
-              <p className="text-xs font-semibold text-zinc-400">Ringkasan Jawaban:</p>
+              <p className="text-xs font-semibold text-zinc-400">{t.summaryTitle}</p>
               {caseData.deductions.map((q) => {
                 const isRight = answers[q.id] === q.correctOptionId;
                 return (
@@ -172,10 +179,10 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                     >
                       {isRight ? (
                         <>
-                          <CheckCircle2 className="h-3.5 w-3.5" /> Tepat
+                          <CheckCircle2 className="h-3.5 w-3.5" /> {t.correctLabel}
                         </>
                       ) : (
-                        'Kurang Tepat'
+                        t.wrongLabel
                       )}
                     </span>
                   </div>
@@ -193,13 +200,13 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                 }}
                 className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-700 px-4 py-2 text-xs font-semibold text-zinc-200 transition hover:bg-zinc-900"
               >
-                <RotateCcw className="h-3.5 w-3.5" /> Main Ulang Kasus
+                <RotateCcw className="h-3.5 w-3.5" /> {t.replayBtn}
               </button>
               <button
                 onClick={onClose}
                 className="rounded-xl bg-white px-4 py-2 text-xs font-bold text-zinc-950 transition hover:bg-zinc-200"
               >
-                Kembali
+                {t.closeBtn}
               </button>
             </div>
           </div>

@@ -1,37 +1,6 @@
 export type Language = 'id' | 'en';
 
-export const UI_STRINGS: Record<
-  Language,
-  {
-    statusTag: string;
-    heroDesc: string;
-    caseListTitle: string;
-    autoSaved: string;
-    startCase: string;
-    continueCase: string;
-    locked: string;
-    solvedBadge: string;
-    backToDesk: string;
-    ownerLabel: string;
-    evidenceBtn: string;
-    solveCaseBtn: string;
-    briefingTitle: string;
-    evidenceBoardTitle: string;
-    evidenceEmpty: string;
-    tipsLabel: string;
-    tipsText: string;
-    phoneCloned: string;
-    appMessages: string;
-    appGallery: string;
-    appNotes: string;
-    appMaps: string;
-    reportBtn: string;
-    homeScreen: string;
-    toastClue: string;
-    toastUnlock: string;
-    toastRecover: string;
-  }
-> = {
+export const UI_STRINGS = {
   id: {
     statusTag: 'terakhir dilihat pukul 01:47',
     heroDesc:
@@ -53,6 +22,14 @@ export const UI_STRINGS: Record<
     tipsLabel: 'Tips Investigasi:',
     tipsText:
       'Periksa semua chat, cocokkan waktu di foto Galeri, dan temukan PIN untuk membuka Catatan yang terkunci.',
+    hintTitle: 'Petunjuk (Hint)',
+    hintRemaining: 'Sisa',
+    hintExhausted: 'Kuota Hint Habis',
+    hintOpenPrefix: 'Buka Hint #',
+    hintRankNote: '(Memengaruhi Rank S)',
+    muteOn: 'Nyalakan Suara',
+    muteOff: 'Matikan Suara',
+    switchLang: 'Ganti Bahasa',
     phoneCloned: 'Perangkat Kloning',
     appMessages: 'Pesan',
     appGallery: 'Galeri',
@@ -63,6 +40,66 @@ export const UI_STRINGS: Record<
     toastClue: 'Bukti baru dicatat ke Papan Bukti!',
     toastUnlock: 'Catatan rahasia berhasil dibuka!',
     toastRecover: 'Pesan terhapus berhasil dipulihkan!',
+    difficulty: {
+      Mudah: 'Mudah',
+      Menengah: 'Menengah',
+      Sulit: 'Sulit',
+    },
+    chat: {
+      title: 'Pesan',
+      subtitle: 'Ketuk percakapan untuk memeriksa bukti',
+      evidencePrefix: 'Bukti:',
+      deletedBadge: 'Terhapus',
+      ownerPrefix: 'Pemilik:',
+      recoveredTag: 'Pesan Dipulihkan',
+      recorded: 'Tercatat',
+      recordClue: 'Catat Bukti',
+      deletedDetected: 'Pesan Terhapus Terdeteksi',
+      keywordPlaceholder: 'Kata kunci...',
+      recoverBtn: 'Pulihkan',
+      keywordMismatch: 'Kata kunci tidak cocok di log backup.',
+    },
+    gallery: {
+      title: 'Galeri Foto',
+      filesFound: 'file media ditemukan',
+      clueRecorded: '✓ Bukti tercatat',
+      alreadyRecorded: 'Sudah Dicatat sebagai Bukti',
+      recordPhoto: 'Catat Foto sebagai Bukti',
+    },
+    notes: {
+      title: 'Catatan',
+      subtitle: 'Memo & catatan pribadi pemilik HP',
+      lockedPreview: 'Catatan ini dilindungi PIN 4 digit.',
+      enterPin: 'Masukkan PIN 4 Digit',
+      wrongPin: 'PIN salah, coba lagi!',
+      updatedAt: 'Diperbarui:',
+      alreadyRecorded: 'Sudah Dicatat sebagai Bukti',
+      recordNote: 'Catat Isi Catatan sebagai Bukti',
+    },
+    maps: {
+      title: 'Riwayat Lokasi',
+      subtitle: 'Pelacakan GPS perangkat malam terakhir',
+      recorded: 'Bukti Tercatat',
+      recordLocation: 'Catat Lokasi sebagai Bukti',
+    },
+    deduction: {
+      headerTag: 'Laporan Investigasi',
+      cluesLabel: 'Bukti',
+      hintLabel: 'Hint',
+      submitBtn: 'Kirim Laporan Polisi',
+      solvedTitle: 'Kasus Terpecahkan!',
+      partialTitle: 'Kasus Ditutup (Sebagian Tepat)',
+      rankSDesc: 'Sempurna (Tanpa Hint • Bukti Lengkap)',
+      rankADescPrefix: 'Tepat',
+      hintsUsedLabel: 'Hint Dipakai',
+      rankBPrefix: 'Benar',
+      rankBSuffix: '(Ada Deduksi Kurang Tepat)',
+      summaryTitle: 'Ringkasan Jawaban:',
+      correctLabel: 'Tepat',
+      wrongLabel: 'Kurang Tepat',
+      replayBtn: 'Main Ulang Kasus',
+      closeBtn: 'Kembali',
+    },
   },
   en: {
     statusTag: 'last seen at 01:47',
@@ -81,10 +118,18 @@ export const UI_STRINGS: Record<
     briefingTitle: 'Case Briefing',
     evidenceBoardTitle: 'Evidence Board',
     evidenceEmpty:
-      'No clues recorded yet. Tap "Catat Bukti" on suspicious messages, photos, or notes to pin them here.',
+      'No clues recorded yet. Tap "Record Clue" on suspicious messages, photos, or notes to pin them here.',
     tipsLabel: 'Investigation Tip:',
     tipsText:
       'Check all chats, cross-reference timestamps in Gallery photos, and find the PIN to unlock hidden Notes.',
+    hintTitle: 'Hints',
+    hintRemaining: 'Left',
+    hintExhausted: 'No Hints Left',
+    hintOpenPrefix: 'Reveal Hint #',
+    hintRankNote: '(Affects S Rank)',
+    muteOn: 'Unmute Audio',
+    muteOff: 'Mute Audio',
+    switchLang: 'Switch Language',
     phoneCloned: 'Cloned Device',
     appMessages: 'Messages',
     appGallery: 'Gallery',
@@ -95,6 +140,65 @@ export const UI_STRINGS: Record<
     toastClue: 'New clue pinned to Evidence Board!',
     toastUnlock: 'Locked note unlocked!',
     toastRecover: 'Deleted messages recovered!',
+    difficulty: {
+      Mudah: 'Easy',
+      Menengah: 'Medium',
+      Sulit: 'Hard',
+    },
+    chat: {
+      title: 'Messages',
+      subtitle: 'Tap a conversation to inspect evidence',
+      evidencePrefix: 'Clues:',
+      deletedBadge: 'Deleted',
+      ownerPrefix: 'Owner:',
+      recoveredTag: 'Recovered Message',
+      recorded: 'Pinned',
+      recordClue: 'Record Clue',
+      deletedDetected: 'Deleted Messages Detected',
+      keywordPlaceholder: 'Keyword...',
+      recoverBtn: 'Recover',
+      keywordMismatch: 'Keyword does not match backup logs.',
+    },
+    gallery: {
+      title: 'Photo Gallery',
+      filesFound: 'media files found',
+      clueRecorded: '✓ Clue pinned',
+      alreadyRecorded: 'Already Pinned as Evidence',
+      recordPhoto: 'Pin Photo as Evidence',
+    },
+    notes: {
+      title: 'Notes',
+      subtitle: 'Personal memos & private notes',
+      lockedPreview: 'This note is protected by a 4-digit PIN.',
+      enterPin: 'Enter 4-Digit PIN',
+      wrongPin: 'Wrong PIN, try again!',
+      updatedAt: 'Updated:',
+      alreadyRecorded: 'Already Pinned as Evidence',
+      recordNote: 'Pin Note as Evidence',
+    },
+    maps: {
+      title: 'Location History',
+      subtitle: 'Device GPS tracking from last night',
+      recorded: 'Clue Pinned',
+      recordLocation: 'Pin Location as Evidence',
+    },
+    deduction: {
+      headerTag: 'Investigation Report',
+      cluesLabel: 'Clues',
+      hintLabel: 'Hints',
+      submitBtn: 'Submit Police Report',
+      solvedTitle: 'Case Solved!',
+      partialTitle: 'Case Closed (Partially Correct)',
+      rankSDesc: 'Flawless (No Hints • Full Evidence)',
+      rankADescPrefix: 'Accurate',
+      hintsUsedLabel: 'Hints Used',
+      rankBPrefix: 'Correct',
+      rankBSuffix: '(Some Deductions Missed)',
+      summaryTitle: 'Answer Summary:',
+      correctLabel: 'Correct',
+      wrongLabel: 'Incorrect',
+      replayBtn: 'Replay Case',
+      closeBtn: 'Close',
+    },
   },
-};
-
+} as const;
