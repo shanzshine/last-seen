@@ -251,3 +251,4 @@ export const CASE_2_EN: CaseData = {
   epiloguePartial:
     'Your report helped reopen the investigation into Bima’s death, though some missed deductions gave Rendy time to try covering his tracks before authorities finally arrested him.',
 };
+

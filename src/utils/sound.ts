@@ -1,6 +1,10 @@
 class SoundEngine {
   private ctx: AudioContext | null = null;
   private muted = false;
+  private ambientGain: GainNode | null = null;
+  private ambientOsc1: OscillatorNode | null = null;
+  private ambientOsc2: OscillatorNode | null = null;
+  private ambientRunning = false;
 
   constructor() {
     try {
@@ -37,10 +41,63 @@ class SoundEngine {
     } catch {
       // ignore storage errors
     }
-    if (!this.muted) {
+    if (this.muted) {
+      this.stopAmbient();
+    } else {
       this.playTap();
     }
     return this.muted;
+  }
+
+  startAmbient() {
+    const ctx = this.getContext();
+    if (!ctx || this.ambientRunning) return;
+
+    const masterGain = ctx.createGain();
+    masterGain.gain.setValueAtTime(0.0001, ctx.currentTime);
+    masterGain.gain.exponentialRampToValueAtTime(0.022, ctx.currentTime + 1.5);
+
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(160, ctx.currentTime);
+
+    const osc1 = ctx.createOscillator();
+    osc1.type = 'sine';
+    osc1.frequency.setValueAtTime(55, ctx.currentTime);
+
+    const osc2 = ctx.createOscillator();
+    osc2.type = 'triangle';
+    osc2.frequency.setValueAtTime(82.41, ctx.currentTime);
+
+    osc1.connect(filter);
+    osc2.connect(filter);
+    filter.connect(masterGain);
+    masterGain.connect(ctx.destination);
+
+    osc1.start();
+    osc2.start();
+
+    this.ambientGain = masterGain;
+    this.ambientOsc1 = osc1;
+    this.ambientOsc2 = osc2;
+    this.ambientRunning = true;
+  }
+
+  stopAmbient() {
+    if (!this.ambientRunning || !this.ctx) return;
+    try {
+      if (this.ambientGain) {
+        this.ambientGain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.3);
+      }
+      this.ambientOsc1?.stop(this.ctx.currentTime + 0.35);
+      this.ambientOsc2?.stop(this.ctx.currentTime + 0.35);
+    } catch {
+      // ignore
+    }
+    this.ambientOsc1 = null;
+    this.ambientOsc2 = null;
+    this.ambientGain = null;
+    this.ambientRunning = false;
   }
 
   private playTone(
@@ -108,4 +165,3 @@ class SoundEngine {
 }
 
 export const sound = new SoundEngine();
-

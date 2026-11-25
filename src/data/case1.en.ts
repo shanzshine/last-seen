@@ -326,3 +326,4 @@ export const CASE_1_EN: CaseData = {
   epiloguePartial:
     'Your report was sent to the police, but because some deductions were off, the investigation was delayed for a few hours before officers finally checked the back shed. Make sure to cross-check every clue in the next case!',
 };
+

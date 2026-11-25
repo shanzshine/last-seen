@@ -64,10 +64,10 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const totalUnread = caseData.chats.reduce((acc, c) => acc + (c.unreadCount ?? 0), 0);
 
   return (
-    <div className="relative mx-auto flex h-[640px] w-full max-w-[340px] flex-col overflow-hidden rounded-[40px] border-[6px] border-zinc-800 bg-zinc-950 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.85)] ring-1 ring-white/10">
-      {/* Subtle Cracked Glass & Vignette Overlay */}
+    <div className="relative mx-auto flex h-[640px] w-full max-w-[340px] flex-col overflow-hidden rounded-[42px] border-[6px] border-zinc-800/90 bg-zinc-950 shadow-[0_0_80px_-18px_rgba(16,185,129,0.28),0_25px_70px_-15px_rgba(0,0,0,0.95)] ring-1 ring-emerald-400/15">
+      {/* Subtle Cracked Glass, Scanlines & Vignette Overlay */}
       <svg
-        className="pointer-events-none absolute right-0 top-0 z-30 h-32 w-32 opacity-20"
+        className="pointer-events-none absolute right-0 top-0 z-30 h-36 w-36 opacity-25"
         viewBox="0 0 120 120"
         fill="none"
       >
@@ -78,7 +78,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           strokeLinecap="round"
         />
       </svg>
-      <div className="pointer-events-none absolute inset-0 z-20 rounded-[34px] shadow-[inset_0_0_32px_rgba(0,0,0,0.55)]" />
+      <div className="screen-scanlines pointer-events-none absolute inset-0 z-20 opacity-20" />
+      <div className="pointer-events-none absolute inset-0 z-20 rounded-[36px] shadow-[inset_0_0_38px_rgba(0,0,0,0.65)]" />
 
       {/* Toast Notification Banner */}
       <AnimatePresence>
@@ -97,12 +98,14 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
       </AnimatePresence>
 
       {/* Status Bar */}
-      <div className="z-20 flex items-center justify-between bg-black/50 px-6 pb-2 pt-3 text-[11px] font-medium text-zinc-200 backdrop-blur-md">
+      <div className="z-20 flex items-center justify-between bg-black/60 px-6 pb-2 pt-3 text-[11px] font-medium text-zinc-200 backdrop-blur-md">
         <span className="font-mono tracking-tight">{caseData.lastSeenTime.slice(0, 5)}</span>
-        <div className="h-4 w-20 rounded-full bg-black ring-1 ring-zinc-800" />
+        <div className="flex h-4 w-20 items-center justify-end rounded-full bg-black px-2 ring-1 ring-zinc-800">
+          <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400/80" />
+        </div>
         <div className="flex items-center gap-1.5 text-zinc-300">
           <Wifi className="h-3.5 w-3.5" />
-          <BatteryMedium className="h-4 w-4 text-rose-400" />
+          <BatteryMedium className="h-4 w-4 animate-pulse text-rose-400" />
         </div>
       </div>
 
@@ -118,14 +121,19 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               transition={{ duration: 0.16 }}
               className={`flex h-full flex-col justify-between bg-gradient-to-b ${caseData.wallpaperGradient} p-5`}
             >
-              <div className="mt-4 text-center">
-                <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-emerald-300/80">
+              <div className="relative mt-3 text-center">
+                <div className="pointer-events-none absolute left-1/2 top-4 h-28 w-28 -translate-x-1/2 rounded-full bg-emerald-500/15 blur-2xl" />
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-emerald-300/85">
                   {t.phoneCloned}
                 </p>
-                <h3 className="mt-1 text-xl font-bold text-white">{caseData.ownerName}</h3>
-                <p className="mt-0.5 font-mono text-xs text-zinc-300/80">
-                  Last Seen: {caseData.lastSeenTime}
+                <p className="mt-1.5 font-mono text-4xl font-black tracking-tight text-white/95">
+                  {caseData.lastSeenTime.slice(0, 5)}
                 </p>
+                <h3 className="mt-1 text-sm font-semibold text-zinc-200">{caseData.ownerName}</h3>
+                <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-full border border-rose-500/30 bg-rose-500/10 px-2.5 py-0.5 font-mono text-[10px] text-rose-300">
+                  <span className="h-1.5 w-1.5 rounded-full bg-rose-400" />
+                  Last Seen: {caseData.lastSeenTime}
+                </span>
               </div>
 
               <div className="grid grid-cols-3 gap-4 px-1">

@@ -225,10 +225,33 @@ export function App() {
     }));
   };
 
+  useEffect(() => {
+    if (activeCaseId && !muted) {
+      sound.startAmbient();
+    } else {
+      sound.stopAmbient();
+    }
+    return () => {
+      sound.stopAmbient();
+    };
+  }, [activeCaseId, muted]);
+
   if (!activeCase) {
     return (
-      <div className="min-h-screen bg-zinc-950 text-zinc-100">
-        <div className="mx-auto max-w-4xl px-5 py-10 sm:py-12">
+      <div className="forensic-grid relative min-h-screen overflow-hidden bg-[#05070a] text-zinc-100">
+        {/* Ambient Lighting Orbs */}
+        <div className="pointer-events-none fixed -left-32 -top-32 h-96 w-96 rounded-full bg-emerald-500/10 blur-[120px]" />
+        <div className="pointer-events-none fixed -bottom-32 -right-32 h-96 w-96 rounded-full bg-rose-500/10 blur-[120px]" />
+
+        <div className="relative z-10 mx-auto max-w-4xl px-5 py-10 sm:py-12">
+          {/* Forensic Terminal Strip */}
+          <div className="mb-6 flex items-center justify-between rounded-xl border border-zinc-800/80 bg-zinc-900/40 px-3.5 py-2 font-mono text-[10px] text-zinc-400 backdrop-blur-md">
+            <span className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 shadow-[0_0_8px_#34d399]" />
+              FORENSIC DESK // ENCRYPTED CLONE v2.4
+            </span>
+            <span className="hidden sm:inline text-zinc-500">SESSION: ACTIVE</span>
+          </div>
           {/* Header */}
           <div className="flex flex-col items-start justify-between gap-4 border-b border-zinc-800/80 pb-8 sm:flex-row sm:items-end">
             <div>
@@ -352,9 +375,10 @@ export function App() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100">
+    <div className="forensic-grid relative min-h-screen overflow-hidden bg-[#05070a] text-zinc-100">
+      <div className="pointer-events-none fixed left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/8 blur-[140px]" />
       {/* Top Bar */}
-      <header className="border-b border-zinc-800/80 bg-zinc-950/90 px-4 py-3 backdrop-blur-md">
+      <header className="relative z-20 border-b border-zinc-800/80 bg-zinc-950/80 px-4 py-3 backdrop-blur-md">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-3">
           <div className="flex items-center gap-3">
             <button
@@ -465,7 +489,7 @@ export function App() {
       )}
 
       {/* Main Workspace */}
-      <main className="mx-auto grid max-w-6xl gap-8 px-4 py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
+      <main className="relative z-10 mx-auto grid max-w-6xl gap-8 px-4 py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
