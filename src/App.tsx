@@ -10,6 +10,7 @@ import {
   BookmarkCheck,
   ClipboardList,
   Globe,
+  Lightbulb,
   Lock,
   Play,
   Search,
@@ -22,20 +23,38 @@ import {
 interface SavedProgress {
   discoveredClues: Record<string, string[]>;
   unlockedNotes: Record<string, string[]>;
+  recoveredThreads: Record<string, string[]>;
+  hintsUsed: Record<string, number>;
   solvedRanks: Record<string, 'S' | 'A' | 'B'>;
 }
 
 const STORAGE_KEY = 'last-seen-save-v1';
 const LANG_KEY = 'last-seen-lang';
+const MAX_HINTS = 2;
 
 const loadProgress = (): SavedProgress => {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) return JSON.parse(raw) as SavedProgress;
+    if (raw) {
+      const parsed = JSON.parse(raw) as Partial<SavedProgress>;
+      return {
+        discoveredClues: parsed.discoveredClues ?? {},
+        unlockedNotes: parsed.unlockedNotes ?? {},
+        recoveredThreads: parsed.recoveredThreads ?? {},
+        hintsUsed: parsed.hintsUsed ?? {},
+        solvedRanks: parsed.solvedRanks ?? {},
+      };
+    }
   } catch {
     // ignore storage errors
   }
-  return { discoveredClues: {}, unlockedNotes: {}, solvedRanks: {} };
+  return {
+    discoveredClues: {},
+    unlockedNotes: {},
+    recoveredThreads: {},
+    hintsUsed: {},
+    solvedRanks: {},
+  };
 };
 
 const loadLang = (): Language => {
@@ -99,22 +118,30 @@ export function App() {
   const clueLabelsMap = useMemo(() => {
     if (!activeCase) return new Map<string, string>();
     const map = new Map<string, string>();
-    activeCase.chats.forEach((t) =>
-      t.messages.forEach((m) => {
+    activeCase.chats.forEach((thread) => {
+      thread.messages.forEach((m) => {
         if (m.clueId && m.clueLabel) map.set(m.clueId, m.clueLabel);
-      })
-    );
+      });
+      thread.deletedMessages?.forEach((m) => {
+        if (m.clueId && m.clueLabel) map.set(m.clueId, m.clueLabel);
+      });
+    });
     activeCase.photos.forEach((p) => {
       if (p.clueId && p.clueLabel) map.set(p.clueId, p.clueLabel);
     });
     activeCase.notes.forEach((n) => {
       if (n.clueId && n.clueLabel) map.set(n.clueId, n.clueLabel);
     });
+    activeCase.locations?.forEach((l) => {
+      if (l.clueId && l.clueLabel) map.set(l.clueId, l.clueLabel);
+    });
     return map;
   }, [activeCase]);
 
   const activeClues = activeCase ? progress.discoveredClues[activeCase.id] ?? [] : [];
   const activeUnlockedNotes = activeCase ? progress.unlockedNotes[activeCase.id] ?? [] : [];
+  const activeRecoveredThreads = activeCase ? progress.recoveredThreads[activeCase.id] ?? [] : [];
+  const activeHintsUsed = activeCase ? progress.hintsUsed[activeCase.id] ?? 0 : 0;
 
   const handleDiscoverClue = (clueId: string) => {
     if (!activeCase) return;
@@ -147,6 +174,33 @@ export function App() {
     }));
   };
 
+  const handleRecoverThread = (threadId: string) => {
+    if (!activeCase) return;
+    const existing = progress.recoveredThreads[activeCase.id] ?? [];
+    if (existing.includes(threadId)) return;
+
+    showToast(t.toastRecover);
+    setProgress((prev) => ({
+      ...prev,
+      recoveredThreads: {
+        ...prev.recoveredThreads,
+        [activeCase.id]: [...(prev.recoveredThreads[activeCase.id] ?? []), threadId],
+      },
+    }));
+  };
+
+  const handleUseHint = () => {
+    if (!activeCase || activeHintsUsed >= MAX_HINTS) return;
+    sound.playTap();
+    setProgress((prev) => ({
+      ...prev,
+      hintsUsed: {
+        ...prev.hintsUsed,
+        [activeCase.id]: (prev.hintsUsed[activeCase.id] ?? 0) + 1,
+      },
+    }));
+  };
+
   const handleCaseSolved = (rank: 'S' | 'A' | 'B') => {
     if (!activeCase) return;
     setProgress((prev) => ({
@@ -164,6 +218,8 @@ export function App() {
       ...prev,
       discoveredClues: { ...prev.discoveredClues, [activeCase.id]: [] },
       unlockedNotes: { ...prev.unlockedNotes, [activeCase.id]: [] },
+      recoveredThreads: { ...prev.recoveredThreads, [activeCase.id]: [] },
+      hintsUsed: { ...prev.hintsUsed, [activeCase.id]: 0 },
     }));
   };
 
@@ -350,16 +406,41 @@ export function App() {
         </div>
       </header>
 
-      {/* Mobile Clue Drawer */}
+      {/* Mobile Clue & Hint Drawer */}
       {mobileCluesOpen && (
         <div className="border-b border-zinc-800 bg-zinc-900/90 p-4 lg:hidden">
           <p className="text-xs font-bold text-white">{t.briefingTitle}</p>
           <p className="mt-1 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
-          <p className="mt-3 text-xs font-bold text-emerald-400">
-            {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
-          </p>
+
+          <div className="mt-3 flex items-center justify-between">
+            <p className="text-xs font-bold text-emerald-400">
+              {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
+            </p>
+            <button
+              disabled={activeHintsUsed >= MAX_HINTS}
+              onClick={handleUseHint}
+              className="inline-flex items-center gap-1 rounded-lg border border-amber-500/30 bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
+            >
+              <Lightbulb className="h-3.5 w-3.5" />
+              Hint ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
+            </button>
+          </div>
+
+          {activeHintsUsed > 0 && (
+            <div className="mt-2 space-y-1.5">
+              {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
+                <p
+                  key={idx}
+                  className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-200"
+                >
+                  💡 Hint {idx + 1}: {hint}
+                </p>
+              ))}
+            </div>
+          )}
+
           {activeClues.length === 0 ? (
-            <p className="mt-1 text-xs text-zinc-500">{t.evidenceEmpty}</p>
+            <p className="mt-2 text-xs text-zinc-500">{t.evidenceEmpty}</p>
           ) : (
             <ul className="mt-2 space-y-1.5">
               {activeClues.map((id) => (
@@ -375,7 +456,7 @@ export function App() {
 
       {/* Main Workspace */}
       <main className="mx-auto grid max-w-6xl gap-8 px-4 py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
-        {/* Left: Briefing */}
+        {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
             <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
@@ -387,6 +468,41 @@ export function App() {
               <strong className="text-zinc-200">{t.tipsLabel}</strong> {t.tipsText}
             </div>
           </div>
+
+          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+            <div className="flex items-center justify-between">
+              <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-300">
+                <Lightbulb className="h-4 w-4" /> Petunjuk (Hint)
+              </span>
+              <span className="font-mono text-[11px] text-zinc-400">
+                Sisa {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
+              </span>
+            </div>
+
+            {activeHintsUsed > 0 && (
+              <div className="mt-3 space-y-2">
+                {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
+                  <div
+                    key={idx}
+                    className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-100"
+                  >
+                    <strong className="text-amber-300">Hint #{idx + 1}:</strong> {hint}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            <button
+              disabled={activeHintsUsed >= MAX_HINTS}
+              onClick={handleUseHint}
+              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl border border-amber-500/30 bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              <Lightbulb className="h-3.5 w-3.5" />
+              {activeHintsUsed >= MAX_HINTS
+                ? 'Kuota Hint Habis'
+                : `Buka Hint #${activeHintsUsed + 1} (Memengaruhi Rank S)`}
+            </button>
+          </div>
         </section>
 
         {/* Center: Cloned Phone */}
@@ -396,9 +512,11 @@ export function App() {
             lang={lang}
             discoveredClues={activeClues}
             unlockedNoteIds={activeUnlockedNotes}
+            recoveredThreadIds={activeRecoveredThreads}
             toastMessage={toastMessage}
             onDiscoverClue={handleDiscoverClue}
             onUnlockNote={handleUnlockNote}
+            onRecoverThread={handleRecoverThread}
             onOpenDeduction={() => setShowDeduction(true)}
           />
         </section>
@@ -438,6 +556,7 @@ export function App() {
         <DeductionModal
           caseData={activeCase}
           discoveredCluesCount={activeClues.length}
+          hintsUsed={activeHintsUsed}
           onClose={() => setShowDeduction(false)}
           onCaseSolved={handleCaseSolved}
           onResetCase={handleResetCase}

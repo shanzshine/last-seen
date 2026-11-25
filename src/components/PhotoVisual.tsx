@@ -1,6 +1,15 @@
 import React from 'react';
 import type { PhotoEvidence } from '../types/case';
-import { Coffee, KeyRound, LockOpen, Train } from 'lucide-react';
+import {
+  BadgeCheck,
+  Coffee,
+  FileSpreadsheet,
+  KeyRound,
+  LockOpen,
+  ShieldAlert,
+  Ticket,
+  Train,
+} from 'lucide-react';
 
 interface PhotoVisualProps {
   visualType: PhotoEvidence['visualType'];
@@ -46,7 +55,7 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
                 <span>1x Matcha Latte</span>
                 <span>28.000</span>
               </div>
-              <div className="border-t border-dashed border-stone-400 pt-1 flex justify-between font-bold">
+              <div className="flex justify-between border-t border-dashed border-stone-400 pt-1 font-bold">
                 <span>TOTAL</span>
                 <span>Rp 52.000</span>
               </div>
@@ -72,6 +81,91 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
                 Area gudang belakang gelap, lampu lorong mati.
               </p>
             </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'audit-transfer') {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-slate-900 to-zinc-950 p-3">
+        <div className={`w-full max-w-[230px] rounded-lg border border-amber-400/30 bg-zinc-900 font-mono text-zinc-100 shadow-lg ${compact ? 'p-2 text-[8px]' : 'p-4 text-[11px]'}`}>
+          <div className="flex items-center gap-1.5 border-b border-zinc-700 pb-1.5 font-bold text-amber-300">
+            <FileSpreadsheet className={compact ? 'h-3 w-3' : 'h-4 w-4'} />
+            <span>INTERNAL AUDIT</span>
+          </div>
+          {!compact && (
+            <div className="mt-2 space-y-1.5 text-[10px]">
+              <p className="text-zinc-400">Tujuan Dana:</p>
+              <p className="rounded bg-rose-500/20 px-2 py-1 font-bold text-rose-300">
+                PROYEK HELIOS
+              </p>
+              <div className="flex justify-between pt-1">
+                <span className="text-zinc-400">Nominal:</span>
+                <span className="font-bold text-white">Rp 4.000.000.000</span>
+              </div>
+              <p className="text-[9px] text-amber-400/80">Status: Tanpa Otorisasi Direksi</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'access-card') {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-cyan-950 via-slate-900 to-zinc-950 p-3">
+        <div className={`w-full max-w-[220px] rounded-xl border border-cyan-400/30 bg-cyan-950/60 text-cyan-50 shadow-lg ${compact ? 'p-2 text-[9px]' : 'p-4 text-xs'}`}>
+          <div className="flex items-center justify-between border-b border-cyan-400/20 pb-1.5">
+            <span className="font-bold tracking-wide text-cyan-300">NUSATECH ID</span>
+            <BadgeCheck className={compact ? 'h-3.5 w-3.5 text-cyan-300' : 'h-4 w-4 text-cyan-300'} />
+          </div>
+          {!compact && (
+            <div className="mt-3 space-y-1 font-mono">
+              <p className="text-xs font-bold text-white">BIMA PRATAMA</p>
+              <p className="text-[10px] text-cyan-200/80">Finance Manager • Lt. 12</p>
+              <div className="mt-2 inline-block rounded bg-black/40 px-2.5 py-1 text-xs font-bold tracking-widest text-amber-300">
+                ID: 4821
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'office-cctv') {
+    return (
+      <div className="relative flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-zinc-900 to-black p-4 text-zinc-200">
+        <div className={`flex flex-col items-center rounded-xl border border-emerald-500/30 bg-emerald-950/20 ${compact ? 'p-2.5' : 'p-4 text-center'}`}>
+          <ShieldAlert className={`${compact ? 'h-6 w-6' : 'h-10 w-10'} text-emerald-400`} />
+          {!compact && (
+            <div className="mt-2 space-y-1 font-mono text-[10px]">
+              <p className="font-bold text-emerald-300">ACCESS LOG: LT. 12</p>
+              <p className="text-zinc-300">Pintu Utama Dibuka: 02:02 WIB</p>
+              <p className="text-amber-300">Kartu: VIP / FOUNDER ACCESS</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'toll-receipt') {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-purple-950 to-zinc-950 p-3">
+        <div className={`w-full max-w-[210px] rounded-sm bg-zinc-100 font-mono text-zinc-800 shadow-md ${compact ? 'p-2 text-[8px]' : 'p-4 text-[11px]'}`}>
+          <div className="flex items-center justify-center gap-1 border-b border-dashed border-zinc-400 pb-1 font-bold">
+            <Ticket className={compact ? 'h-3 w-3' : 'h-4 w-4'} />
+            <span>E-TOLL JASA MARGA</span>
+          </div>
+          {!compact && (
+            <div className="mt-2 space-y-1 text-[10px]">
+              <p className="font-bold">GT BEKASI BARAT</p>
+              <p className="text-zinc-600">Waktu: 22:46 WIB</p>
+              <p className="text-emerald-700 font-bold">TRANSAKSI BERHASIL</p>
+            </div>
           )}
         </div>
       </div>

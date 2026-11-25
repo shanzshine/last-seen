@@ -1,4 +1,5 @@
 import { CASE_1 } from './case1';
+import { CASE_2 } from './case2';
 import type { CaseData } from '../types/case';
 
 export interface CasePreview {
@@ -11,7 +12,7 @@ export interface CasePreview {
   newMechanicHint: string;
 }
 
-export const ALL_CASES: CaseData[] = [CASE_1];
+export const ALL_CASES: CaseData[] = [CASE_1, CASE_2];
 
 export const CASE_ROADMAP: CasePreview[] = [
   {
@@ -24,13 +25,13 @@ export const CASE_ROADMAP: CasePreview[] = [
     newMechanicHint: 'Chat, Galeri Foto & PIN Catatan Rahasia',
   },
   {
-    id: 'case-02-meja-0214',
+    id: CASE_2.id,
     number: 2,
-    title: 'Meja Kerja 02.14',
-    subtitle: 'Skandal & Kematian di Startup Tengah Malam',
-    difficulty: 'Menengah',
-    isUnlocked: false,
-    newMechanicHint: 'Segera Hadir: Riwayat Lokasi (Maps) & Pemulihan Chat Terhapus',
+    title: CASE_2.title,
+    subtitle: CASE_2.subtitle,
+    difficulty: CASE_2.difficulty,
+    isUnlocked: true,
+    newMechanicHint: 'Mekanik Baru: Riwayat Lokasi (Maps) & Pemulihan Chat Terhapus',
   },
   {
     id: 'case-03-penumpang',

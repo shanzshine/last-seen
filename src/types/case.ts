@@ -22,6 +22,9 @@ export interface ChatThread {
   statusText: string;
   unreadCount?: number;
   messages: ChatMessage[];
+  deletedMessages?: ChatMessage[];
+  recoveryKeyword?: string;
+  recoveryHint?: string;
 }
 
 export interface PhotoEvidence {
@@ -29,7 +32,15 @@ export interface PhotoEvidence {
   title: string;
   timestamp: string;
   location: string;
-  visualType: 'cafe-receipt' | 'room-key' | 'side-gate' | 'train-ticket';
+  visualType:
+    | 'cafe-receipt'
+    | 'room-key'
+    | 'side-gate'
+    | 'train-ticket'
+    | 'access-card'
+    | 'audit-transfer'
+    | 'office-cctv'
+    | 'toll-receipt';
   caption: string;
   clueId?: string;
   clueLabel?: string;
@@ -43,6 +54,16 @@ export interface NoteItem {
   pinCode?: string;
   pinHint?: string;
   content: string;
+  clueId?: string;
+  clueLabel?: string;
+}
+
+export interface LocationLog {
+  id: string;
+  time: string;
+  place: string;
+  address: string;
+  note: string;
   clueId?: string;
   clueLabel?: string;
 }
@@ -72,9 +93,10 @@ export interface CaseData {
   chats: ChatThread[];
   photos: PhotoEvidence[];
   notes: NoteItem[];
+  locations?: LocationLog[];
+  hints: string[];
   totalClues: number;
   deductions: DeductionQuestion[];
   epilogueSuccess: string;
   epiloguePartial: string;
 }
-

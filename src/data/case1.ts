@@ -11,6 +11,10 @@ export const CASE_1: CaseData = {
   briefing:
     'Nadia Putri (22), mahasiswi penghuni Kamar 07 Kos Melati, tidak bisa dihubungi sejak dini hari. Pagi ini HP-nya ditemukan tergeletak dekat gerbang kos dengan layar sedikit retak. Periksa isi HP Nadia, kumpulkan bukti, dan temukan siapa yang berbohong.',
   wallpaperGradient: 'from-slate-900 via-indigo-950 to-zinc-950',
+  hints: [
+    'Untuk membuka Catatan yang terkunci, cek foto gantungan kunci di Galeri dan perhatikan tanggal masuk Kos Melati (DDMM).',
+    'Bandingkan pengakuan tidur Siska di Grup Kos Melati dengan jam pesan pribadinya kepada Nadia.',
+  ],
   totalClues: 6,
   chats: [
     {

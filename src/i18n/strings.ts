@@ -24,10 +24,12 @@ export const UI_STRINGS: Record<
     appMessages: string;
     appGallery: string;
     appNotes: string;
+    appMaps: string;
     reportBtn: string;
     homeScreen: string;
     toastClue: string;
     toastUnlock: string;
+    toastRecover: string;
   }
 > = {
   id: {
@@ -55,10 +57,12 @@ export const UI_STRINGS: Record<
     appMessages: 'Pesan',
     appGallery: 'Galeri',
     appNotes: 'Catatan',
+    appMaps: 'Maps',
     reportBtn: 'Laporkan & Pecahkan Kasus',
     homeScreen: 'Layar Utama',
     toastClue: 'Bukti baru dicatat ke Papan Bukti!',
     toastUnlock: 'Catatan rahasia berhasil dibuka!',
+    toastRecover: 'Pesan terhapus berhasil dipulihkan!',
   },
   en: {
     statusTag: 'last seen at 01:47',
@@ -85,10 +89,12 @@ export const UI_STRINGS: Record<
     appMessages: 'Messages',
     appGallery: 'Gallery',
     appNotes: 'Notes',
+    appMaps: 'Maps',
     reportBtn: 'Submit Investigation Report',
     homeScreen: 'Home Screen',
     toastClue: 'New clue pinned to Evidence Board!',
     toastUnlock: 'Locked note unlocked!',
+    toastRecover: 'Deleted messages recovered!',
   },
 };
 

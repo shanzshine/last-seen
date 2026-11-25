@@ -6,6 +6,7 @@ import { CheckCircle2, RotateCcw, ShieldAlert, Trophy, X } from 'lucide-react';
 interface DeductionModalProps {
   caseData: CaseData;
   discoveredCluesCount: number;
+  hintsUsed: number;
   onClose: () => void;
   onCaseSolved: (rank: 'S' | 'A' | 'B') => void;
   onResetCase: () => void;
@@ -14,6 +15,7 @@ interface DeductionModalProps {
 export const DeductionModal: React.FC<DeductionModalProps> = ({
   caseData,
   discoveredCluesCount,
+  hintsUsed,
   onClose,
   onCaseSolved,
   onResetCase,
@@ -29,7 +31,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
   const isAllCorrect = correctCount === caseData.deductions.length;
 
   const getRank = (): 'S' | 'A' | 'B' => {
-    if (isAllCorrect && discoveredCluesCount >= 4) return 'S';
+    if (isAllCorrect && hintsUsed === 0 && discoveredCluesCount >= 4) return 'S';
     if (isAllCorrect) return 'A';
     return 'B';
   };
@@ -40,6 +42,8 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
     setSubmitted(true);
     onCaseSolved(getRank());
   };
+
+  const rank = getRank();
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm">
@@ -75,7 +79,10 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                     return (
                       <button
                         key={opt.id}
-                        onClick={() => setAnswers((prev) => ({ ...prev, [q.id]: opt.id }))}
+                        onClick={() => {
+                          sound.playTap();
+                          setAnswers((prev) => ({ ...prev, [q.id]: opt.id }));
+                        }}
                         className={`w-full rounded-xl border px-3.5 py-2.5 text-left text-xs transition ${
                           selected
                             ? 'border-emerald-500 bg-emerald-500/15 font-semibold text-emerald-200'
@@ -92,7 +99,8 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
 
             <div className="flex items-center justify-between gap-3 border-t border-zinc-800 pt-4">
               <span className="text-xs text-zinc-400">
-                Bukti tercatat: <strong className="text-white">{discoveredCluesCount}/{caseData.totalClues}</strong>
+                Bukti: <strong className="text-white">{discoveredCluesCount}/{caseData.totalClues}</strong> • Hint:{' '}
+                <strong className="text-white">{hintsUsed}/2</strong>
               </span>
               <button
                 disabled={!allAnswered}
@@ -119,7 +127,7 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                     : 'bg-amber-500 text-zinc-950'
                 }`}
               >
-                {getRank()}
+                {rank}
               </div>
               <div>
                 <h3 className="flex items-center gap-1.5 text-base font-bold text-white">
@@ -134,8 +142,11 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
                   )}
                 </h3>
                 <p className="mt-0.5 text-xs text-zinc-300">
-                  Jawaban benar: {correctCount}/{caseData.deductions.length} • Bukti dicatat:{' '}
-                  {discoveredCluesCount}/{caseData.totalClues}
+                  {rank === 'S'
+                    ? 'Sempurna (Tanpa Hint • Bukti Lengkap)'
+                    : rank === 'A'
+                      ? `Tepat (${hintsUsed} Hint Dipakai • Bukti ${discoveredCluesCount}/${caseData.totalClues})`
+                      : `Benar ${correctCount}/${caseData.deductions.length} (Ada Deduksi Kurang Tepat)`}
                 </p>
               </div>
             </div>

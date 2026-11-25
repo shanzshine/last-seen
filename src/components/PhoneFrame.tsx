@@ -5,6 +5,7 @@ import { sound } from '../utils/sound';
 import { ChatApp } from './apps/ChatApp';
 import { GalleryApp } from './apps/GalleryApp';
 import { NotesApp } from './apps/NotesApp';
+import { MapsApp } from './apps/MapsApp';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   BatteryMedium,
@@ -12,21 +13,24 @@ import {
   FileCheck2,
   Home,
   Image as ImageIcon,
+  MapPin,
   MessageSquare,
   StickyNote,
   Wifi,
 } from 'lucide-react';
 
-type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes';
+type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps';
 
 interface PhoneFrameProps {
   caseData: CaseData;
   lang: Language;
   discoveredClues: string[];
   unlockedNoteIds: string[];
+  recoveredThreadIds: string[];
   toastMessage: string | null;
   onDiscoverClue: (clueId: string) => void;
   onUnlockNote: (noteId: string) => void;
+  onRecoverThread: (threadId: string) => void;
   onOpenDeduction: () => void;
 }
 
@@ -35,9 +39,11 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   lang,
   discoveredClues,
   unlockedNoteIds,
+  recoveredThreadIds,
   toastMessage,
   onDiscoverClue,
   onUnlockNote,
+  onRecoverThread,
   onOpenDeduction,
 }) => {
   const [activeApp, setActiveApp] = useState<ActiveApp>('home');
@@ -92,7 +98,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
 
       {/* Status Bar */}
       <div className="z-20 flex items-center justify-between bg-black/50 px-6 pb-2 pt-3 text-[11px] font-medium text-zinc-200 backdrop-blur-md">
-        <span className="font-mono tracking-tight">01:47</span>
+        <span className="font-mono tracking-tight">{caseData.lastSeenTime.slice(0, 5)}</span>
         <div className="h-4 w-20 rounded-full bg-black ring-1 ring-zinc-800" />
         <div className="flex items-center gap-1.5 text-zinc-300">
           <Wifi className="h-3.5 w-3.5" />
@@ -160,6 +166,18 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                   </div>
                   <span className="text-[11px] font-medium text-zinc-200">{t.appNotes}</span>
                 </button>
+
+                {caseData.locations && caseData.locations.length > 0 && (
+                  <button
+                    onClick={() => openApp('maps')}
+                    className="group flex flex-col items-center gap-1.5"
+                  >
+                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-rose-500 text-white shadow-lg shadow-rose-950/50 transition group-hover:scale-105 group-active:scale-95">
+                      <MapPin className="h-7 w-7" />
+                    </div>
+                    <span className="text-[11px] font-medium text-zinc-200">{t.appMaps}</span>
+                  </button>
+                )}
               </div>
 
               <div className="mb-2">
@@ -190,7 +208,9 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 threads={caseData.chats}
                 photos={caseData.photos}
                 discoveredClues={discoveredClues}
+                recoveredThreadIds={recoveredThreadIds}
                 onDiscoverClue={onDiscoverClue}
+                onRecoverThread={onRecoverThread}
                 onOpenPhoto={openPhotoFromChat}
               />
             </motion.div>
@@ -228,6 +248,23 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 unlockedNoteIds={unlockedNoteIds}
                 discoveredClues={discoveredClues}
                 onUnlockNote={onUnlockNote}
+                onDiscoverClue={onDiscoverClue}
+              />
+            </motion.div>
+          )}
+
+          {activeApp === 'maps' && caseData.locations && (
+            <motion.div
+              key="maps"
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 12 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <MapsApp
+                locations={caseData.locations}
+                discoveredClues={discoveredClues}
                 onDiscoverClue={onDiscoverClue}
               />
             </motion.div>
