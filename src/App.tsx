@@ -77,6 +77,7 @@ export function App() {
   const [progress, setProgress] = useState<SavedProgress>(loadProgress);
   const [lang, setLang] = useState<Language>(loadLang);
   const [muted, setMuted] = useState<boolean>(() => sound.isMuted());
+  const [audioUnlocked, setAudioUnlocked] = useState<boolean>(() => sound.isAudioUnlocked());
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [showDeduction, setShowDeduction] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
@@ -269,15 +270,22 @@ export function App() {
   };
 
   useEffect(() => {
-    if (activeCaseId && !muted) {
-      sound.startAmbient();
+    return sound.onUnlockChange(setAudioUnlocked);
+  }, []);
+
+  useEffect(() => {
+    if (!muted) {
+      sound.startAmbient(activeCaseId ? 'case' : 'home');
     } else {
       sound.stopAmbient();
     }
+  }, [activeCaseId, muted]);
+
+  useEffect(() => {
     return () => {
       sound.stopAmbient();
     };
-  }, [activeCaseId, muted]);
+  }, []);
 
   useEffect(() => {
     if (!baseCase?.liveAlert || liveTriggeredCases.includes(baseCase.id)) return;
@@ -342,13 +350,25 @@ export function App() {
               </button>
               <button
                 onClick={toggleMute}
-                className="inline-flex items-center rounded-lg bg-zinc-900 p-1.5 text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
-                title={muted ? t.muteOn : t.muteOff}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-2 py-1.5 text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                title={muted ? t.muteOn : !audioUnlocked ? t.audioTapHint : t.muteOff}
               >
                 {muted ? (
                   <VolumeX className="h-3.5 w-3.5 text-zinc-500" />
                 ) : (
-                  <Volume2 className="h-3.5 w-3.5 text-zinc-300" />
+                  <>
+                    <span className="relative inline-flex">
+                      <Volume2 className="h-3.5 w-3.5 text-zinc-200" />
+                      {!audioUnlocked && (
+                        <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-ping rounded-full bg-red-500" />
+                      )}
+                    </span>
+                    {!audioUnlocked && (
+                      <span className="hidden text-[10px] font-semibold text-zinc-300 sm:inline">
+                        {t.audioTapHint}
+                      </span>
+                    )}
+                  </>
                 )}
               </button>
             </div>
@@ -822,12 +842,17 @@ export function App() {
             <button
               onClick={toggleMute}
               className="rounded-lg bg-zinc-900/90 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
-              title={muted ? t.muteOn : t.muteOff}
+              title={muted ? t.muteOn : !audioUnlocked ? t.audioTapHint : t.muteOff}
             >
               {muted ? (
                 <VolumeX className="h-4 w-4 text-zinc-500" />
               ) : (
-                <Volume2 className="h-4 w-4 text-emerald-400" />
+                <span className="relative inline-flex">
+                  <Volume2 className="h-4 w-4 text-emerald-400" />
+                  {!audioUnlocked && (
+                    <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-ping rounded-full bg-emerald-400" />
+                  )}
+                </span>
               )}
             </button>
             <button
