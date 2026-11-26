@@ -5,6 +5,7 @@ import { UI_STRINGS, type Language } from './i18n/strings';
 import { sound } from './utils/sound';
 import { PhoneFrame } from './components/PhoneFrame';
 import { DeductionModal } from './components/DeductionModal';
+import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle,
   ArrowLeft,
@@ -473,7 +474,7 @@ export function App() {
             </div>
 
             <div className="grid gap-3.5">
-              {roadmap.map((item) => {
+              {roadmap.map((item, idx) => {
                 const rank = progress.solvedRanks[item.id];
                 const cluesCount = progress.discoveredClues[item.id]?.length ?? 0;
                 const caseObj = cases.find((c) => c.id === item.id);
@@ -492,8 +493,11 @@ export function App() {
                       : 'bg-red-500';
 
                 return (
-                  <div
+                  <motion.div
                     key={item.id}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.25, delay: idx * 0.045 }}
                     className={`group relative overflow-hidden rounded-xl border border-l-[3px] ${accentBorder} transition ${
                       item.isUnlocked
                         ? 'border-zinc-800/80 bg-zinc-950/75 hover:border-zinc-700 hover:bg-zinc-900/75 active:scale-[0.995]'
@@ -581,24 +585,101 @@ export function App() {
                         </div>
                       </div>
                     </div>
-                  </div>
+                  </motion.div>
                 );
               })}
             </div>
           </div>
         </div>
 
-        {/* How to Play Modal */}
-        {showHowToPlay && (
-          <div
-            onClick={() => setShowHowToPlay(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-5 shadow-2xl sm:p-6"
+        {/* How to Play Modal with Subtle Horror Blood Drips */}
+        <AnimatePresence>
+          {showHowToPlay && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              onClick={() => setShowHowToPlay(false)}
+              className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
             >
-              <div className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3.5">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 8 }}
+                transition={{ duration: 0.24, ease: 'easeOut' }}
+                onClick={(e) => e.stopPropagation()}
+                className="relative w-full max-w-lg overflow-hidden rounded-2xl border border-red-950/60 bg-zinc-950 p-5 shadow-2xl sm:p-6"
+              >
+                {/* Matte Dark-Crimson Dripping Blood Overlay along Top Edge */}
+                <svg
+                  className="pointer-events-none absolute inset-x-0 top-0 h-14 w-full"
+                  viewBox="0 0 400 56"
+                  preserveAspectRatio="none"
+                  fill="none"
+                >
+                  <defs>
+                    <linearGradient id="dripGrad" x1="0" y1="0" x2="0" y2="56" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stopColor="#7f1d1d" />
+                      <stop offset="100%" stopColor="#3b0707" />
+                    </linearGradient>
+                  </defs>
+                  {/* Top thin blood rim */}
+                  <rect x="0" y="0" width="400" height="3.5" fill="#7f1d1d" opacity="0.9" />
+                  {/* Dripping strands */}
+                  <motion.path
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 0.92 }}
+                    transition={{ duration: 1.1, ease: 'easeOut', delay: 0.1 }}
+                    style={{ transformOrigin: 'top' }}
+                    d="M34 3 C34 15, 31 24, 34.5 29 C38 24, 36.5 15, 37 3 Z"
+                    fill="url(#dripGrad)"
+                  />
+                  <motion.path
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 0.88 }}
+                    transition={{ duration: 1.4, ease: 'easeOut', delay: 0.22 }}
+                    style={{ transformOrigin: 'top' }}
+                    d="M112 3 C112 22, 108 36, 113 44 C118 36, 115.5 22, 116 3 Z"
+                    fill="url(#dripGrad)"
+                  />
+                  <motion.path
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 0.85 }}
+                    transition={{ duration: 0.95, ease: 'easeOut', delay: 0.18 }}
+                    style={{ transformOrigin: 'top' }}
+                    d="M210 3 C210 12, 208 18, 211 22 C214 18, 212.5 12, 213 3 Z"
+                    fill="url(#dripGrad)"
+                  />
+                  <motion.path
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 0.92 }}
+                    transition={{ duration: 1.55, ease: 'easeOut', delay: 0.3 }}
+                    style={{ transformOrigin: 'top' }}
+                    d="M306 3 C306 24, 302 40, 307 49 C312 40, 309.5 24, 310 3 Z"
+                    fill="url(#dripGrad)"
+                  />
+                  <motion.path
+                    initial={{ scaleY: 0, opacity: 0 }}
+                    animate={{ scaleY: 1, opacity: 0.86 }}
+                    transition={{ duration: 1.05, ease: 'easeOut', delay: 0.25 }}
+                    style={{ transformOrigin: 'top' }}
+                    d="M366 3 C366 16, 364 25, 367 30 C370 25, 368.5 16, 369 3 Z"
+                    fill="url(#dripGrad)"
+                  />
+                  {/* Single slow falling droplet */}
+                  <motion.circle
+                    cx="307"
+                    cy="50"
+                    r="2"
+                    fill="#7f1d1d"
+                    initial={{ y: 0, opacity: 0 }}
+                    animate={{ y: [0, 26], opacity: [0, 0.85, 0] }}
+                    transition={{ duration: 1.8, delay: 1.3, repeat: Infinity, repeatDelay: 2.8, ease: 'easeIn' }}
+                  />
+                </svg>
+
+                <div className="relative flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3.5 pt-1">
                 <div>
                   <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
                     {lang === 'en' ? 'HOW TO PLAY' : 'PANDUAN BERMAIN'}
@@ -694,9 +775,10 @@ export function App() {
               >
                 {lang === 'en' ? 'Got it' : 'Mengerti'}
               </button>
-            </div>
-          </div>
-        )}
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     );
   }
