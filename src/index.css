@@ -23,30 +23,27 @@
   }
 }
 
-/* Forensic subtle grid + eerie vignette background */
+/* Subtle dark vignette background without neon glow */
 .forensic-grid {
-  background-color: #030406;
+  background-color: #050507;
   background-image:
-    radial-gradient(circle at 50% 0%, rgba(225, 29, 72, 0.08) 0%, transparent 55%),
-    radial-gradient(circle at 15% 80%, rgba(16, 185, 129, 0.05) 0%, transparent 45%),
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(circle at 50% 0%, rgba(127, 29, 29, 0.14) 0%, transparent 55%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
 }
 
 @keyframes subtle-flicker {
-  0%, 92%, 96%, 100% {
+  0%, 93%, 97%, 100% {
     opacity: 1;
-    text-shadow: 0 0 24px rgba(244, 63, 94, 0.35), 0 0 4px rgba(255, 255, 255, 0.15);
   }
-  93%, 95% {
-    opacity: 0.78;
-    text-shadow: -2px 0 rgba(244, 63, 94, 0.7), 2px 0 rgba(16, 185, 129, 0.5);
+  94%, 96% {
+    opacity: 0.72;
   }
 }
 
 .title-flicker {
-  animation: subtle-flicker 5s infinite;
+  animation: subtle-flicker 6s infinite;
 }
 
 /* Subtle scanline texture for cloned device screen */

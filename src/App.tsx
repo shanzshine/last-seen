@@ -19,7 +19,6 @@ import {
   Play,
   Search,
   Smartphone,
-  Sparkles,
   Trophy,
   Volume2,
   VolumeX,
@@ -303,17 +302,16 @@ export function App() {
 
     return (
       <div className="forensic-grid forensic-noise relative min-h-screen overflow-hidden text-zinc-100">
-        {/* Ambient Lighting Orbs */}
-        <div className="pointer-events-none fixed -left-32 -top-32 h-[480px] w-[480px] rounded-full bg-rose-600/12 blur-[150px]" />
-        <div className="pointer-events-none fixed -bottom-32 -right-32 h-[480px] w-[480px] rounded-full bg-emerald-500/10 blur-[150px]" />
-
         <div className="relative z-10 mx-auto max-w-5xl px-4 py-6 sm:px-5 sm:py-10">
-          {/* Forensic Terminal Strip */}
-          <div className="mb-8 flex items-center justify-between rounded-xl border border-zinc-800/80 bg-zinc-950/75 px-3.5 py-2 font-mono text-[10px] text-zinc-400 shadow-lg backdrop-blur-md sm:px-4 sm:py-2.5">
+          {/* Top Archive Strip */}
+          <div className="mb-8 flex items-center justify-between rounded-xl border border-zinc-800/70 bg-zinc-950/80 px-3.5 py-2 font-mono text-[10px] text-zinc-400 backdrop-blur-md sm:px-4 sm:py-2.5">
             <span className="flex items-center gap-2">
-              <span className="h-2 w-2 animate-pulse rounded-full bg-rose-500 shadow-[0_0_8px_#f43f5e]" />
-              <span className="hidden sm:inline">FORENSIC DESK // ENCRYPTED CLONE v2.4</span>
-              <span className="sm:hidden">FORENSIC DESK // v2.4</span>
+              <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
+              <span>
+                {lang === 'en'
+                  ? 'FORENSICS • EVIDENCE ARCHIVE'
+                  : 'ARSIP FORENSIK • BARANG BUKTI'}
+              </span>
             </span>
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
@@ -321,45 +319,45 @@ export function App() {
                   sound.playTap();
                   setShowHowToPlay(true);
                 }}
-                className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-1 text-[11px] font-semibold text-emerald-300 transition hover:bg-emerald-500/20 hover:text-emerald-200"
+                className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-2.5 py-1 text-[11px] font-semibold text-zinc-200 transition hover:bg-zinc-800 hover:text-white"
                 title={lang === 'en' ? 'How to Play' : 'Cara Bermain'}
               >
-                <HelpCircle className="h-3.5 w-3.5" />
+                <HelpCircle className="h-3.5 w-3.5 text-zinc-400" />
                 <span className="hidden sm:inline">
                   {lang === 'en' ? 'How to Play' : 'Cara Main'}
                 </span>
               </button>
               <button
                 onClick={toggleLanguage}
-                className="inline-flex items-center gap-1 rounded-lg bg-zinc-900/90 px-2.5 py-1 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 px-2.5 py-1 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
                 title={t.switchLang}
               >
-                <Globe className="h-3 w-3 text-emerald-400" />
+                <Globe className="h-3 w-3 text-zinc-400" />
                 {lang.toUpperCase()}
               </button>
               <button
                 onClick={toggleMute}
-                className="inline-flex items-center rounded-lg bg-zinc-900/90 p-1.5 text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                className="inline-flex items-center rounded-lg bg-zinc-900 p-1.5 text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
                 title={muted ? t.muteOn : t.muteOff}
               >
                 {muted ? (
                   <VolumeX className="h-3.5 w-3.5 text-zinc-500" />
                 ) : (
-                  <Volume2 className="h-3.5 w-3.5 text-emerald-400" />
+                  <Volume2 className="h-3.5 w-3.5 text-zinc-300" />
                 )}
               </button>
             </div>
           </div>
 
-          {/* Cinematic Hero + Live Device Teaser */}
-          <div className="relative grid items-center gap-8 border-b border-zinc-800/70 pb-10 md:grid-cols-[1.35fr_0.9fr]">
+          {/* Hero + Evidence Device Preview */}
+          <div className="relative grid items-center gap-8 border-b border-zinc-800/60 pb-10 md:grid-cols-[1.35fr_0.9fr]">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-rose-500/35 bg-rose-950/40 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-wider text-rose-300 shadow-[0_0_20px_-5px_rgba(244,63,94,0.3)]">
-                <span className="h-1.5 w-1.5 animate-ping rounded-full bg-rose-400" />
-                REC ● {t.statusTag}
+              <div className="inline-flex items-center gap-2 rounded-md border border-red-900/50 bg-red-950/30 px-2.5 py-1 font-mono text-[10px] font-medium tracking-wider text-red-300/90">
+                <span className="h-1.5 w-1.5 rounded-full bg-red-500" />
+                {t.statusTag}
               </div>
 
-              <h1 className="font-creepy title-flicker mt-5 bg-gradient-to-b from-red-400 via-red-600 to-red-950 bg-clip-text py-1 text-3xl leading-snug tracking-wide text-transparent drop-shadow-[0_4px_18px_rgba(220,38,38,0.45)] sm:text-5xl">
+              <h1 className="font-creepy title-flicker mt-5 bg-gradient-to-b from-red-500 via-red-700 to-red-950 bg-clip-text py-1 text-3xl leading-snug tracking-wide text-transparent sm:text-5xl">
                 Last Seen
               </h1>
 
@@ -369,20 +367,20 @@ export function App() {
 
               {/* Detective Stats */}
               <div className="mt-6 flex flex-wrap items-center gap-3">
-                <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/70 px-4 py-2.5 backdrop-blur-sm">
+                <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/80 px-4 py-2.5">
                   <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
                     {lang === 'en' ? 'Cases Solved' : 'Kasus Selesai'}
                   </p>
-                  <p className="mt-0.5 font-mono text-lg font-extrabold text-white">
+                  <p className="mt-0.5 font-mono text-lg font-extrabold text-zinc-100">
                     {solvedCount}
                     <span className="text-xs font-normal text-zinc-600">/{cases.length}</span>
                   </p>
                 </div>
-                <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/70 px-4 py-2.5 backdrop-blur-sm">
+                <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/80 px-4 py-2.5">
                   <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
                     {lang === 'en' ? 'Clues Pinned' : 'Bukti Tercatat'}
                   </p>
-                  <p className="mt-0.5 font-mono text-lg font-extrabold text-emerald-400">
+                  <p className="mt-0.5 font-mono text-lg font-extrabold text-zinc-100">
                     {totalCluesFound}
                   </p>
                 </div>
@@ -391,9 +389,9 @@ export function App() {
                     sound.playTap();
                     setShowHowToPlay(true);
                   }}
-                  className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-3 text-xs font-semibold text-zinc-300 transition hover:border-emerald-500/40 hover:bg-zinc-900 hover:text-white sm:hidden"
+                  className="inline-flex items-center gap-2 rounded-xl border border-zinc-800 bg-zinc-900/70 px-4 py-3 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:hidden"
                 >
-                  <HelpCircle className="h-4 w-4 text-emerald-400" />
+                  <HelpCircle className="h-4 w-4 text-zinc-400" />
                   {lang === 'en' ? 'How to Play' : 'Cara Main'}
                 </button>
               </div>
@@ -401,7 +399,7 @@ export function App() {
 
             {/* Decorative Evidence Phone Preview */}
             <div className="hidden justify-end md:flex">
-              <div className="relative w-[246px] rotate-2 rounded-[32px] border-[5px] border-zinc-800/90 bg-gradient-to-b from-zinc-900 via-[#080a0f] to-black p-4 shadow-[0_25px_70px_-15px_rgba(244,63,94,0.22)] ring-1 ring-white/10 transition duration-500 hover:rotate-0">
+              <div className="relative w-[246px] rotate-2 rounded-[32px] border-[5px] border-zinc-800/90 bg-gradient-to-b from-zinc-900 via-[#07080a] to-black p-4 shadow-2xl ring-1 ring-white/5 transition duration-500 hover:rotate-0">
                 {/* Subtle crack SVG */}
                 <svg
                   className="pointer-events-none absolute right-0 top-0 h-24 w-24 opacity-25"
@@ -418,31 +416,31 @@ export function App() {
 
                 <div className="flex items-center justify-between font-mono text-[10px] text-zinc-500">
                   <span>NO SERVICE</span>
-                  <span className="font-bold text-rose-400">4% BAT</span>
+                  <span className="font-bold text-red-400">4% BAT</span>
                 </div>
                 <div className="mt-5 text-center">
-                  <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-400/75">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-500">
                     {t.phoneCloned}
                   </p>
-                  <p className="mt-1 font-mono text-4xl font-bold tracking-tight text-white">
+                  <p className="mt-1 font-mono text-4xl font-bold tracking-tight text-zinc-100">
                     01:47
                   </p>
-                  <p className="mt-0.5 font-mono text-[9px] text-zinc-500">
-                    {lang === 'en' ? 'EVIDENCE #01 // LOCKED' : 'BARANG BUKTI #01'}
+                  <p className="mt-0.5 font-mono text-[9px] text-zinc-600">
+                    {lang === 'en' ? 'EVIDENCE #01' : 'BARANG BUKTI #01'}
                   </p>
                 </div>
                 <div className="mt-5 space-y-2">
-                  <div className="rounded-xl border border-rose-500/30 bg-rose-950/35 p-2.5 text-[10px] text-rose-100 backdrop-blur-sm">
+                  <div className="rounded-xl border border-red-900/40 bg-red-950/25 p-2.5 text-[10px] text-zinc-200">
                     <div className="flex items-center justify-between">
-                      <p className="font-bold text-rose-300">Mas Dimas</p>
-                      <span className="font-mono text-[8px] text-rose-400/80">01:46</span>
+                      <p className="font-bold text-red-300">Mas Dimas</p>
+                      <span className="font-mono text-[8px] text-zinc-500">01:46</span>
                     </div>
-                    <p className="mt-0.5 truncate text-zinc-300">
+                    <p className="mt-0.5 truncate text-zinc-400">
                       {lang === 'en' ? 'Nadia: Mas help me...' : 'Nadia: Mas tolong jgn...'}
                     </p>
                   </div>
-                  <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/85 p-2.5 text-[10px] text-zinc-300">
-                    <p className="font-bold text-amber-300">🔒 Note Locked</p>
+                  <div className="rounded-xl border border-zinc-800/80 bg-zinc-900/80 p-2.5 text-[10px] text-zinc-300">
+                    <p className="font-bold text-zinc-300">Catatan Terkunci</p>
                     <p className="mt-0.5 font-mono text-[9px] text-zinc-500">PIN: • • • •</p>
                   </div>
                 </div>
@@ -454,10 +452,10 @@ export function App() {
           <div className="mt-9">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
-                // {t.caseListTitle}
+                {t.caseListTitle}
               </h2>
               <span className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-500">
-                <BookmarkCheck className="h-3 w-3 text-emerald-500/70" />
+                <BookmarkCheck className="h-3 w-3 text-zinc-500" />
                 {t.autoSaved}
               </span>
             </div>
@@ -470,43 +468,43 @@ export function App() {
                 const totalClues = caseObj?.totalClues ?? 6;
                 const accentBorder =
                   item.difficulty === 'Mudah'
-                    ? 'border-l-emerald-500/80'
+                    ? 'border-l-emerald-700'
                     : item.difficulty === 'Menengah'
-                      ? 'border-l-amber-500/80'
-                      : 'border-l-rose-500/80';
+                      ? 'border-l-amber-700'
+                      : 'border-l-red-800';
                 const difficultyDot =
                   item.difficulty === 'Mudah'
-                    ? 'bg-emerald-400'
+                    ? 'bg-emerald-500'
                     : item.difficulty === 'Menengah'
-                      ? 'bg-amber-400'
-                      : 'bg-rose-400';
+                      ? 'bg-amber-500'
+                      : 'bg-red-500';
 
                 return (
                   <div
                     key={item.id}
                     className={`group relative overflow-hidden rounded-xl border border-l-[3px] ${accentBorder} transition ${
                       item.isUnlocked
-                        ? 'border-zinc-800/85 bg-zinc-950/65 hover:border-zinc-700 hover:bg-zinc-900/80 hover:shadow-[0_12px_35px_-12px_rgba(244,63,94,0.16)] active:scale-[0.995]'
+                        ? 'border-zinc-800/80 bg-zinc-950/75 hover:border-zinc-700 hover:bg-zinc-900/75 active:scale-[0.995]'
                         : 'border-zinc-800/40 bg-zinc-950/40 opacity-50'
                     }`}
                   >
                     {/* Case number watermark */}
-                    <span className="pointer-events-none absolute right-4 top-1 font-mono text-[72px] font-black leading-none text-white/[0.025]">
+                    <span className="pointer-events-none absolute right-4 top-1 font-mono text-[72px] font-black leading-none text-white/[0.02]">
                       {String(item.number).padStart(2, '0')}
                     </span>
 
                     <div className="relative p-4 sm:p-5">
                       {/* Top row: case id + difficulty + rank */}
                       <div className="flex flex-wrap items-center gap-2.5">
-                        <span className="rounded bg-zinc-900 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-emerald-400/90 ring-1 ring-white/5">
-                          FILE #{String(item.number).padStart(2, '0')}
+                        <span className="rounded bg-zinc-900 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-zinc-300 ring-1 ring-white/5">
+                          BERKAS #{String(item.number).padStart(2, '0')}
                         </span>
                         <span className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-400">
                           <span className={`inline-block h-1.5 w-1.5 rounded-full ${difficultyDot}`} />
                           {t.difficulty[item.difficulty]}
                         </span>
                         {rank && (
-                          <span className="inline-flex items-center gap-1 rounded bg-amber-400/15 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300 ring-1 ring-amber-400/20">
+                          <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
                             <Trophy className="h-2.5 w-2.5" /> RANK {rank}
                           </span>
                         )}
@@ -522,12 +520,11 @@ export function App() {
 
                       {/* Atmosphere + warning */}
                       <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                        <span className="inline-flex items-center gap-1 text-[10.5px] text-zinc-500">
-                          <Sparkles className="h-3 w-3 text-emerald-400/70" />
+                        <span className="text-[11px] text-zinc-500">
                           {item.atmosphere}
                         </span>
                         {item.contentWarning && (
-                          <span className="inline-flex items-center gap-1 rounded bg-rose-500/10 px-1.5 py-0.5 text-[10px] font-medium text-rose-300/90">
+                          <span className="inline-flex items-center gap-1 rounded bg-red-950/40 px-1.5 py-0.5 text-[10px] font-medium text-red-300/90">
                             <AlertTriangle className="h-2.5 w-2.5 shrink-0" />
                             {item.contentWarning}
                           </span>
@@ -540,7 +537,7 @@ export function App() {
                           <div className="flex flex-1 items-center gap-2">
                             <div className="h-1 flex-1 max-w-[130px] overflow-hidden rounded-full bg-zinc-800">
                               <div
-                                className="h-full rounded-full bg-emerald-500/80 transition-all"
+                                className="h-full rounded-full bg-emerald-600 transition-all"
                                 style={{ width: `${Math.min(100, (cluesCount / totalClues) * 100)}%` }}
                               />
                             </div>
@@ -559,7 +556,7 @@ export function App() {
                                 sound.playTap();
                                 setActiveCaseId(item.id);
                               }}
-                              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-4 py-2 text-[11px] font-bold text-zinc-950 shadow-md shadow-emerald-950/50 transition hover:bg-emerald-400 active:scale-95 sm:px-5 sm:py-2.5 sm:text-xs"
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-100 px-4 py-2 text-[11px] font-bold text-zinc-950 transition hover:bg-white active:scale-95 sm:px-5 sm:py-2.5 sm:text-xs"
                             >
                               <Play className="h-3.5 w-3.5 fill-current" />
                               {cluesCount > 0 ? t.continueCase : t.startCase}
@@ -583,7 +580,7 @@ export function App() {
         {showHowToPlay && (
           <div
             onClick={() => setShowHowToPlay(false)}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-md"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4 backdrop-blur-sm"
           >
             <div
               onClick={(e) => e.stopPropagation()}
@@ -591,11 +588,11 @@ export function App() {
             >
               <div className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3.5">
                 <div>
-                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-emerald-400">
-                    // {lang === 'en' ? 'FIELD MANUAL' : 'PANDUAN DETEKTIF'}
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-zinc-500">
+                    {lang === 'en' ? 'HOW TO PLAY' : 'PANDUAN BERMAIN'}
                   </p>
                   <h3 className="mt-1 text-lg font-bold text-white">
-                    {lang === 'en' ? 'How to Play Last Seen' : 'Cara Bermain Last Seen'}
+                    {lang === 'en' ? 'How to Play Last Seen' : 'Alur Investigasi'}
                   </h3>
                 </div>
                 <button
@@ -612,7 +609,7 @@ export function App() {
 
               <div className="mt-4 space-y-3 text-xs leading-relaxed">
                 <div className="flex gap-3 rounded-xl border border-zinc-800/70 bg-zinc-900/50 p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-emerald-500/15 text-emerald-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200">
                     <Smartphone className="h-4 w-4" />
                   </div>
                   <div>
@@ -621,14 +618,14 @@ export function App() {
                     </p>
                     <p className="mt-0.5 text-zinc-400">
                       {lang === 'en'
-                        ? 'Open Messages, Gallery, Notes, Maps, or Browser to uncover the victim’s last movements.'
+                        ? 'Open Messages, Gallery, Notes, Maps, or Browser to trace the victim’s last movements.'
                         : 'Buka aplikasi Pesan, Galeri, Catatan, Maps, atau Browser untuk melacak jejak terakhir korban.'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-3 rounded-xl border border-zinc-800/70 bg-zinc-900/50 p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-amber-500/15 text-amber-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200">
                     <BookmarkCheck className="h-4 w-4" />
                   </div>
                   <div>
@@ -644,7 +641,7 @@ export function App() {
                 </div>
 
                 <div className="flex gap-3 rounded-xl border border-zinc-800/70 bg-zinc-900/50 p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-rose-500/15 text-rose-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200">
                     <KeyRound className="h-4 w-4" />
                   </div>
                   <div>
@@ -653,14 +650,14 @@ export function App() {
                     </p>
                     <p className="mt-0.5 text-zinc-400">
                       {lang === 'en'
-                        ? 'Look for 4-digit PIN clues in photos/chats to unlock secret Notes, and enter keywords to restore deleted messages.'
-                        : 'Cari petunjuk PIN 4 digit dari foto/chat untuk membuka Catatan terkunci, dan masukkan kata kunci untuk memulihkan pesan terhapus.'}
+                        ? 'Look for 4-digit PIN clues in photos or chats to unlock secret Notes, and enter keywords to restore deleted messages.'
+                        : 'Cari petunjuk PIN 4 digit dari foto atau chat untuk membuka Catatan terkunci, dan masukkan kata kunci untuk memulihkan pesan terhapus.'}
                     </p>
                   </div>
                 </div>
 
                 <div className="flex gap-3 rounded-xl border border-zinc-800/70 bg-zinc-900/50 p-3">
-                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-sky-500/15 text-sky-400">
+                  <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-zinc-800 text-zinc-200">
                     <FileCheck2 className="h-4 w-4" />
                   </div>
                   <div>
@@ -669,8 +666,8 @@ export function App() {
                     </p>
                     <p className="mt-0.5 text-zinc-400">
                       {lang === 'en'
-                        ? 'Tap "Solve Case" (or the Report app on the phone) to deduce the culprit and motive. Find all clues without hints for Rank S!'
-                        : 'Tekan "Selesaikan Kasus" (atau ikon Lapor di HP) untuk menjawab pelaku & motifnya. Kumpulkan semua bukti tanpa Hint untuk Rank S!'}
+                        ? 'Tap "Solve Case" (or the Report app on the phone) to deduce the culprit and motive. Find all clues without hints for Rank S.'
+                        : 'Tekan "Selesaikan Kasus" (atau ikon Lapor di HP) untuk menjawab pelaku & motifnya. Kumpulkan semua bukti tanpa Hint untuk Rank S.'}
                     </p>
                   </div>
                 </div>
@@ -681,9 +678,9 @@ export function App() {
                   sound.playTap();
                   setShowHowToPlay(false);
                 }}
-                className="mt-5 w-full rounded-xl bg-emerald-500 py-2.5 text-xs font-bold text-zinc-950 transition hover:bg-emerald-400 active:scale-[0.99]"
+                className="mt-5 w-full rounded-xl bg-zinc-100 py-2.5 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.99]"
               >
-                {lang === 'en' ? 'Got It, Let’s Investigate' : 'Siap, Mulai Investigasi'}
+                {lang === 'en' ? 'Got it' : 'Mengerti'}
               </button>
             </div>
           </div>

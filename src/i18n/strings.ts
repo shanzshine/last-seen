@@ -4,7 +4,7 @@ export const UI_STRINGS = {
   id: {
     statusTag: 'terakhir dilihat pukul 01:47',
     heroDesc:
-      'Selamat datang di Meja Kerja Forensik Digital. Periksa kloningan HP barang bukti, cocokkan kebohongan antar-chat, buka catatan terkunci, dan pecahkan misterinya.',
+      'HP korban berhasil dikloning sebelum baterainya habis. Periksa isi chat, foto, dan catatan pribadinya—temukan kejanggalan yang tersembunyi.',
     caseListTitle: 'Daftar Kasus',
     autoSaved: 'Progres tersimpan otomatis',
     startCase: 'Mulai Investigasi',
@@ -106,7 +106,7 @@ export const UI_STRINGS = {
   en: {
     statusTag: 'last seen at 01:47',
     heroDesc:
-      'Welcome to the Digital Forensics Desk. Inspect cloned evidence phones, spot lies across chats, unlock hidden notes, and crack the case.',
+      'The victim’s phone was cloned right before the battery died. Inspect their chats, photos, and locked notes to uncover what really happened.',
     caseListTitle: 'Case Files',
     autoSaved: 'Progress auto-saved',
     startCase: 'Start Investigation',
