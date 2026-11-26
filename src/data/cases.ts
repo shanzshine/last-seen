@@ -16,7 +16,8 @@ export interface CasePreview {
   subtitle: string;
   difficulty: 'Mudah' | 'Menengah' | 'Sulit';
   isUnlocked: boolean;
-  newMechanicHint: string;
+  atmosphere: string;
+  contentWarning?: string;
 }
 
 export const getCases = (lang: Language): CaseData[] =>
@@ -39,10 +40,14 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       subtitle: c1.subtitle,
       difficulty: c1.difficulty,
       isUnlocked: true,
-      newMechanicHint:
+      atmosphere:
         lang === 'en'
-          ? 'Chats, Photo Gallery & PIN-Locked Notes'
-          : 'Chat, Galeri Foto & PIN Catatan Rahasia',
+          ? 'Atmosphere: Late-Night Dorm Mystery • Social Betrayal'
+          : 'Suasana: Misteri Kos Malam • Pengkhianatan Teman',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Missing person & debt pressure'
+          : 'TW: Orang hilang & tekanan utang',
     },
     {
       id: c2.id,
@@ -51,10 +56,14 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       subtitle: c2.subtitle,
       difficulty: c2.difficulty,
       isUnlocked: true,
-      newMechanicHint:
+      atmosphere:
         lang === 'en'
-          ? 'Location History (Maps) & Deleted Chat Recovery'
-          : 'Riwayat Lokasi (Maps) & Pemulihan Chat Terhapus',
+          ? 'Atmosphere: Corporate Thriller • Silent Midnight Office'
+          : 'Suasana: Thriller Korporat • Kantor Sunyi Tengah Malam',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Sudden death & premeditated murder'
+          : 'TW: Kematian & tindak pembunuhan',
     },
     {
       id: c3.id,
@@ -63,10 +72,14 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       subtitle: c3.subtitle,
       difficulty: c3.difficulty,
       isUnlocked: true,
-      newMechanicHint:
+      atmosphere:
         lang === 'en'
-          ? 'Typing Style Analysis & Live Incoming Chat'
-          : 'Analisis Gaya Ketik & Jebakan Chat Live',
+          ? 'Atmosphere: Midnight Highway Dread • Impersonation'
+          : 'Suasana: Teror Perjalanan Malam • Peniruan Identitas',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Kidnapping, confinement & threatening messages'
+          : 'TW: Penculikan, penyekapan & pesan ancaman',
     },
     {
       id: c4.id,
@@ -75,10 +88,14 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
       subtitle: c4.subtitle,
       difficulty: c4.difficulty,
       isUnlocked: true,
-      newMechanicHint:
+      atmosphere:
         lang === 'en'
-          ? 'New Mechanics: Browser History & Multiple Endings'
-          : 'Mekanik Baru: Browser History & Multiple Endings',
+          ? 'Atmosphere: Dark Conspiracy • Psychological Pressure'
+          : 'Suasana: Konspirasi Gelap • Tekanan Psikologis',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Criminal syndicate, betrayal & coercion'
+          : 'TW: Sindikat kriminal, pengkhianatan & intimidasi',
     },
   ];
 };

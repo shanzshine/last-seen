@@ -6,6 +6,7 @@ import { sound } from './utils/sound';
 import { PhoneFrame } from './components/PhoneFrame';
 import { DeductionModal } from './components/DeductionModal';
 import {
+  AlertTriangle,
   ArrowLeft,
   BookmarkCheck,
   ClipboardList,
@@ -455,10 +456,18 @@ export function App() {
 
                         <h3 className="text-lg font-bold text-white">{item.title}</h3>
                         <p className="text-xs text-zinc-400">{item.subtitle}</p>
-                        <p className="inline-flex items-center gap-1.5 pt-1 text-[11px] text-zinc-500">
-                          <Sparkles className="h-3.5 w-3.5 text-zinc-400" />
-                          {item.newMechanicHint}
-                        </p>
+                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-1">
+                          <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400">
+                            <Sparkles className="h-3.5 w-3.5 text-emerald-400/80" />
+                            {item.atmosphere}
+                          </span>
+                          {item.contentWarning && (
+                            <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[10.5px] font-medium text-amber-300/90">
+                              <AlertTriangle className="h-3 w-3 shrink-0" />
+                              {item.contentWarning}
+                            </span>
+                          )}
+                        </div>
 
                         {item.isUnlocked && cluesCount > 0 && (
                           <div className="flex items-center gap-2 pt-1.5">
