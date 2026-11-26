@@ -397,15 +397,18 @@ export function App() {
           </div>
 
           {/* Case Roadmap */}
-          <div className="mt-8">
-            <div className="flex items-center justify-between">
-              <h2 className="font-mono text-xs font-bold uppercase tracking-[0.18em] text-zinc-400">
+          <div className="mt-10">
+            <div className="mb-5 flex items-center justify-between">
+              <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-500">
                 {t.caseListTitle}
               </h2>
-              <span className="text-xs text-zinc-500">{t.autoSaved}</span>
+              <span className="flex items-center gap-1.5 text-[10px] text-zinc-600">
+                <BookmarkCheck className="h-3 w-3 text-emerald-500/60" />
+                {t.autoSaved}
+              </span>
             </div>
 
-            <div className="mt-4 grid gap-4">
+            <div className="grid gap-3">
               {roadmap.map((item) => {
                 const rank = progress.solvedRanks[item.id];
                 const cluesCount = progress.discoveredClues[item.id]?.length ?? 0;
@@ -413,97 +416,102 @@ export function App() {
                 const totalClues = caseObj?.totalClues ?? 6;
                 const accentBorder =
                   item.difficulty === 'Mudah'
-                    ? 'border-l-emerald-500'
+                    ? 'border-l-emerald-500/70'
                     : item.difficulty === 'Menengah'
-                      ? 'border-l-amber-500'
-                      : 'border-l-rose-500';
+                      ? 'border-l-amber-500/70'
+                      : 'border-l-rose-500/70';
+                const difficultyDot =
+                  item.difficulty === 'Mudah'
+                    ? 'bg-emerald-400'
+                    : item.difficulty === 'Menengah'
+                      ? 'bg-amber-400'
+                      : 'bg-rose-400';
 
                 return (
                   <div
                     key={item.id}
-                    className={`group relative overflow-hidden rounded-2xl border border-zinc-800/90 border-l-4 ${accentBorder} p-5 backdrop-blur-md transition ${
+                    className={`group relative overflow-hidden rounded-xl border border-l-[3px] ${accentBorder} transition ${
                       item.isUnlocked
-                        ? 'bg-zinc-900/60 hover:-translate-y-0.5 hover:border-zinc-700 hover:bg-zinc-900/85 hover:shadow-[0_12px_35px_-15px_rgba(16,185,129,0.25)]'
-                        : 'bg-zinc-950/60 opacity-60'
+                        ? 'border-zinc-800/80 bg-zinc-900/50 hover:border-zinc-700/80 hover:bg-zinc-900/80 hover:shadow-[0_8px_30px_-10px_rgba(16,185,129,0.2)] active:scale-[0.995]'
+                        : 'border-zinc-800/40 bg-zinc-950/40 opacity-50'
                     }`}
                   >
-                    <span className="pointer-events-none absolute right-6 top-2 font-mono text-6xl font-black text-white/[0.03]">
-                      0{item.number}
+                    {/* Case number watermark */}
+                    <span className="pointer-events-none absolute right-4 top-1 font-mono text-[72px] font-black leading-none text-white/[0.025]">
+                      {String(item.number).padStart(2, '0')}
                     </span>
 
-                    <div className="relative flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
-                      <div className="space-y-1.5">
-                        <div className="flex flex-wrap items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-emerald-400">
-                            CASE #{item.number}
+                    <div className="relative p-4 sm:p-5">
+                      {/* Top row: case id + difficulty + rank */}
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="font-mono text-[10px] font-bold tracking-wider text-emerald-400/80">
+                          CASE #{String(item.number).padStart(2, '0')}
+                        </span>
+                        <span className="flex items-center gap-1 text-[10px] text-zinc-500">
+                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${difficultyDot}`} />
+                          {t.difficulty[item.difficulty]}
+                        </span>
+                        {rank && (
+                          <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/15 px-2 py-0.5 text-[10px] font-bold text-amber-300">
+                            <Trophy className="h-2.5 w-2.5" /> Rank {rank}
                           </span>
-                          <span
-                            className={`rounded-full px-2.5 py-0.5 text-[10px] font-semibold ${
-                              item.difficulty === 'Mudah'
-                                ? 'bg-emerald-500/15 text-emerald-300'
-                                : item.difficulty === 'Menengah'
-                                  ? 'bg-amber-500/15 text-amber-300'
-                                  : 'bg-rose-500/15 text-rose-300'
-                            }`}
-                          >
-                            {t.difficulty[item.difficulty]}
-                          </span>
-                          {rank && (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-amber-400/20 px-2.5 py-0.5 text-[10px] font-bold text-amber-300">
-                              <Trophy className="h-3 w-3" /> {t.solvedBadge} (Rank {rank})
-                            </span>
-                          )}
-                        </div>
-
-                        <h3 className="text-lg font-bold text-white">{item.title}</h3>
-                        <p className="text-xs text-zinc-400">{item.subtitle}</p>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 pt-1">
-                          <span className="inline-flex items-center gap-1.5 text-[11px] text-zinc-400">
-                            <Sparkles className="h-3.5 w-3.5 text-emerald-400/80" />
-                            {item.atmosphere}
-                          </span>
-                          {item.contentWarning && (
-                            <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/10 px-2 py-0.5 text-[10.5px] font-medium text-amber-300/90">
-                              <AlertTriangle className="h-3 w-3 shrink-0" />
-                              {item.contentWarning}
-                            </span>
-                          )}
-                        </div>
-
-                        {item.isUnlocked && cluesCount > 0 && (
-                          <div className="flex items-center gap-2 pt-1.5">
-                            <div className="h-1.5 w-32 overflow-hidden rounded-full bg-zinc-800">
-                              <div
-                                className="h-full rounded-full bg-emerald-400 transition-all"
-                                style={{
-                                  width: `${Math.min(100, (cluesCount / totalClues) * 100)}%`,
-                                }}
-                              />
-                            </div>
-                            <span className="font-mono text-[10px] text-emerald-400">
-                              {cluesCount}/{totalClues}
-                            </span>
-                          </div>
                         )}
                       </div>
 
-                      <div className="flex shrink-0 items-center gap-3">
-                        {item.isUnlocked ? (
-                          <button
-                            onClick={() => {
-                              sound.playTap();
-                              setActiveCaseId(item.id);
-                            }}
-                            className="inline-flex items-center gap-2 rounded-xl bg-emerald-500 px-5 py-2.5 text-xs font-bold text-zinc-950 shadow-lg shadow-emerald-950/50 transition hover:bg-emerald-400 active:scale-95"
-                          >
-                            <Play className="h-4 w-4 fill-current" />
-                            {cluesCount > 0 ? t.continueCase : t.startCase}
-                          </button>
-                        ) : (
-                          <div className="inline-flex items-center gap-1.5 rounded-xl border border-zinc-800 bg-zinc-900/60 px-4 py-2.5 font-mono text-[11px] font-semibold text-zinc-500">
-                            <Lock className="h-3.5 w-3.5" /> {t.locked}
-                          </div>
+                      {/* Title + subtitle */}
+                      <h3 className="mt-1.5 text-base font-bold leading-tight text-white sm:text-lg">{item.title}</h3>
+                      <p className="mt-0.5 text-[11px] leading-relaxed text-zinc-500">{item.subtitle}</p>
+
+                      {/* Atmosphere + warning */}
+                      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
+                        <span className="inline-flex items-center gap-1 text-[10px] text-zinc-500">
+                          <Sparkles className="h-3 w-3 text-emerald-400/60" />
+                          {item.atmosphere}
+                        </span>
+                        {item.contentWarning && (
+                          <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-1.5 py-0.5 text-[10px] font-medium text-amber-400/80">
+                            <AlertTriangle className="h-2.5 w-2.5 shrink-0" />
+                            {item.contentWarning}
+                          </span>
                         )}
+                      </div>
+
+                      {/* Progress bar + action */}
+                      <div className="mt-3.5 flex items-center justify-between gap-3">
+                        {item.isUnlocked && cluesCount > 0 ? (
+                          <div className="flex flex-1 items-center gap-2">
+                            <div className="h-1 flex-1 max-w-[120px] overflow-hidden rounded-full bg-zinc-800">
+                              <div
+                                className="h-full rounded-full bg-emerald-500/70 transition-all"
+                                style={{ width: `${Math.min(100, (cluesCount / totalClues) * 100)}%` }}
+                              />
+                            </div>
+                            <span className="font-mono text-[10px] text-zinc-500">
+                              {cluesCount}/{totalClues}
+                            </span>
+                          </div>
+                        ) : (
+                          <div />
+                        )}
+
+                        <div className="shrink-0">
+                          {item.isUnlocked ? (
+                            <button
+                              onClick={() => {
+                                sound.playTap();
+                                setActiveCaseId(item.id);
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-500 px-4 py-2 text-[11px] font-bold text-zinc-950 shadow-md shadow-emerald-950/40 transition hover:bg-emerald-400 active:scale-95 sm:px-5 sm:py-2.5 sm:text-xs"
+                            >
+                              <Play className="h-3.5 w-3.5 fill-current" />
+                              {cluesCount > 0 ? t.continueCase : t.startCase}
+                            </button>
+                          ) : (
+                            <div className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-800/60 bg-zinc-900/40 px-3.5 py-2 font-mono text-[10px] font-semibold text-zinc-600">
+                              <Lock className="h-3 w-3" /> {t.locked}
+                            </div>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

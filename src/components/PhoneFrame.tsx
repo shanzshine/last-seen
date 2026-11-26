@@ -144,73 +144,73 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               <div className="pointer-events-none absolute -right-12 bottom-16 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl" />
 
               {/* Top Natural Home Grid & Widgets */}
-              <div className="relative z-10 space-y-5">
-                {/* Minimalist Clock / Owner Widget */}
-                <div className="rounded-3xl bg-black/25 px-4 py-3.5 backdrop-blur-xl">
+              <div className="relative z-10 space-y-4">
+                {/* Clock / Owner Widget */}
+                <div className="rounded-2xl bg-black/30 px-4 py-3 backdrop-blur-xl ring-1 ring-white/5">
                   <div className="flex items-baseline justify-between">
-                    <span className="text-3xl font-light tracking-tight text-white">{timeStr}</span>
-                    <span className="text-[10px] font-medium text-white/60">
+                    <span className="text-[32px] font-thin tracking-tight text-white">{timeStr}</span>
+                    <span className="text-[9px] font-medium uppercase tracking-wider text-white/50">
                       {caseData.ownerName}
                     </span>
                   </div>
-                  <p className="mt-1 text-[10px] text-rose-300/90">
-                    Last Seen {caseData.lastSeenTime}
+                  <p className="mt-0.5 text-[10px] text-rose-300/80">
+                    ● Last Seen {caseData.lastSeenTime}
                   </p>
                 </div>
 
-                {/* App Grid (4 columns) */}
-                <div className="grid grid-cols-4 gap-y-4 px-1">
+                {/* App Grid — always fills cols left-to-right */}
+                <div className="grid grid-cols-4 gap-x-2 gap-y-4 px-0.5">
                   <button
                     onClick={() => openApp('notes')}
-                    className="group flex flex-col items-center gap-1"
+                    className="group flex flex-col items-center gap-1.5"
                   >
-                    <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                    <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                       <NotesAppIcon />
                     </div>
-                    <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                    <span className="text-[9px] font-medium leading-none text-white/85 drop-shadow-sm">
                       {t.appNotes}
                     </span>
                   </button>
 
-                  {caseData.locations && caseData.locations.length > 0 && (
+                  {caseData.locations && caseData.locations.length > 0 ? (
                     <button
                       onClick={() => openApp('maps')}
-                      className="group flex flex-col items-center gap-1"
+                      className="group flex flex-col items-center gap-1.5"
                     >
-                      <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                      <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                         <MapsAppIcon />
                       </div>
-                      <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                      <span className="text-[9px] font-medium leading-none text-white/85 drop-shadow-sm">
                         {t.appMaps}
                       </span>
                     </button>
-                  )}
+                  ) : <div />}
 
-                  {caseData.browserHistory && caseData.browserHistory.length > 0 && (
+                  {caseData.browserHistory && caseData.browserHistory.length > 0 ? (
                     <button
                       onClick={() => openApp('browser')}
-                      className="group flex flex-col items-center gap-1"
+                      className="group flex flex-col items-center gap-1.5"
                     >
-                      <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                      <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                         <BrowserAppIcon />
                       </div>
-                      <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                      <span className="text-[9px] font-medium leading-none text-white/85 drop-shadow-sm">
                         {t.appBrowser}
                       </span>
                     </button>
-                  )}
+                  ) : <div />}
 
                   <button
                     onClick={() => {
                       sound.playTap();
                       onOpenDeduction();
                     }}
-                    className="group flex flex-col items-center gap-1"
+                    className="group flex flex-col items-center gap-1.5"
                   >
-                    <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                    <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                       <ReportAppIcon />
                     </div>
-                    <span className="text-[10px] font-medium text-white/90 drop-shadow">
+                    <span className="text-[9px] font-medium leading-none text-white/85 drop-shadow-sm">
                       {lang === 'en' ? 'Report' : 'Lapor'}
                     </span>
                   </button>
@@ -218,21 +218,19 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               </div>
 
               {/* Bottom Frosted Dock */}
-              <div className="relative z-10 flex items-center justify-around rounded-[26px] bg-white/15 px-3 py-2.5 backdrop-blur-2xl">
+              <div className="relative z-10 flex items-center justify-around rounded-[22px] bg-white/12 px-4 py-2 backdrop-blur-2xl ring-1 ring-white/10">
                 <button
                   onClick={() => openApp('chat')}
-                  className="group flex flex-col items-center gap-1"
+                  className="group relative flex h-[52px] w-[52px] items-center justify-center transition group-hover:scale-105 group-active:scale-90"
                 >
-                  <div className="relative h-12 w-12 transition group-hover:scale-105 group-active:scale-95">
-                    <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
-                      <MessagesAppIcon />
-                    </div>
-                    {totalUnread > 0 && (
-                      <span className="absolute -right-1.5 -top-1.5 flex h-4 min-w-4 items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow">
-                        {totalUnread}
-                      </span>
-                    )}
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
+                    <MessagesAppIcon />
                   </div>
+                  {totalUnread > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-md">
+                      {totalUnread}
+                    </span>
+                  )}
                 </button>
 
                 <button
@@ -240,18 +238,18 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     setGalleryTargetPhotoId(null);
                     openApp('gallery');
                   }}
-                  className="group flex flex-col items-center gap-1"
+                  className="group flex h-[52px] w-[52px] items-center justify-center transition group-hover:scale-105 group-active:scale-90"
                 >
-                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
                     <GalleryAppIcon />
                   </div>
                 </button>
 
                 <button
                   onClick={() => openApp('notes')}
-                  className="group flex flex-col items-center gap-1"
+                  className="group flex h-[52px] w-[52px] items-center justify-center transition group-hover:scale-105 group-active:scale-90"
                 >
-                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
                     <NotesAppIcon />
                   </div>
                 </button>
@@ -261,9 +259,9 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     sound.playTap();
                     onOpenDeduction();
                   }}
-                  className="group flex flex-col items-center gap-1"
+                  className="group flex h-[52px] w-[52px] items-center justify-center transition group-hover:scale-105 group-active:scale-90"
                 >
-                  <div className="h-12 w-12 overflow-hidden rounded-[14px] shadow-md transition group-hover:scale-105 group-active:scale-95">
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
                     <ReportAppIcon />
                   </div>
                 </button>
