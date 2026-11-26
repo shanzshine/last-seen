@@ -48,7 +48,10 @@ export interface PhotoEvidence {
     | 'audit-transfer'
     | 'office-cctv'
     | 'toll-receipt'
-    | 'taxi-plate';
+    | 'taxi-plate'
+    | 'trail-sign'
+    | 'fog-silhouettes'
+    | 'radio-ht';
   caption: string;
   clueId?: string;
   clueLabel?: string;

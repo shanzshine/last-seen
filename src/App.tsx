@@ -375,7 +375,7 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-extrabold text-white">
                     {solvedCount}
-                    <span className="text-xs font-normal text-zinc-600">/5</span>
+                    <span className="text-xs font-normal text-zinc-600">/{cases.length}</span>
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/70 px-4 py-2.5 backdrop-blur-sm">

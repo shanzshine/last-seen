@@ -216,6 +216,66 @@ export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = 
     );
   }
 
+  if (visualType === 'trail-sign') {
+    return (
+      <div className="relative flex h-full w-full flex-col items-center justify-center bg-gradient-to-b from-slate-900 via-emerald-950/60 to-black p-4">
+        <div className={`flex flex-col items-center rounded-xl border border-amber-500/40 bg-amber-950/70 text-amber-100 shadow-xl ${compact ? 'p-2.5' : 'p-5 text-center'}`}>
+          <span className={`font-mono font-bold tracking-widest text-amber-300 ${compact ? 'text-[8px]' : 'text-[11px]'}`}>
+            POS 3 • PUNCAK KABUT
+          </span>
+          <div className={`mt-1.5 rounded bg-black/50 px-3 py-1 font-mono font-black tracking-widest text-white ${compact ? 'text-xs' : 'text-xl'}`}>
+            2840 MDPL
+          </div>
+          {!compact && (
+            <p className="mt-2 font-mono text-[10px] text-amber-200/80">
+              ⬅ Jalur Jurang Utara • Bunker Pos 2 ➡
+            </p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'fog-silhouettes') {
+    return (
+      <div className="relative flex h-full w-full flex-col items-center justify-center overflow-hidden bg-gradient-to-b from-zinc-800 via-zinc-950 to-black p-4">
+        <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_35%_45%,rgba(255,255,255,0.12),transparent_40%),radial-gradient(circle_at_70%_50%,rgba(244,63,94,0.16),transparent_35%)]" />
+        <div className={`relative flex flex-col items-center rounded-xl border border-rose-500/30 bg-black/60 backdrop-blur-sm ${compact ? 'p-2.5' : 'p-4 text-center'}`}>
+          <ShieldAlert className={`${compact ? 'h-6 w-6' : 'h-10 w-10'} text-rose-400`} />
+          {!compact && (
+            <div className="mt-2 space-y-1 font-mono text-[10px]">
+              <p className="font-bold text-rose-300">SEKTOR TERLARANG • 02:44</p>
+              <p className="text-zinc-300">2 sorot lampu truk & 3 siluet di kabut</p>
+              <p className="text-zinc-500">ISO 12800 • Night Blur</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (visualType === 'radio-ht') {
+    return (
+      <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-stone-900 via-zinc-950 to-black p-4">
+        <div className={`w-full max-w-[220px] rounded-xl border border-emerald-500/35 bg-zinc-900/90 font-mono text-zinc-100 shadow-xl ${compact ? 'p-2 text-[8px]' : 'p-4 text-xs'}`}>
+          <div className="flex items-center justify-between border-b border-zinc-700 pb-1.5">
+            <span className="font-bold text-emerald-400">HT PORTABLE</span>
+            <span className="h-2 w-2 rounded-full bg-rose-500" />
+          </div>
+          {!compact && (
+            <div className="mt-2.5 space-y-1">
+              <p className="text-[10px] text-zinc-400">FREKUENSI AKTIF:</p>
+              <p className="rounded bg-black/60 px-2.5 py-1 text-sm font-black tracking-widest text-amber-300">
+                142.85 MHz
+              </p>
+              <p className="pt-1 text-[10px] text-zinc-400">Channel: LOG-MALAM</p>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   if (compact) {
     return (
       <div className="relative flex h-full w-full items-center justify-center bg-gradient-to-br from-sky-950 via-slate-900 to-zinc-950 p-2">

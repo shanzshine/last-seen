@@ -8,6 +8,8 @@ import { CASE_4 } from './case4';
 import { CASE_4_EN } from './case4.en';
 import { CASE_5 } from './case5';
 import { CASE_5_EN } from './case5.en';
+import { CASE_6 } from './case6';
+import { CASE_6_EN } from './case6.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -24,8 +26,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -34,6 +36,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c3 = cases[2];
   const c4 = cases[3];
   const c5 = cases[4];
+  const c6 = cases[5];
 
   return [
     {
@@ -115,6 +118,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Stalking, bribery & witness abduction'
           : 'TW: Penguntitan, penyuapan & penculikan saksi',
+    },
+    {
+      id: c6.id,
+      number: 6,
+      title: c6.title,
+      subtitle: c6.subtitle,
+      difficulty: c6.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Foggy Mountain Horror • Survival Mystery'
+          : 'Suasana: Horor Kabut Gunung • Misteri Survival',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Eerie forest isolation, night chase & illegal logging'
+          : 'TW: Teror hutan berkabut, pengejaran malam & isolasi',
     },
   ];
 };
