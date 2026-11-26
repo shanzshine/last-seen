@@ -20,6 +20,9 @@ const REAL_PHOTO_MAP: Partial<Record<PhotoEvidence['visualType'], { file: string
   'room-key': { file: 'images/room-key.jpg', alt: 'Foto gantungan kunci Kamar 07' },
   'cafe-receipt': { file: 'images/cafe-receipt.jpg', alt: 'Foto struk Kopi Sudut' },
   'side-gate': { file: 'images/side-gate.jpg', alt: 'Foto gembok gudang belakang rusak' },
+  'audit-transfer': { file: 'images/audit-transfer.jpg', alt: 'Foto dokumen audit Proyek Helios' },
+  'office-cctv': { file: 'images/office-cctv.jpg', alt: 'Foto CCTV lorong kantor lantai 12' },
+  'taxi-plate': { file: 'images/taxi-plate.jpg', alt: 'Foto plat nomor taksi B 2841 KJL' },
 };
 
 export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = false }) => {
