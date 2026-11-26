@@ -197,3 +197,4 @@ export const CASE_4_EN: CaseData = {
   epiloguePartial:
     'Your report reached the Taskforce, but missed deductions delayed the Warehouse 4 raid and several syndicate members escaped.',
 };
+

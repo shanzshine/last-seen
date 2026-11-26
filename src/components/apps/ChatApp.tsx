@@ -8,6 +8,8 @@ import {
   BookmarkPlus,
   CheckCheck,
   Image as ImageIcon,
+  Mic,
+  Play,
   RotateCcw,
   Trash2,
   Users,
@@ -36,6 +38,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
 }) => {
   const t = UI_STRINGS[lang].chat;
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
+  const [playedVoiceIds, setPlayedVoiceIds] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState('');
   const [keywordError, setKeywordError] = useState(false);
 
@@ -162,7 +165,49 @@ export const ChatApp: React.FC<ChatAppProps> = ({
             </button>
           )}
 
-          <p>{msg.text}</p>
+          {msg.voiceNote ? (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2.5">
+                <button
+                  type="button"
+                  onClick={() => {
+                    sound.playVoiceNoteCue();
+                    setPlayedVoiceIds((prev) =>
+                      prev.includes(msg.id) ? prev : [...prev, msg.id]
+                    );
+                  }}
+                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30 active:scale-95"
+                  aria-label="Play Voice Note"
+                >
+                  <Play className="h-3.5 w-3.5 fill-current" />
+                </button>
+                <div className="flex flex-1 items-center gap-[2px]">
+                  {[3, 6, 4, 8, 5, 9, 4, 7, 10, 6, 4, 8, 5, 3, 6, 4].map((h, i) => (
+                    <span
+                      key={i}
+                      className={`w-[2.5px] rounded-full ${
+                        playedVoiceIds.includes(msg.id) ? 'bg-emerald-300' : 'bg-white/45'
+                      }`}
+                      style={{ height: `${h * 2}px` }}
+                    />
+                  ))}
+                </div>
+                <span className="flex items-center gap-1 font-mono text-[10px] text-white/75">
+                  <Mic className="h-3 w-3" />
+                  {msg.voiceNote.duration}
+                </span>
+              </div>
+
+              {playedVoiceIds.includes(msg.id) && (
+                <div className="space-y-1 rounded-lg bg-black/25 p-2 text-[10.5px] leading-relaxed">
+                  <p className="text-zinc-100">{msg.voiceNote.transcript}</p>
+                  <p className="font-medium text-amber-300">{msg.voiceNote.backgroundCue}</p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p>{msg.text}</p>
+          )}
 
           <div className="mt-1 flex items-center justify-end gap-1.5">
             {msg.clueId && (

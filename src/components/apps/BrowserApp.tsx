@@ -71,3 +71,4 @@ export const BrowserApp: React.FC<BrowserAppProps> = ({
     </div>
   );
 };
+

@@ -160,6 +160,12 @@ class SoundEngine {
     this.playTone(880, 0.26, 'sine', 0.24, 0.09);
   }
 
+  playVoiceNoteCue() {
+    this.playTone(392, 0.18, 'sine', 0.16, 0);
+    this.playTone(329.63, 0.22, 'triangle', 0.14, 0.18);
+    this.playTone(261.63, 0.3, 'sine', 0.12, 0.4);
+  }
+
   playCaseSolved(success: boolean) {
     if (success) {
       this.playTone(440, 0.18, 'triangle', 0.22, 0);

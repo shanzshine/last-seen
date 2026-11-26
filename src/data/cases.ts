@@ -6,6 +6,8 @@ import { CASE_3 } from './case3';
 import { CASE_3_EN } from './case3.en';
 import { CASE_4 } from './case4';
 import { CASE_4_EN } from './case4.en';
+import { CASE_5 } from './case5';
+import { CASE_5_EN } from './case5.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -22,8 +24,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -31,6 +33,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c2 = cases[1];
   const c3 = cases[2];
   const c4 = cases[3];
+  const c5 = cases[4];
 
   return [
     {
@@ -96,6 +99,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Criminal syndicate, betrayal & coercion'
           : 'TW: Sindikat kriminal, pengkhianatan & intimidasi',
+    },
+    {
+      id: c5.id,
+      number: 5,
+      title: c5.title,
+      subtitle: c5.subtitle,
+      difficulty: c5.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Claustrophobic Hotel • Midnight Harbor Chase'
+          : 'Suasana: Hotel Klaustrofobik • Pengejaran Pelabuhan Malam',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Stalking, bribery & witness abduction'
+          : 'TW: Penguntitan, penyuapan & penculikan saksi',
     },
   ];
 };

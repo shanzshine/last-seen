@@ -2,6 +2,12 @@ export type CaseDifficulty = 'Mudah' | 'Menengah' | 'Sulit';
 
 export type ChatSenderType = 'owner' | 'contact' | 'system';
 
+export interface VoiceNoteData {
+  duration: string;
+  transcript: string;
+  backgroundCue: string;
+}
+
 export interface ChatMessage {
   id: string;
   senderName: string;
@@ -11,6 +17,7 @@ export interface ChatMessage {
   clueId?: string;
   clueLabel?: string;
   attachmentPhotoId?: string;
+  voiceNote?: VoiceNoteData;
 }
 
 export interface ChatThread {
@@ -99,6 +106,11 @@ export interface LiveAlert {
   time: string;
 }
 
+export interface CaseRecap {
+  title: string;
+  points: string[];
+}
+
 export interface CaseData {
   id: string;
   number: number;
@@ -108,6 +120,7 @@ export interface CaseData {
   ownerName: string;
   lastSeenTime: string;
   briefing: string;
+  recap?: CaseRecap;
   wallpaperGradient: string;
   chats: ChatThread[];
   photos: PhotoEvidence[];

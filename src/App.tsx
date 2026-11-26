@@ -75,6 +75,7 @@ export function App() {
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [showDeduction, setShowDeduction] = useState(false);
   const [mobileCluesOpen, setMobileCluesOpen] = useState(false);
+  const [dismissedRecaps, setDismissedRecaps] = useState<string[]>([]);
   const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const toastTimerRef = useRef<number | null>(null);
@@ -352,7 +353,7 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-black text-white">
                     {solvedCount}
-                    <span className="text-xs font-normal text-zinc-500">/4</span>
+                    <span className="text-xs font-normal text-zinc-500">/5</span>
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-800/90 bg-zinc-900/60 px-4 py-2.5 backdrop-blur-sm">
@@ -738,6 +739,45 @@ export function App() {
           onCaseSolved={handleCaseSolved}
           onResetCase={handleResetCase}
         />
+      )}
+
+      {/* "Previously on Last Seen..." Recap Modal */}
+      {activeCase.recap && !dismissedRecaps.includes(activeCase.id) && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
+          <div className="w-full max-w-md rounded-2xl bg-zinc-950 p-6 shadow-2xl ring-1 ring-white/15">
+            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">
+              {activeCase.recap.title}
+            </p>
+            <h2 className="mt-1.5 text-xl font-black text-white">
+              Case #{activeCase.number}: {activeCase.title}
+            </h2>
+
+            <ul className="mt-4 space-y-2.5">
+              {activeCase.recap.points.map((pt, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-start gap-2.5 rounded-xl bg-zinc-900/80 p-3 text-xs leading-relaxed text-zinc-200"
+                >
+                  <span className="mt-0.5 font-mono text-[10px] font-bold text-emerald-400">
+                    0{idx + 1}
+                  </span>
+                  <span>{pt}</span>
+                </li>
+              ))}
+            </ul>
+
+            <button
+              onClick={() => {
+                sound.playTap();
+                setDismissedRecaps((prev) => [...prev, activeCase.id]);
+              }}
+              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 text-xs font-bold text-zinc-950 transition hover:bg-emerald-400 active:scale-[0.98]"
+            >
+              <Play className="h-4 w-4 fill-current" />
+              {t.startCase}
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );

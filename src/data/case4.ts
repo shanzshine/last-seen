@@ -197,3 +197,4 @@ export const CASE_4: CaseData = {
   epiloguePartial:
     'Laporanmu diterima oleh Satgas, namun karena ada detail deduksi yang meleset, penggerebekan Gudang 4 terlambat dilakukan dan sebagian anggota sindikat berhasil kabur.',
 };
+
