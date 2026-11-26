@@ -136,6 +136,17 @@ class SoundEngine {
     }
   }
 
+  vibrate(pattern: number | number[] = 30) {
+    if (this.muted || typeof navigator === 'undefined') return;
+    try {
+      if ('vibrate' in navigator) {
+        navigator.vibrate(pattern);
+      }
+    } catch {
+      // ignore unsupported devices
+    }
+  }
+
   playTap() {
     this.playTone(620, 0.065, 'triangle', 0.16);
   }
@@ -145,17 +156,20 @@ class SoundEngine {
   }
 
   playPinError() {
+    this.vibrate([45, 35, 65]);
     this.playTone(210, 0.15, 'sawtooth', 0.18, 0);
     this.playTone(165, 0.2, 'sawtooth', 0.18, 0.11);
   }
 
   playPinUnlock() {
+    this.vibrate(25);
     this.playTone(523.25, 0.12, 'sine', 0.22, 0);
     this.playTone(659.25, 0.14, 'sine', 0.22, 0.09);
     this.playTone(783.99, 0.24, 'triangle', 0.24, 0.18);
   }
 
   playClueFound() {
+    this.vibrate(18);
     this.playTone(587.33, 0.12, 'triangle', 0.22, 0);
     this.playTone(880, 0.26, 'sine', 0.24, 0.09);
   }
@@ -164,6 +178,41 @@ class SoundEngine {
     this.playTone(392, 0.18, 'sine', 0.16, 0);
     this.playTone(329.63, 0.22, 'triangle', 0.14, 0.18);
     this.playTone(261.63, 0.3, 'sine', 0.12, 0.4);
+
+    // Subtle tape/mic static hiss for realistic voice note playback
+    const ctx = this.getContext();
+    if (!ctx) return;
+    try {
+      const duration = 1.25;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * 0.4;
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(1100, ctx.currentTime);
+      bandpass.Q.setValueAtTime(0.8, ctx.currentTime);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.035, ctx.currentTime + 0.12);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
+      noise.connect(bandpass);
+      bandpass.connect(gain);
+      gain.connect(ctx.destination);
+
+      noise.start();
+      noise.stop(ctx.currentTime + duration);
+    } catch {
+      // ignore audio buffer errors
+    }
   }
 
   playCaseSolved(success: boolean) {

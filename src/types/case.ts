@@ -114,6 +114,28 @@ export interface CaseRecap {
   points: string[];
 }
 
+export interface SocialComment {
+  id: string;
+  author: string;
+  text: string;
+  time: string;
+}
+
+export interface SocialPost {
+  id: string;
+  accountHandle: string;
+  accountLabel?: string;
+  isPrivateAlt?: boolean;
+  isCloseFriends?: boolean;
+  time: string;
+  location?: string;
+  caption: string;
+  likes: number;
+  comments: SocialComment[];
+  clueId?: string;
+  clueLabel?: string;
+}
+
 export interface CaseData {
   id: string;
   number: number;
@@ -130,6 +152,7 @@ export interface CaseData {
   notes: NoteItem[];
   locations?: LocationLog[];
   browserHistory?: BrowserHistoryItem[];
+  socialPosts?: SocialPost[];
   liveAlert?: LiveAlert;
   hints: string[];
   totalClues: number;

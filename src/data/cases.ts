@@ -10,6 +10,8 @@ import { CASE_5 } from './case5';
 import { CASE_5_EN } from './case5.en';
 import { CASE_6 } from './case6';
 import { CASE_6_EN } from './case6.en';
+import { CASE_7 } from './case7';
+import { CASE_7_EN } from './case7.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -26,8 +28,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -37,6 +39,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c4 = cases[3];
   const c5 = cases[4];
   const c6 = cases[5];
+  const c7 = cases[6];
 
   return [
     {
@@ -134,6 +137,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Eerie forest isolation, night chase & illegal logging'
           : 'TW: Teror hutan berkabut, pengejaran malam & isolasi',
+    },
+    {
+      id: c7.id,
+      number: 7,
+      title: c7.title,
+      subtitle: c7.subtitle,
+      difficulty: c7.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Dark Social Media • Agency Conspiracy'
+          : 'Suasana: Drama Gelap Sosmed • Konspirasi Agensi',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Drink spiking, betrayal & ICU hospitalization'
+          : 'TW: Pembiusan, pengkhianatan & intimidasi',
     },
   ];
 };

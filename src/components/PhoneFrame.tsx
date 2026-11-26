@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { CaseData } from '../types/case';
 import { UI_STRINGS, type Language } from '../i18n/strings';
 import { sound } from '../utils/sound';
@@ -7,6 +7,7 @@ import { GalleryApp } from './apps/GalleryApp';
 import { NotesApp } from './apps/NotesApp';
 import { MapsApp } from './apps/MapsApp';
 import { BrowserApp } from './apps/BrowserApp';
+import { SocialApp } from './apps/SocialApp';
 import {
   BrowserAppIcon,
   GalleryAppIcon,
@@ -14,11 +15,12 @@ import {
   MessagesAppIcon,
   NotesAppIcon,
   ReportAppIcon,
+  SocialAppIcon,
 } from './AppIcons';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BookmarkCheck, Wifi } from 'lucide-react';
 
-type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser';
+type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser' | 'social';
 
 interface PhoneFrameProps {
   caseData: CaseData;
@@ -47,7 +49,16 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
 }) => {
   const [activeApp, setActiveApp] = useState<ActiveApp>('home');
   const [galleryTargetPhotoId, setGalleryTargetPhotoId] = useState<string | null>(null);
+  const [batteryLevel, setBatteryLevel] = useState<number>(4);
   const t = UI_STRINGS[lang];
+
+  useEffect(() => {
+    setBatteryLevel(4);
+    const timer = window.setInterval(() => {
+      setBatteryLevel((prev) => (prev > 2 ? prev - 1 : prev));
+    }, 90000);
+    return () => window.clearInterval(timer);
+  }, [caseData.id]);
 
   const openApp = (app: ActiveApp) => {
     sound.playTap();
@@ -119,9 +130,12 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           </div>
           <Wifi className="h-3 w-3 text-white" />
           <div className="flex items-center gap-0.5">
-            <span className="text-[9px] font-bold text-rose-400">4%</span>
+            <span className="text-[9px] font-bold text-rose-400">{batteryLevel}%</span>
             <div className="flex h-[10px] w-[18px] items-center rounded-[3px] border border-white/40 p-[1.5px]">
-              <div className="h-full w-[3px] rounded-[1px] bg-rose-500" />
+              <div
+                className="h-full rounded-[1px] bg-rose-500 transition-all"
+                style={{ width: `${Math.max(2, batteryLevel)}px` }}
+              />
             </div>
           </div>
         </div>
@@ -199,6 +213,20 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                       </span>
                     </button>
                   ) : <div />}
+
+                  {caseData.socialPosts && caseData.socialPosts.length > 0 && (
+                    <button
+                      onClick={() => openApp('social')}
+                      className="group flex flex-col items-center gap-1.5"
+                    >
+                      <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <SocialAppIcon />
+                      </div>
+                      <span className="text-[9px] font-medium leading-none text-white/85 drop-shadow-sm">
+                        {t.appSocial}
+                      </span>
+                    </button>
+                  )}
 
                   <button
                     onClick={() => {
@@ -360,6 +388,24 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               <BrowserApp
                 lang={lang}
                 history={caseData.browserHistory}
+                discoveredClues={discoveredClues}
+                onDiscoverClue={onDiscoverClue}
+              />
+            </motion.div>
+          )}
+
+          {activeApp === 'social' && caseData.socialPosts && (
+            <motion.div
+              key="social"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 16 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <SocialApp
+                lang={lang}
+                posts={caseData.socialPosts}
                 discoveredClues={discoveredClues}
                 onDiscoverClue={onDiscoverClue}
               />

@@ -176,6 +176,9 @@ export function App() {
     activeCase.browserHistory?.forEach((b) => {
       if (b.clueId && b.clueLabel) map.set(b.clueId, b.clueLabel);
     });
+    activeCase.socialPosts?.forEach((s) => {
+      if (s.clueId && s.clueLabel) map.set(s.clueId, s.clueLabel);
+    });
     return map;
   }, [activeCase]);
 
@@ -295,6 +298,7 @@ export function App() {
 
   if (!activeCase) {
     const solvedCount = Object.keys(progress.solvedRanks).length;
+    const rankSCount = Object.values(progress.solvedRanks).filter((r) => r === 'S').length;
     const totalCluesFound = Object.values(progress.discoveredClues).reduce(
       (sum, arr) => sum + arr.length,
       0
@@ -382,6 +386,14 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-extrabold text-zinc-100">
                     {totalCluesFound}
+                  </p>
+                </div>
+                <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/80 px-4 py-2.5">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-zinc-500">
+                    Rank S
+                  </p>
+                  <p className="mt-0.5 font-mono text-lg font-extrabold text-amber-300">
+                    {rankSCount}
                   </p>
                 </div>
                 <button
