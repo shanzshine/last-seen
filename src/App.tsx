@@ -359,7 +359,7 @@ export function App() {
                 REC ● {t.statusTag}
               </div>
 
-              <h1 className="font-creepy title-flicker mt-5 bg-gradient-to-b from-white via-zinc-200 to-rose-400/90 bg-clip-text text-5xl font-normal tracking-wide text-transparent sm:text-7xl">
+              <h1 className="font-creepy title-flicker mt-5 bg-gradient-to-b from-red-400 via-red-600 to-red-950 bg-clip-text py-1 text-3xl leading-snug tracking-wide text-transparent drop-shadow-[0_4px_18px_rgba(220,38,38,0.45)] sm:text-5xl">
                 Last Seen
               </h1>
 
