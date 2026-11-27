@@ -26,6 +26,9 @@ const REAL_PHOTO_MAP: Partial<Record<PhotoEvidence['visualType'], { file: string
   'access-card': { file: 'images/access-card.jpg', alt: 'Foto kartu akses NUSATECH ID Bima Pratama' },
   'toll-receipt': { file: 'images/toll-receipt.jpg', alt: 'Foto struk tol GT Bekasi Barat' },
   'train-ticket': { file: 'images/train-ticket.jpg', alt: 'Foto boarding pass KAI Gambir-Bandung' },
+  'trail-sign': { file: 'images/trail-sign.jpg', alt: 'Foto plang kayu Pos 3 2840 MDPL malam hari' },
+  'fog-silhouettes': { file: 'images/fog-silhouettes.jpg', alt: 'Foto sorot lampu truk & siluet di kabut malam' },
+  'radio-ht': { file: 'images/radio-ht.jpg', alt: 'Foto walkie-talkie HT frekuensi 148.550 MHz' },
 };
 
 export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = false }) => {
