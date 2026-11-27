@@ -23,6 +23,9 @@ const REAL_PHOTO_MAP: Partial<Record<PhotoEvidence['visualType'], { file: string
   'audit-transfer': { file: 'images/audit-transfer.jpg', alt: 'Foto dokumen audit Proyek Helios' },
   'office-cctv': { file: 'images/office-cctv.jpg', alt: 'Foto CCTV lorong kantor lantai 12' },
   'taxi-plate': { file: 'images/taxi-plate.jpg', alt: 'Foto plat nomor taksi B 2841 KJL' },
+  'access-card': { file: 'images/access-card.jpg', alt: 'Foto kartu akses NUSATECH ID Bima Pratama' },
+  'toll-receipt': { file: 'images/toll-receipt.jpg', alt: 'Foto struk tol GT Bekasi Barat' },
+  'train-ticket': { file: 'images/train-ticket.jpg', alt: 'Foto boarding pass KAI Gambir-Bandung' },
 };
 
 export const PhotoVisual: React.FC<PhotoVisualProps> = ({ visualType, compact = false }) => {
