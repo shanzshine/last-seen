@@ -755,18 +755,15 @@ export function App() {
                         {item.subtitle}
                       </p>
 
-                      {/* Atmosphere + warning */}
-                      <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1.5">
-                        <span className="text-[11px] text-zinc-500">
-                          {item.atmosphere}
-                        </span>
-                        {item.contentWarning && (
+                      {/* Content Warning */}
+                      {item.contentWarning && (
+                        <div className="mt-2.5">
                           <span className="inline-flex items-center gap-1 rounded bg-red-950/40 px-1.5 py-0.5 text-[10px] font-medium text-red-300/90">
                             <AlertTriangle className="h-2.5 w-2.5 shrink-0" />
-                            {item.contentWarning}
+                            {item.contentWarning.replace(/^TW:\s*/i, '')}
                           </span>
-                        )}
-                      </div>
+                        </div>
+                      )}
 
                       {/* Progress bar + action */}
                       <div className="mt-4 flex items-center justify-between gap-3">
