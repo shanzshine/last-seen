@@ -17,6 +17,7 @@ import {
   Lock,
   Play,
   Search,
+  Smartphone,
   Trophy,
   Volume2,
   VolumeX,
@@ -107,7 +108,7 @@ export function App() {
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
   const [showDeduction, setShowDeduction] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
-  const [mobileCluesOpen, setMobileCluesOpen] = useState(false);
+  const [mobileTab, setMobileTab] = useState<'phone' | 'briefing' | 'clues'>('phone');
   const [dismissedRecaps, setDismissedRecaps] = useState<string[]>([]);
   const [recapStep, setRecapStep] = useState(0);
   const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
@@ -381,6 +382,7 @@ export function App() {
 
   useEffect(() => {
     setRecapStep(0);
+    setMobileTab('phone');
   }, [activeCaseId]);
 
   useEffect(() => {
@@ -922,17 +924,6 @@ export function App() {
               )}
             </button>
             <button
-              onClick={() => setMobileCluesOpen((v) => !v)}
-              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition lg:hidden ${
-                mobileCluesOpen
-                  ? 'bg-zinc-800 text-white'
-                  : 'bg-zinc-900 text-zinc-200 hover:bg-zinc-800'
-              }`}
-            >
-              <ClipboardList className="h-3.5 w-3.5 text-emerald-400" />
-              {activeClues.length}/{activeCase.totalClues}
-            </button>
-            <button
               onClick={() => {
                 sound.playTap();
                 setShowDeduction(true);
@@ -943,91 +934,63 @@ export function App() {
             </button>
           </div>
         </div>
-      </header>
 
-      {/* Mobile Clue & Hint Drawer */}
-      <AnimatePresence>
-        {mobileCluesOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            className="relative z-20 overflow-hidden border-b border-zinc-800/80 bg-zinc-950/95 backdrop-blur-md lg:hidden"
+        {/* Mobile Quick Switcher: Phone | Story & Hint | Evidence */}
+        <div className="mx-auto grid max-w-6xl grid-cols-3 gap-1.5 border-t border-zinc-800/60 px-3 py-2 lg:hidden">
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              setMobileTab('phone');
+            }}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-semibold transition ${
+              mobileTab === 'phone'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200'
+            }`}
           >
-            <div className="p-4">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400">
-                {t.briefingTitle}
-              </p>
-              <p className="mt-1 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
-
-              <div className="mt-3 flex items-center justify-between">
-                <p className="font-mono text-[11px] font-bold text-emerald-400">
-                  {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
-                </p>
-                <span className="font-mono text-[10px] text-amber-300/80">
-                  💡 {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
-                </span>
-              </div>
-
-              <div className="mt-2 space-y-1.5">
-                {activeCase.hints.map((hint, idx) => {
-                  const isRevealed = activeRevealedHints.includes(idx);
-                  const topic = getHintTopic(hint, lang);
-                  return isRevealed ? (
-                    <div
-                      key={idx}
-                      className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-100"
-                    >
-                      <span className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-amber-300">
-                        💡 {topic}
-                      </span>
-                      <p className="mt-0.5 leading-relaxed">{hint}</p>
-                    </div>
-                  ) : (
-                    <button
-                      key={idx}
-                      disabled={activeHintsUsed >= MAX_HINTS}
-                      onClick={() => handleUseHint(idx)}
-                      className="flex w-full items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-2.5 py-1.5 text-left text-[11px] font-semibold text-amber-200 transition hover:bg-amber-500/20 disabled:opacity-40"
-                    >
-                      <span className="flex items-center gap-1.5">
-                        <Lightbulb className="h-3.5 w-3.5 text-amber-300" />
-                        {lang === 'en' ? `Hint: ${topic}` : `Buka Hint: ${topic}`}
-                      </span>
-                      <span className="font-mono text-[9px] text-amber-300/70">
-                        {lang === 'en' ? 'Affects Rank S' : '-Rank S'}
-                      </span>
-                    </button>
-                  );
-                })}
-              </div>
-
-              {activeClues.length === 0 ? (
-                <p className="mt-2 text-xs text-zinc-500">{t.evidenceEmpty}</p>
-              ) : (
-                <ul className="mt-2 space-y-1.5">
-                  {activeClues.map((id, idx) => (
-                    <li
-                      key={id}
-                      className="flex items-start gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-2 text-xs text-zinc-200"
-                    >
-                      <span className="mt-0.5 font-mono text-[10px] font-bold text-emerald-400">
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <span>{clueLabelsMap.get(id)}</span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <Smartphone className="h-3.5 w-3.5" />
+            {lang === 'en' ? 'Phone' : 'HP'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              setMobileTab('briefing');
+            }}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-semibold transition ${
+              mobileTab === 'briefing'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <Lightbulb className="h-3.5 w-3.5 text-amber-400" />
+            {lang === 'en' ? 'Story & Hint' : 'Story & Hint'}
+          </button>
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              setMobileTab('clues');
+            }}
+            className={`flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-[11px] font-semibold transition ${
+              mobileTab === 'clues'
+                ? 'bg-zinc-100 text-zinc-950'
+                : 'bg-zinc-900/80 text-zinc-400 hover:text-zinc-200'
+            }`}
+          >
+            <ClipboardList className="h-3.5 w-3.5 text-emerald-400" />
+            <span>
+              {lang === 'en' ? 'Clues' : 'Bukti'} ({activeClues.length}/{activeCase.totalClues})
+            </span>
+          </button>
+        </div>
+      </header>
 
       {/* Main Workspace */}
       <main className="relative z-10 mx-auto grid w-full min-w-0 max-w-6xl gap-6 px-3 py-2.5 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_336px_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
-        <section className="hidden space-y-4 lg:block">
+        <section className={`${mobileTab === 'briefing' ? 'block' : 'hidden'} space-y-4 lg:block`}>
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
             <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
               <Search className="h-3.5 w-3.5 text-zinc-400" /> {t.briefingTitle}
@@ -1089,7 +1052,7 @@ export function App() {
         </section>
 
         {/* Center: Cloned Phone */}
-        <section className="flex w-full min-w-0 justify-center">
+        <section className={`${mobileTab === 'phone' ? 'flex' : 'hidden'} w-full min-w-0 justify-center lg:flex`}>
           <PhoneFrame
             caseData={activeCase}
             lang={lang}
@@ -1106,7 +1069,7 @@ export function App() {
         </section>
 
         {/* Right: Evidence Board */}
-        <section className="hidden space-y-4 lg:block">
+        <section className={`${mobileTab === 'clues' ? 'block' : 'hidden'} space-y-4 lg:block`}>
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
