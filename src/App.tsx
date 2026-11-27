@@ -83,6 +83,7 @@ export function App() {
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [mobileCluesOpen, setMobileCluesOpen] = useState(false);
   const [dismissedRecaps, setDismissedRecaps] = useState<string[]>([]);
+  const [recapStep, setRecapStep] = useState(0);
   const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
   const [notification, setNotification] = useState<PhoneNotification | null>(null);
   const toastTimerRef = useRef<number | null>(null);
@@ -311,6 +312,20 @@ export function App() {
       sound.stopAmbient();
     };
   }, []);
+
+  useEffect(() => {
+    setRecapStep(0);
+  }, [activeCaseId]);
+
+  useEffect(() => {
+    if (!activeCase?.recap || dismissedRecaps.includes(activeCase.id)) return;
+    const total = activeCase.recap.points.length;
+    if (recapStep >= total - 1) return;
+    const timer = window.setTimeout(() => {
+      setRecapStep((prev) => Math.min(total - 1, prev + 1));
+    }, 4200);
+    return () => window.clearTimeout(timer);
+  }, [activeCase, dismissedRecaps, recapStep]);
 
   useEffect(() => {
     if (!baseCase?.liveAlert || liveTriggeredCases.includes(baseCase.id)) return;
@@ -1055,53 +1070,125 @@ export function App() {
         />
       )}
 
-      {/* "Previously on Last Seen..." Recap Modal */}
+      {/* "Previously on Last Seen..." Cinematic Sequence Modal */}
       <AnimatePresence>
         {activeCase.recap && !dismissedRecaps.includes(activeCase.id) && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4 backdrop-blur-md"
           >
             <motion.div
-              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              initial={{ opacity: 0, scale: 0.95, y: 14 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 8 }}
-              transition={{ duration: 0.22 }}
-              className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl"
+              transition={{ duration: 0.24 }}
+              className="relative w-full max-w-md overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl"
             >
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
-                {activeCase.recap.title}
-              </p>
-              <h2 className="mt-1.5 text-xl font-black text-white">
-                Case #{String(activeCase.number).padStart(2, '0')}: {activeCase.title}
-              </h2>
-
-              <ul className="mt-4 space-y-2.5">
-                {activeCase.recap.points.map((pt, idx) => (
-                  <li
+              {/* Story Progress Bars */}
+              <div className="mb-4 flex gap-1.5">
+                {activeCase.recap.points.map((_, idx) => (
+                  <div
                     key={idx}
-                    className="flex items-start gap-2.5 rounded-xl border border-zinc-800/70 bg-zinc-900/60 p-3 text-xs leading-relaxed text-zinc-200"
+                    className="h-1 flex-1 overflow-hidden rounded-full bg-zinc-800"
                   >
-                    <span className="mt-0.5 font-mono text-[10px] font-bold text-zinc-400">
-                      0{idx + 1}
-                    </span>
-                    <span>{pt}</span>
-                  </li>
+                    {idx < recapStep ? (
+                      <div className="h-full w-full bg-red-600" />
+                    ) : idx === recapStep ? (
+                      <motion.div
+                        key={`bar-${activeCase.id}-${recapStep}`}
+                        initial={{ width: '0%' }}
+                        animate={{ width: '100%' }}
+                        transition={{
+                          duration: idx === activeCase.recap!.points.length - 1 ? 0.5 : 4.2,
+                          ease: 'linear',
+                        }}
+                        className="h-full bg-red-500"
+                      />
+                    ) : null}
+                  </div>
                 ))}
-              </ul>
+              </div>
 
-              <button
-                onClick={() => {
-                  sound.playTap();
-                  setDismissedRecaps((prev) => [...prev, activeCase.id]);
-                }}
-                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.98]"
-              >
-                <Play className="h-4 w-4 fill-current" />
-                {t.startCase}
-              </button>
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
+                    {activeCase.recap.title}
+                  </p>
+                  <h2 className="mt-1 text-lg font-black text-white">
+                    Case #{String(activeCase.number).padStart(2, '0')}: {activeCase.title}
+                  </h2>
+                </div>
+                <button
+                  onClick={() => {
+                    sound.playTap();
+                    setDismissedRecaps((prev) => [...prev, activeCase.id]);
+                  }}
+                  className="rounded-md px-2 py-1 font-mono text-[10px] font-semibold text-zinc-500 transition hover:bg-zinc-900 hover:text-zinc-200"
+                >
+                  {lang === 'en' ? 'Skip' : 'Lewati'}
+                </button>
+              </div>
+
+              {/* Single Animated Scene Beat */}
+              <div className="mt-5 min-h-[120px] rounded-xl border border-zinc-800/80 bg-zinc-900/60 p-4">
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`${activeCase.id}-beat-${recapStep}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.25 }}
+                    className="space-y-2"
+                  >
+                    <span className="inline-block rounded bg-red-950/60 px-2 py-0.5 font-mono text-[9.5px] font-bold text-red-300">
+                      {lang === 'en' ? `SCENE 0${recapStep + 1}` : `ADEGAN 0${recapStep + 1}`} / 0
+                      {activeCase.recap.points.length}
+                    </span>
+                    <p className="text-[13px] leading-relaxed text-zinc-100">
+                      {activeCase.recap.points[recapStep]}
+                    </p>
+                  </motion.div>
+                </AnimatePresence>
+              </div>
+
+              <div className="mt-5 flex items-center gap-2.5">
+                {recapStep > 0 && (
+                  <button
+                    onClick={() => {
+                      sound.playTap();
+                      setRecapStep((s) => Math.max(0, s - 1));
+                    }}
+                    className="rounded-xl border border-zinc-800 bg-zinc-900 px-4 py-3 text-xs font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white"
+                  >
+                    {lang === 'en' ? 'Back' : 'Kembali'}
+                  </button>
+                )}
+
+                {recapStep < activeCase.recap.points.length - 1 ? (
+                  <button
+                    onClick={() => {
+                      sound.playTap();
+                      setRecapStep((s) => s + 1);
+                    }}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.98]"
+                  >
+                    {lang === 'en' ? 'Next →' : 'Lanjut →'}
+                  </button>
+                ) : (
+                  <button
+                    onClick={() => {
+                      sound.playTap();
+                      setDismissedRecaps((prev) => [...prev, activeCase.id]);
+                    }}
+                    className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.98]"
+                  >
+                    <Play className="h-4 w-4 fill-current" />
+                    {t.startCase}
+                  </button>
+                )}
+              </div>
             </motion.div>
           </motion.div>
         )}
