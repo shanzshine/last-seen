@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import type { ChatMessage, ChatThread, PhotoEvidence } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
@@ -11,6 +11,7 @@ import {
   Mic,
   Play,
   RotateCcw,
+  Square,
   Trash2,
   Users,
 } from 'lucide-react';
@@ -39,8 +40,15 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   const t = UI_STRINGS[lang].chat;
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [playedVoiceIds, setPlayedVoiceIds] = useState<string[]>([]);
+  const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const [keywordInput, setKeywordInput] = useState('');
   const [keywordError, setKeywordError] = useState(false);
+
+  useEffect(() => {
+    return () => {
+      sound.stopVoiceNote();
+    };
+  }, []);
 
   const activeThread = threads.find((t) => t.id === activeThreadId) ?? null;
 
@@ -171,22 +179,42 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                 <button
                   type="button"
                   onClick={() => {
-                    sound.playVoiceNoteCue();
-                    setPlayedVoiceIds((prev) =>
-                      prev.includes(msg.id) ? prev : [...prev, msg.id]
-                    );
+                    if (playingVoiceId === msg.id) {
+                      sound.stopVoiceNote();
+                      setPlayingVoiceId(null);
+                    } else {
+                      setPlayingVoiceId(msg.id);
+                      setPlayedVoiceIds((prev) =>
+                        prev.includes(msg.id) ? prev : [...prev, msg.id]
+                      );
+                      sound.playVoiceNote(msg.voiceNote!.transcript, lang, () => {
+                        setPlayingVoiceId((curr) => (curr === msg.id ? null : curr));
+                      });
+                    }
                   }}
-                  className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 text-white transition hover:bg-white/30 active:scale-95"
-                  aria-label="Play Voice Note"
+                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-white transition active:scale-95 ${
+                    playingVoiceId === msg.id
+                      ? 'bg-rose-500/80 hover:bg-rose-500'
+                      : 'bg-white/20 hover:bg-white/30'
+                  }`}
+                  aria-label={playingVoiceId === msg.id ? 'Stop Voice Note' : 'Play Voice Note'}
                 >
-                  <Play className="h-3.5 w-3.5 fill-current" />
+                  {playingVoiceId === msg.id ? (
+                    <Square className="h-3 w-3 fill-current" />
+                  ) : (
+                    <Play className="h-3.5 w-3.5 fill-current" />
+                  )}
                 </button>
                 <div className="flex flex-1 items-center gap-[2px]">
                   {[3, 6, 4, 8, 5, 9, 4, 7, 10, 6, 4, 8, 5, 3, 6, 4].map((h, i) => (
                     <span
                       key={i}
-                      className={`w-[2.5px] rounded-full ${
-                        playedVoiceIds.includes(msg.id) ? 'bg-emerald-300' : 'bg-white/45'
+                      className={`w-[2.5px] rounded-full transition-all ${
+                        playingVoiceId === msg.id
+                          ? 'animate-pulse bg-emerald-300'
+                          : playedVoiceIds.includes(msg.id)
+                            ? 'bg-emerald-400/80'
+                            : 'bg-white/45'
                       }`}
                       style={{ height: `${h * 2}px` }}
                     />

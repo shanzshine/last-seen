@@ -15,6 +15,10 @@ class SoundEngine {
   private bgFadeTimer: number | null = null;
   private bgCurrentSrc: string | null = null;
 
+  private voiceNoiseSrc: AudioBufferSourceNode | null = null;
+  private voiceNoiseGain: GainNode | null = null;
+  private voiceOnEnd: (() => void) | null = null;
+
   private gestureBound = false;
 
   constructor() {
@@ -141,6 +145,7 @@ class SoundEngine {
     }
 
     if (this.muted) {
+      this.stopVoiceNote();
       this.stopAmbientNodes();
     } else {
       void this.unlock().then((ok) => {
@@ -253,6 +258,7 @@ class SoundEngine {
 
   stopAmbient() {
     this.ambientDesired = false;
+    this.stopVoiceNote();
     this.stopAmbientNodes();
   }
 
@@ -328,6 +334,143 @@ class SoundEngine {
     this.vibrate(18);
     this.playTone(587.33, 0.12, 'triangle', 0.22, 0);
     this.playTone(880, 0.26, 'sine', 0.24, 0.09);
+  }
+
+  playVoiceNote(transcript: string, lang: 'id' | 'en', onEnd?: () => void) {
+    this.stopVoiceNote();
+    if (this.muted || typeof window === 'undefined') {
+      onEnd?.();
+      return;
+    }
+
+    this.voiceOnEnd = onEnd ?? null;
+
+    // Duck background horror music slightly so voice is clear
+    if (this.bgAudio && !this.bgAudio.paused) {
+      this.fadeBgVolume(this.bgAudio, 0.1);
+    }
+
+    // Start subtle atmospheric mic/tape static bed during playback
+    const ctx = this.getContext();
+    if (ctx) {
+      try {
+        const bufferSize = ctx.sampleRate * 2;
+        const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+        const data = buffer.getChannelData(0);
+        for (let i = 0; i < bufferSize; i++) {
+          data[i] = (Math.random() * 2 - 1) * 0.38;
+        }
+
+        const noise = ctx.createBufferSource();
+        noise.buffer = buffer;
+        noise.loop = true;
+
+        const bandpass = ctx.createBiquadFilter();
+        bandpass.type = 'bandpass';
+        bandpass.frequency.setValueAtTime(950, ctx.currentTime);
+        bandpass.Q.setValueAtTime(0.75, ctx.currentTime);
+
+        const gain = ctx.createGain();
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.032, ctx.currentTime + 0.18);
+
+        noise.connect(bandpass);
+        bandpass.connect(gain);
+        gain.connect(ctx.destination);
+        noise.start();
+
+        this.voiceNoiseSrc = noise;
+        this.voiceNoiseGain = gain;
+      } catch {
+        // ignore audio buffer errors
+      }
+    }
+
+    // Clean transcript for natural spoken delivery
+    const spokenText = transcript
+      .replace(/^["']|["']$/g, '')
+      .replace(/█/g, '... ')
+      .replace(/—/g, ', ');
+
+    if ('speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(spokenText);
+        const targetLang = lang === 'en' ? 'en' : 'id';
+        utterance.lang = lang === 'en' ? 'en-US' : 'id-ID';
+        utterance.rate = 1.04;
+        utterance.pitch = 0.96;
+        utterance.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const matchingVoices = voices.filter((v) =>
+          v.lang.toLowerCase().startsWith(targetLang)
+        );
+        const preferred =
+          matchingVoices.find((v) => /google|natural|online|microsoft/i.test(v.name)) ??
+          matchingVoices[0];
+        if (preferred) {
+          utterance.voice = preferred;
+        }
+
+        const finish = () => {
+          const cb = this.voiceOnEnd;
+          this.stopVoiceNote(false);
+          cb?.();
+        };
+
+        utterance.onend = finish;
+        utterance.onerror = finish;
+
+        window.speechSynthesis.speak(utterance);
+        return;
+      } catch {
+        // fallback below if speechSynthesis fails
+      }
+    }
+
+    // Fallback if browser doesn't support speechSynthesis
+    this.playVoiceNoteCue();
+    window.setTimeout(() => {
+      const cb = this.voiceOnEnd;
+      this.stopVoiceNote(false);
+      cb?.();
+    }, 1500);
+  }
+
+  stopVoiceNote(cancelSpeech = true) {
+    this.voiceOnEnd = null;
+
+    if (cancelSpeech && typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      try {
+        window.speechSynthesis.cancel();
+      } catch {
+        // ignore
+      }
+    }
+
+    if (this.voiceNoiseSrc) {
+      const src = this.voiceNoiseSrc;
+      const gain = this.voiceNoiseGain;
+      this.voiceNoiseSrc = null;
+      this.voiceNoiseGain = null;
+      try {
+        if (this.ctx && gain) {
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.15);
+          src.stop(this.ctx.currentTime + 0.18);
+        } else {
+          src.stop();
+        }
+      } catch {
+        // ignore
+      }
+    }
+
+    // Restore background music volume
+    if (this.bgAudio && !this.bgAudio.paused && !this.muted && this.ambientDesired) {
+      const targetVol = this.ambientMode === 'case' ? 0.34 : 0.25;
+      this.fadeBgVolume(this.bgAudio, targetVol);
+    }
   }
 
   playVoiceNoteCue() {
