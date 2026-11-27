@@ -12,6 +12,8 @@ import { CASE_6 } from './case6';
 import { CASE_6_EN } from './case6.en';
 import { CASE_7 } from './case7';
 import { CASE_7_EN } from './case7.en';
+import { CASE_8 } from './case8';
+import { CASE_8_EN } from './case8.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -28,8 +30,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN, CASE_8_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7, CASE_8];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -40,6 +42,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c5 = cases[4];
   const c6 = cases[5];
   const c7 = cases[6];
+  const c8 = cases[7];
 
   return [
     {
@@ -153,6 +156,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Drink spiking, betrayal & ICU hospitalization'
           : 'TW: Pembiusan, pengkhianatan & intimidasi',
+    },
+    {
+      id: c8.id,
+      number: 8,
+      title: c8.title,
+      subtitle: c8.subtitle,
+      difficulty: c8.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Urban Horror • Cut-Off Midnight Livestream'
+          : 'Suasana: Horor Urban • Siaran Uji Nyali Terputus',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Abandoned hospital isolation, pursuit & intimidation'
+          : 'TW: Gedung tua terbengkalai, pengejaran & ancaman',
     },
   ];
 };
