@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { NoteItem } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
@@ -10,6 +10,8 @@ interface NotesAppProps {
   notes: NoteItem[];
   unlockedNoteIds: string[];
   discoveredClues: string[];
+  backSignal?: number;
+  onBackAtRoot?: () => void;
   onUnlockNote: (noteId: string) => void;
   onDiscoverClue: (clueId: string) => void;
 }
@@ -19,12 +21,27 @@ export const NotesApp: React.FC<NotesAppProps> = ({
   notes,
   unlockedNoteIds,
   discoveredClues,
+  backSignal = 0,
+  onBackAtRoot,
   onUnlockNote,
   onDiscoverClue,
 }) => {
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const prevBackRef = useRef(backSignal);
+
+  useEffect(() => {
+    if (backSignal === prevBackRef.current) return;
+    prevBackRef.current = backSignal;
+    if (selectedNoteId !== null) {
+      setSelectedNoteId(null);
+      setPinInput('');
+      setPinError(false);
+    } else {
+      onBackAtRoot?.();
+    }
+  }, [backSignal, selectedNoteId, onBackAtRoot]);
 
   const t = UI_STRINGS[lang].notes;
   const selectedNote = notes.find((n) => n.id === selectedNoteId) ?? null;

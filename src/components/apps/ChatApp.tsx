@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { ChatMessage, ChatThread, PhotoEvidence } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
@@ -23,6 +23,8 @@ interface ChatAppProps {
   discoveredClues: string[];
   recoveredThreadIds: string[];
   typingThreadId?: string | null;
+  backSignal?: number;
+  onBackAtRoot?: () => void;
   onDiscoverClue: (clueId: string) => void;
   onRecoverThread: (threadId: string) => void;
   onOpenPhoto: (photoId: string) => void;
@@ -35,6 +37,8 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   discoveredClues,
   recoveredThreadIds,
   typingThreadId = null,
+  backSignal = 0,
+  onBackAtRoot,
   onDiscoverClue,
   onRecoverThread,
   onOpenPhoto,
@@ -45,6 +49,20 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const [keywordInput, setKeywordInput] = useState('');
   const [keywordError, setKeywordError] = useState(false);
+
+  const prevBackRef = useRef(backSignal);
+
+  useEffect(() => {
+    if (backSignal === prevBackRef.current) return;
+    prevBackRef.current = backSignal;
+    if (activeThreadId !== null) {
+      sound.stopVoiceNote();
+      setPlayingVoiceId(null);
+      setActiveThreadId(null);
+    } else {
+      onBackAtRoot?.();
+    }
+  }, [backSignal, activeThreadId, onBackAtRoot]);
 
   useEffect(() => {
     return () => {

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { CaseData, PhoneNotification } from '../types/case';
 import { UI_STRINGS, type Language } from '../i18n/strings';
 import { sound } from '../utils/sound';
@@ -52,6 +52,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   onOpenDeduction,
 }) => {
   const [activeApp, setActiveApp] = useState<ActiveApp>('home');
+  const appHistoryRef = useRef<ActiveApp[]>([]);
+  const [backSignal, setBackSignal] = useState<number>(0);
   const [galleryTargetPhotoId, setGalleryTargetPhotoId] = useState<string | null>(null);
   const [batteryLevel, setBatteryLevel] = useState<number>(4);
   const [isLockedScreen, setIsLockedScreen] = useState<boolean>(true);
@@ -67,6 +69,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   useEffect(() => {
     setBatteryLevel(4);
     setActiveApp('home');
+    appHistoryRef.current = [];
+    setBackSignal(0);
     setIsLockedScreen(true);
     const timer = window.setInterval(() => {
       setBatteryLevel((prev) => (prev > 2 ? prev - 1 : prev));
@@ -94,11 +98,40 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
 
   const openApp = (app: ActiveApp) => {
     sound.playTap();
+    if (app === 'home') {
+      appHistoryRef.current = [];
+      setActiveApp('home');
+      return;
+    }
+    if (activeApp !== app) {
+      appHistoryRef.current = [...appHistoryRef.current, activeApp];
+    }
     setActiveApp(app);
+  };
+
+  const popAppHistory = () => {
+    const prev = appHistoryRef.current;
+    if (prev.length === 0) {
+      setActiveApp('home');
+      return;
+    }
+    const nextApp = prev[prev.length - 1];
+    appHistoryRef.current = prev.slice(0, -1);
+    setActiveApp(nextApp);
+  };
+
+  const handlePhoneBack = () => {
+    sound.playTap();
+    if (activeApp === 'chat' || activeApp === 'gallery' || activeApp === 'notes') {
+      setBackSignal((s) => s + 1);
+    } else {
+      popAppHistory();
+    }
   };
 
   const openPhotoFromChat = (photoId: string) => {
     sound.playTap();
+    appHistoryRef.current = [...appHistoryRef.current, 'chat'];
     setGalleryTargetPhotoId(photoId);
     setActiveApp('gallery');
   };
@@ -477,6 +510,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 discoveredClues={discoveredClues}
                 recoveredThreadIds={recoveredThreadIds}
                 typingThreadId={typingThreadId}
+                backSignal={backSignal}
+                onBackAtRoot={popAppHistory}
                 onDiscoverClue={onDiscoverClue}
                 onRecoverThread={onRecoverThread}
                 onOpenPhoto={openPhotoFromChat}
@@ -498,6 +533,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 photos={caseData.photos}
                 initialPhotoId={galleryTargetPhotoId}
                 discoveredClues={discoveredClues}
+                backSignal={backSignal}
+                onBackAtRoot={popAppHistory}
                 onDiscoverClue={onDiscoverClue}
               />
             </motion.div>
@@ -517,6 +554,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 notes={caseData.notes}
                 unlockedNoteIds={unlockedNoteIds}
                 discoveredClues={discoveredClues}
+                backSignal={backSignal}
+                onBackAtRoot={popAppHistory}
                 onUnlockNote={onUnlockNote}
                 onDiscoverClue={onDiscoverClue}
               />
@@ -579,21 +618,30 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Bottom Gesture Home Bar */}
-      <div className="z-20 flex shrink-0 flex-col items-center justify-center bg-black/95 pb-2 pt-1.5">
+      {/* Bottom Navigation Bar (Back + Home Gesture Bar) */}
+      <div className="z-20 flex shrink-0 items-center justify-between bg-black/95 px-4 pb-2 pt-1.5">
+        {activeApp !== 'home' ? (
+          <button
+            onClick={handlePhoneBack}
+            className="inline-flex w-16 items-center gap-0.5 rounded-full bg-zinc-900 px-2.5 py-1 text-[10px] font-medium text-zinc-300 ring-1 ring-white/10 transition hover:bg-zinc-800 hover:text-white active:scale-95"
+            aria-label={lang === 'en' ? 'Back' : 'Kembali'}
+          >
+            <ChevronLeft className="h-3 w-3" />
+            {lang === 'en' ? 'Back' : 'Kembali'}
+          </button>
+        ) : (
+          <div className="w-16" />
+        )}
+
         <button
           onClick={() => openApp('home')}
-          className="group flex flex-col items-center gap-1 px-6 py-0.5"
+          className="group flex flex-col items-center gap-1 px-4 py-1"
           aria-label={t.homeScreen}
         >
           <div className="h-1 w-24 rounded-full bg-zinc-600 transition group-hover:bg-white" />
-          {activeApp !== 'home' && (
-            <span className="inline-flex items-center gap-0.5 rounded-full bg-zinc-900 px-2.5 py-0.5 text-[9.5px] font-medium text-zinc-300 ring-1 ring-white/10 transition group-hover:bg-zinc-800 group-hover:text-white">
-              <ChevronLeft className="h-2.5 w-2.5" />
-              {t.homeScreen}
-            </span>
-          )}
         </button>
+
+        <div className="w-16" />
       </div>
     </div>
   );

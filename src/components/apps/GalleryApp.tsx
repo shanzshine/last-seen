@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import type { PhotoEvidence } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { PhotoVisual } from '../PhotoVisual';
@@ -17,6 +17,8 @@ interface GalleryAppProps {
   photos: PhotoEvidence[];
   initialPhotoId?: string | null;
   discoveredClues: string[];
+  backSignal?: number;
+  onBackAtRoot?: () => void;
   onDiscoverClue: (clueId: string) => void;
 }
 
@@ -25,10 +27,25 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
   photos,
   initialPhotoId = null,
   discoveredClues,
+  backSignal = 0,
+  onBackAtRoot,
   onDiscoverClue,
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(initialPhotoId);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const prevBackRef = useRef(backSignal);
+
+  useEffect(() => {
+    if (backSignal === prevBackRef.current) return;
+    prevBackRef.current = backSignal;
+    if (zoomOpen) {
+      setZoomOpen(false);
+    } else if (selectedId !== null) {
+      setSelectedId(null);
+    } else {
+      onBackAtRoot?.();
+    }
+  }, [backSignal, zoomOpen, selectedId, onBackAtRoot]);
   const selectedPhoto = photos.find((p) => p.id === selectedId) ?? null;
   const t = UI_STRINGS[lang].gallery;
 
