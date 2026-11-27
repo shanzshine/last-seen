@@ -11,15 +11,12 @@ import {
   ArrowLeft,
   BookmarkCheck,
   ClipboardList,
-  FileCheck2,
   Globe,
   HelpCircle,
-  KeyRound,
   Lightbulb,
   Lock,
   Play,
   Search,
-  Smartphone,
   Trophy,
   Volume2,
   VolumeX,
@@ -668,7 +665,7 @@ export function App() {
           </div>
         </div>
 
-        {/* How to Play Modal — Compact Dark Forensic Guide */}
+        {/* How to Play Modal — Compact Aged Forensic Paper Memo */}
         <AnimatePresence>
           {showHowToPlay && (
             <motion.div
@@ -680,20 +677,29 @@ export function App() {
               className="fixed inset-0 z-50 flex items-center justify-center overscroll-contain bg-black/85 p-4 backdrop-blur-sm"
             >
               <motion.div
-                initial={{ opacity: 0, scale: 0.94, y: 14 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.96, y: 8 }}
-                transition={{ type: 'spring', stiffness: 380, damping: 28 }}
+                initial={{ opacity: 0, scale: 0.88, y: 24, rotate: -1.8 }}
+                animate={{ opacity: 1, scale: 1, y: 0, rotate: -0.3 }}
+                exit={{ opacity: 0, scale: 0.92, y: 14, rotate: 0.8 }}
+                transition={{ type: 'spring', stiffness: 360, damping: 26 }}
                 onClick={(e) => e.stopPropagation()}
-                className="relative max-h-[88dvh] w-full max-w-lg overflow-y-auto overscroll-contain rounded-2xl border border-zinc-800 bg-[#0b0c10] p-5 text-zinc-100 shadow-2xl sm:p-6"
+                className="relative max-h-[88dvh] w-full max-w-md overflow-y-auto overscroll-contain rounded-lg border border-[#cbbba0] bg-[#efe6d2] p-5 text-stone-900 shadow-[0_28px_70px_rgba(0,0,0,0.9)] sm:p-6"
+                style={{
+                  backgroundImage:
+                    'radial-gradient(circle at 85% 12%, rgba(153, 27, 27, 0.09) 0%, transparent 45%), repeating-linear-gradient(to bottom, transparent 0px, transparent 27px, rgba(120, 100, 75, 0.09) 28px)',
+                }}
               >
-                <div className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-3.5">
+                {/* Red Classified Rubber Stamp */}
+                <div className="pointer-events-none absolute right-12 top-5 rotate-[-10deg] rounded border-2 border-red-800/60 px-2 py-0.5 font-mono text-[9.5px] font-black uppercase tracking-[0.22em] text-red-800/65">
+                  {lang === 'en' ? 'CLASSIFIED' : 'RAHASIA'}
+                </div>
+
+                <div className="relative flex items-start justify-between gap-3 border-b-2 border-stone-800/20 pb-3">
                   <div>
-                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
-                      {lang === 'en' ? 'FIELD GUIDE' : 'CARA BERMAIN'}
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-red-900/80">
+                      {lang === 'en' ? 'FIELD MANUAL' : 'BERKAS PANDUAN'}
                     </p>
-                    <h3 className="mt-1 text-lg font-bold tracking-tight text-white">
-                      {lang === 'en' ? 'How to Play Last Seen' : 'Alur Investigasi'}
+                    <h3 className="mt-0.5 text-lg font-black tracking-tight text-stone-900">
+                      {lang === 'en' ? 'How to Play' : 'Cara Bermain'}
                     </h3>
                   </div>
                   <button
@@ -701,100 +707,84 @@ export function App() {
                       sound.playTap();
                       setShowHowToPlay(false);
                     }}
-                    className="rounded-lg bg-zinc-900 p-1.5 text-zinc-400 transition hover:bg-zinc-800 hover:text-white"
+                    className="rounded-md p-1.5 text-stone-600 transition hover:bg-stone-900/10 hover:text-stone-950"
                     aria-label="Close"
                   >
                     <X className="h-4 w-4" />
                   </button>
                 </div>
 
-                {/* Short 1-line Premise */}
-                <p className="mt-3.5 rounded-xl border border-zinc-800/80 bg-zinc-900/50 px-3.5 py-2.5 text-[11.5px] leading-relaxed text-zinc-300">
-                  <span className="font-semibold text-white">
-                    {lang === 'en' ? 'Premise: ' : 'Peranmu: '}
-                  </span>
+                <p className="mt-3 border-l-2 border-red-900/60 pl-2.5 text-[11.5px] leading-relaxed text-stone-800">
+                  <strong className="text-stone-950">
+                    {lang === 'en' ? 'Role: ' : 'Peranmu: '}
+                  </strong>
                   {lang === 'en'
-                    ? 'You inspect a recovered victim phone (at 4% battery) before the culprit can wipe it.'
-                    : 'Kamu memeriksa salinan HP korban (baterai tinggal 4%) sebelum isinya dihapus pelaku.'}
+                    ? 'Inspect the victim’s recovered phone (at 4% battery) before the culprit wipes it.'
+                    : 'Periksa salinan HP korban (baterai tinggal 4%) sebelum isinya dihapus pelaku.'}
                 </p>
 
-                {/* Compact 2x2 Grid on Desktop, Tight 4 Rows on Mobile */}
-                <div className="mt-3.5 grid gap-2.5 sm:grid-cols-2">
-                  <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-3.5">
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-900 text-emerald-400 ring-1 ring-white/5">
-                        <Smartphone className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="font-mono text-[10px] font-bold text-zinc-500">01</span>
-                      <p className="text-xs font-bold text-white">
-                        {lang === 'en' ? 'Check Apps' : 'Cek Isi HP'}
+                {/* Clean numbered ink lines directly on paper — no chunky boxes */}
+                <ol className="mt-3.5 divide-y divide-stone-800/12 text-xs">
+                  <li className="flex items-start gap-3 py-2.5">
+                    <span className="mt-0.5 font-mono text-[11px] font-black text-red-900">01</span>
+                    <div>
+                      <p className="font-bold text-stone-950">
+                        {lang === 'en' ? 'Inspect Apps' : 'Periksa Isi HP'}
+                      </p>
+                      <p className="text-[11px] text-stone-700">
+                        {lang === 'en'
+                          ? 'Check Messages, Gallery, Notes, Maps, Browser & Social.'
+                          : 'Buka Pesan, Galeri, Catatan, Maps, Browser & Sosmed.'}
                       </p>
                     </div>
-                    <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-                      {lang === 'en'
-                        ? 'Explore Messages, Gallery, Notes, Maps, Browser & Social.'
-                        : 'Buka Pesan, Galeri, Catatan, Maps, Browser & Sosmed.'}
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-3.5">
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-900 text-amber-400 ring-1 ring-white/5">
-                        <BookmarkCheck className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="font-mono text-[10px] font-bold text-zinc-500">02</span>
-                      <p className="text-xs font-bold text-white">
-                        {lang === 'en' ? 'Pin Clues' : 'Catat Bukti'}
+                  </li>
+                  <li className="flex items-start gap-3 py-2.5">
+                    <span className="mt-0.5 font-mono text-[11px] font-black text-red-900">02</span>
+                    <div>
+                      <p className="font-bold text-stone-950">
+                        {lang === 'en' ? 'Pin Suspicious Clues' : 'Catat Bukti'}
+                      </p>
+                      <p className="text-[11px] text-stone-700">
+                        {lang === 'en'
+                          ? 'Tap "Pin Clue" whenever you spot a lie or odd detail.'
+                          : 'Klik "Catat Bukti" tiap nemu kebohongan atau kejanggalan.'}
                       </p>
                     </div>
-                    <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-                      {lang === 'en'
-                        ? 'Tap "Pin Clue" whenever you spot a lie or odd detail.'
-                        : 'Klik "Catat Bukti" tiap nemu kebohongan atau kejanggalan.'}
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-3.5">
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-900 text-rose-400 ring-1 ring-white/5">
-                        <KeyRound className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="font-mono text-[10px] font-bold text-zinc-500">03</span>
-                      <p className="text-xs font-bold text-white">
-                        {lang === 'en' ? 'Crack Locks' : 'Buka Kunci'}
+                  </li>
+                  <li className="flex items-start gap-3 py-2.5">
+                    <span className="mt-0.5 font-mono text-[11px] font-black text-red-900">03</span>
+                    <div>
+                      <p className="font-bold text-stone-950">
+                        {lang === 'en' ? 'Crack PINs & Deleted Chats' : 'Buka Kunci & Pulihkan Chat'}
+                      </p>
+                      <p className="text-[11px] text-stone-700">
+                        {lang === 'en'
+                          ? 'Find 4-digit PINs for locked Notes & keywords for deleted messages.'
+                          : 'Cari PIN 4 digit Catatan & kata kunci chat yang terhapus.'}
                       </p>
                     </div>
-                    <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-                      {lang === 'en'
-                        ? 'Find 4-digit PINs for Notes & keywords for deleted chats.'
-                        : 'Cari PIN 4 digit Catatan & kata kunci chat yang terhapus.'}
-                    </p>
-                  </div>
-
-                  <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-3.5">
-                    <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-zinc-900 text-sky-400 ring-1 ring-white/5">
-                        <FileCheck2 className="h-3.5 w-3.5" />
-                      </span>
-                      <span className="font-mono text-[10px] font-bold text-zinc-500">04</span>
-                      <p className="text-xs font-bold text-white">
-                        {lang === 'en' ? 'Solve Case' : 'Pecahkan Kasus'}
+                  </li>
+                  <li className="flex items-start gap-3 py-2.5">
+                    <span className="mt-0.5 font-mono text-[11px] font-black text-red-900">04</span>
+                    <div>
+                      <p className="font-bold text-stone-950">
+                        {lang === 'en' ? 'Submit Police Report' : 'Kirim Laporan & Raih Rank S'}
+                      </p>
+                      <p className="text-[11px] text-stone-700">
+                        {lang === 'en'
+                          ? 'Tap "Solve Case" to accuse the culprit. Zero hints = Rank S.'
+                          : 'Klik "Selesaikan Kasus", tebak pelaku tanpa Hint untuk Rank S.'}
                       </p>
                     </div>
-                    <p className="mt-1.5 text-[11px] leading-relaxed text-zinc-400">
-                      {lang === 'en'
-                        ? 'Tap "Solve Case" to accuse the culprit & earn Rank S.'
-                        : 'Klik "Selesaikan Kasus", tebak pelaku & raih Rank S.'}
-                    </p>
-                  </div>
-                </div>
+                  </li>
+                </ol>
 
                 <button
                   onClick={() => {
                     sound.playTap();
                     setShowHowToPlay(false);
                   }}
-                  className="mt-4 w-full rounded-xl bg-zinc-100 py-2.5 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.99]"
+                  className="mt-4 w-full rounded-md bg-stone-900 py-2.5 font-mono text-xs font-bold uppercase tracking-wider text-[#efe6d2] transition hover:bg-stone-800 active:scale-[0.99]"
                 >
                   {lang === 'en' ? 'Got it' : 'Mengerti'}
                 </button>
