@@ -4,7 +4,7 @@ export const UI_STRINGS = {
   id: {
     statusTag: 'terakhir dilihat pukul 01:47',
     heroDesc:
-      'HP korban berhasil dikloning sebelum baterainya habis. Periksa isi chat, foto, dan catatan pribadinya—temukan kejanggalan yang tersembunyi.',
+      'Kamu berperan sebagai analis forensik. Isi HP korban berhasil diamankan sebelum baterainya mati total—periksa chat, foto, dan catatannya untuk mengungkap apa yang sebenarnya terjadi.',
     caseListTitle: 'Daftar Kasus',
     autoSaved: 'Progres tersimpan otomatis',
     startCase: 'Mulai Investigasi',
@@ -31,7 +31,7 @@ export const UI_STRINGS = {
     muteOff: 'Matikan Suara',
     audioTapHint: 'Aktifkan Audio',
     switchLang: 'Ganti Bahasa',
-    phoneCloned: 'Perangkat Kloning',
+    phoneCloned: 'Salinan HP Korban',
     appMessages: 'Pesan',
     appGallery: 'Galeri',
     appNotes: 'Catatan',
@@ -108,7 +108,7 @@ export const UI_STRINGS = {
   en: {
     statusTag: 'last seen at 01:47',
     heroDesc:
-      'The victim’s phone was cloned right before the battery died. Inspect their chats, photos, and locked notes to uncover what really happened.',
+      'You play as a digital forensics analyst. The victim’s phone data was recovered right before the battery died—inspect their chats, photos, and notes to uncover the truth.',
     caseListTitle: 'Case Files',
     autoSaved: 'Progress auto-saved',
     startCase: 'Start Investigation',
@@ -135,7 +135,7 @@ export const UI_STRINGS = {
     muteOff: 'Mute Audio',
     audioTapHint: 'Enable Audio',
     switchLang: 'Switch Language',
-    phoneCloned: 'Cloned Device',
+    phoneCloned: 'Recovered Phone',
     appMessages: 'Messages',
     appGallery: 'Gallery',
     appNotes: 'Notes',

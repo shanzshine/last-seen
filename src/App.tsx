@@ -349,8 +349,8 @@ export function App() {
               <span className="h-1.5 w-1.5 rounded-full bg-red-600" />
               <span>
                 {lang === 'en'
-                  ? 'FORENSICS • EVIDENCE ARCHIVE'
-                  : 'ARSIP FORENSIK • BARANG BUKTI'}
+                  ? 'FORENSICS • EVIDENCE PHONE'
+                  : 'ARSIP FORENSIK • HP KORBAN'}
               </span>
             </span>
             <div className="flex items-center gap-1.5 sm:gap-2">
@@ -679,6 +679,15 @@ export function App() {
                 </div>
 
                 <div className="mt-4 space-y-2.5 text-xs leading-relaxed">
+                  <div className="rounded-md border border-red-900/20 bg-red-950/10 px-3 py-2 text-[11px] leading-relaxed text-stone-800">
+                    <span className="font-bold text-red-950">
+                      {lang === 'en' ? 'Your Role: ' : 'Peran Kamu: '}
+                    </span>
+                    {lang === 'en'
+                      ? 'Police recovered the victim’s phone at 4% battery and backed up its data to your desk so the culprit can’t wipe it remotely.'
+                      : 'Polisi mengamankan HP korban saat baterainya tinggal 4% dan menyalin isinya ke mejamu supaya tidak dihapus paksa oleh pelaku.'}
+                  </div>
+
                   <motion.div
                     initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
@@ -690,7 +699,7 @@ export function App() {
                     </div>
                     <div>
                       <p className="font-bold text-stone-950">
-                        {lang === 'en' ? '1. Inspect the Cloned Phone' : '1. Periksa HP Barang Bukti'}
+                        {lang === 'en' ? '1. Inspect the Victim’s Phone' : '1. Periksa Salinan HP Korban'}
                       </p>
                       <p className="mt-0.5 text-stone-700">
                         {lang === 'en'
