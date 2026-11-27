@@ -33,7 +33,8 @@ export const SocialApp: React.FC<SocialAppProps> = ({
 }) => {
   const hasAltPosts = posts.some((p) => p.isPrivateAlt);
   const [accountTab, setAccountTab] = useState<'all' | 'alt'>('all');
-  const [navTab, setNavTab] = useState<'feed' | 'profile'>('feed');
+  const [navTab, setNavTab] = useState<'feed' | 'search' | 'activity' | 'profile'>('feed');
+  const [searchQuery, setSearchQuery] = useState('');
   const [likedIds, setLikedIds] = useState<string[]>([]);
   const [starredPostIds, setStarredPostIds] = useState<string[]>([]);
 
@@ -43,6 +44,42 @@ export const SocialApp: React.FC<SocialAppProps> = ({
       : posts.filter((p) => !p.isPrivateAlt);
 
   const activeHandle = visiblePosts[0]?.accountHandle ?? '@user';
+
+  const searchResults = posts.filter((p) => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) return true;
+    return (
+      p.accountHandle.toLowerCase().includes(q) ||
+      p.caption.toLowerCase().includes(q) ||
+      (p.location?.toLowerCase().includes(q) ?? false) ||
+      p.comments.some(
+        (c) => c.author.toLowerCase().includes(q) || c.text.toLowerCase().includes(q)
+      )
+    );
+  });
+
+  const activityItems = visiblePosts.flatMap((p) => [
+    ...p.comments.map((c) => ({
+      id: `act-${c.id}`,
+      actor: c.author,
+      text:
+        lang === 'en'
+          ? `commented: "${c.text}"`
+          : `mengomentari: "${c.text}"`,
+      time: c.time,
+      isAlert: p.isCloseFriends,
+    })),
+    {
+      id: `like-${p.id}`,
+      actor: p.comments[0]?.author ?? '@someone',
+      text:
+        lang === 'en'
+          ? `and ${Math.max(1, p.likes - 1).toLocaleString()} others liked your post`
+          : `dan ${Math.max(1, p.likes - 1).toLocaleString()} lainnya menyukai postinganmu`,
+      time: p.time,
+      isAlert: false,
+    },
+  ]);
 
   // Collect unique commenters for realistic Stories bar
   const storyHandles = Array.from(
@@ -289,6 +326,81 @@ export const SocialApp: React.FC<SocialAppProps> = ({
               })}
             </div>
           </>
+        ) : navTab === 'search' ? (
+          /* Search Tab */
+          <div className="p-3.5">
+            <div className="flex items-center gap-2 rounded-xl bg-zinc-900 px-3 py-2 ring-1 ring-white/10">
+              <Search className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={
+                  lang === 'en' ? 'Search posts, @users, locations...' : 'Cari postingan, @akun, lokasi...'
+                }
+                className="w-full bg-transparent text-xs text-white placeholder-zinc-500 outline-none"
+              />
+            </div>
+
+            <div className="mt-3 space-y-2.5">
+              {searchResults.length === 0 ? (
+                <p className="py-8 text-center text-xs text-zinc-500">
+                  {lang === 'en' ? 'No matching posts found.' : 'Tidak ada postingan yang cocok.'}
+                </p>
+              ) : (
+                searchResults.map((post) => (
+                  <button
+                    key={post.id}
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setAccountTab(post.isPrivateAlt ? 'alt' : 'all');
+                      setNavTab('feed');
+                    }}
+                    className="block w-full rounded-xl border border-white/[0.07] bg-zinc-900/60 p-3 text-left transition hover:bg-zinc-900"
+                  >
+                    <div className="flex items-center justify-between text-[10.5px]">
+                      <span className="font-bold text-white">{post.accountHandle}</span>
+                      <span className="font-mono text-[9px] text-zinc-500">{post.time}</span>
+                    </div>
+                    <p className="mt-1 line-clamp-2 text-[11px] text-zinc-300">{post.caption}</p>
+                  </button>
+                ))
+              )}
+            </div>
+          </div>
+        ) : navTab === 'activity' ? (
+          /* Activity / Notifications Tab */
+          <div className="divide-y divide-white/[0.06]">
+            <div className="px-4 py-2.5">
+              <p className="text-xs font-bold text-white">
+                {lang === 'en' ? 'Activity' : 'Aktivitas'}
+              </p>
+            </div>
+            {activityItems.map((act) => (
+              <button
+                key={act.id}
+                type="button"
+                onClick={() => {
+                  sound.playTap();
+                  setNavTab('feed');
+                }}
+                className="flex w-full items-start gap-2.5 px-4 py-3 text-left transition hover:bg-white/[0.03]"
+              >
+                <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-zinc-200 ring-1 ring-white/10">
+                  {act.actor.replace('@', '').slice(0, 2).toUpperCase()}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-[11px] leading-snug text-zinc-300">
+                    <span className="font-bold text-white">{act.actor}</span> {act.text}
+                  </p>
+                  <span className="mt-0.5 block font-mono text-[9px] text-zinc-500">
+                    {act.time}
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
         ) : (
           /* Real Profile View */
           <div className="p-4">
@@ -360,7 +472,7 @@ export const SocialApp: React.FC<SocialAppProps> = ({
         )}
       </div>
 
-      {/* Bottom Social App Tab Bar */}
+      {/* Bottom Social App Tab Bar (All 4 Tabs Interactive) */}
       <div className="flex shrink-0 items-center justify-around border-t border-white/[0.08] bg-black px-4 py-2">
         <button
           type="button"
@@ -373,12 +485,28 @@ export const SocialApp: React.FC<SocialAppProps> = ({
         >
           <Home className="h-4 w-4" />
         </button>
-        <span className="p-1 text-zinc-600">
+        <button
+          type="button"
+          onClick={() => {
+            sound.playTap();
+            setNavTab('search');
+          }}
+          className={`p-1 transition ${navTab === 'search' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+          aria-label="Search"
+        >
           <Search className="h-4 w-4" />
-        </span>
-        <span className="p-1 text-zinc-600">
-          <Heart className="h-4 w-4" />
-        </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            sound.playTap();
+            setNavTab('activity');
+          }}
+          className={`p-1 transition ${navTab === 'activity' ? 'text-white' : 'text-zinc-500 hover:text-zinc-300'}`}
+          aria-label="Activity"
+        >
+          <Heart className={`h-4 w-4 ${navTab === 'activity' ? 'fill-current text-rose-500' : ''}`} />
+        </button>
         <button
           type="button"
           onClick={() => {

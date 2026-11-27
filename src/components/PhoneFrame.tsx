@@ -779,19 +779,19 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         </AnimatePresence>
       </div>
 
-      {/* Bottom Navigation Bar (Back + Home Gesture Bar) */}
+      {/* Bottom Navigation Bar (Back icon + Home Gesture Bar) */}
       <div className="z-20 flex shrink-0 items-center justify-between bg-black/95 px-4 pb-2 pt-1.5">
         {activeApp !== 'home' ? (
           <button
             onClick={handlePhoneBack}
-            className="inline-flex w-16 items-center gap-0.5 rounded-full bg-zinc-900 px-2.5 py-1 text-[10px] font-medium text-zinc-300 ring-1 ring-white/10 transition hover:bg-zinc-800 hover:text-white active:scale-95"
+            className="inline-flex h-7 w-7 items-center justify-center rounded-full bg-zinc-900 text-zinc-300 ring-1 ring-white/10 transition hover:bg-zinc-800 hover:text-white active:scale-90"
             aria-label={lang === 'en' ? 'Back' : 'Kembali'}
+            title={lang === 'en' ? 'Back' : 'Kembali'}
           >
-            <ChevronLeft className="h-3 w-3" />
-            {lang === 'en' ? 'Back' : 'Kembali'}
+            <ChevronLeft className="h-4 w-4" />
           </button>
         ) : (
-          <div className="w-16" />
+          <div className="w-7" />
         )}
 
         <button
@@ -802,7 +802,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           <div className="h-1 w-24 rounded-full bg-zinc-600 transition group-hover:bg-white" />
         </button>
 
-        <div className="w-16" />
+        <div className="w-7" />
       </div>
     </div>
   );
