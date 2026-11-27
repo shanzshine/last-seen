@@ -17,10 +17,10 @@ export const CASE_7: CaseData = {
     ],
   },
   briefing:
-    'Clarina Putri (24) ditemukan tak sadarkan diri di apartemennya pukul 23:52 WIB dan kini dirawat di ICU. Polisi awalnya menduga overdosis akibat stres, tetapi laptop kerjanya hilang. Buka aplikasi Sosmed—periksa Akun Utama dan Akun Kedua (Close Friends)—lalu cocokkan dengan chat dan catatan terkunci!',
+    'Clarina Putri (24) ditemukan tak sadarkan diri di apartemennya pukul 23:52 WIB dan kini dirawat di ICU. Polisi awalnya menduga overdosis akibat stres, tetapi laptop kerjanya hilang. Buka aplikasi Pulse—periksa Akun Utama dan Akun Kedua (Close Friends)—lalu cocokkan dengan chat dan catatan terkunci!',
   wallpaperGradient: 'from-zinc-950 via-rose-950 to-slate-950',
   hints: [
-    'Buka aplikasi Sosmed lalu pindah ke tab "Akun Kedua" untuk membaca curhatan Close Friends Clarina dan melihat angka kode PIN 4 digit.',
+    'Buka aplikasi Pulse lalu pindah ke tab "Akun Kedua" untuk membaca curhatan Close Friends Clarina dan melihat angka kode PIN 4 digit.',
     'Di chat Rendy (Manajer) ada pesan terhapus. Gunakan kata kunci 1 kata terkait kerja sama iklan Clarina untuk memulihkannya.',
   ],
   totalClues: 6,
@@ -28,7 +28,7 @@ export const CASE_7: CaseData = {
     threadId: 'chat-rendy',
     delayMs: 11000,
     senderName: 'Rendy (Manajer)',
-    text: 'HP Clarina masih aktif?! Tolong jangan buka tab Akun Kedua di Sosmed itu urusan pribadi agensi!',
+    text: 'HP Clarina masih aktif?! Tolong jangan buka tab Akun Kedua di Pulse itu urusan pribadi agensi!',
     time: 'LIVE',
   },
   chats: [
@@ -218,7 +218,7 @@ export const CASE_7: CaseData = {
       question: 'Bukti mana yang paling telak mematahkan alibi Rendy bahwa ia tidak ke apartemen?',
       options: [
         { id: 'a', label: 'Foto struk kopi jam 16:20 WIB' },
-        { id: 'b', label: 'Komentar Rendy jam 22:55 di Sosmed & Voice Note Clarina jam 23:44' },
+        { id: 'b', label: 'Komentar Rendy jam 22:55 di Pulse & Voice Note Clarina jam 23:44' },
         { id: 'c', label: 'Riwayat browser tentang OJK' },
       ],
       correctOptionId: 'b',

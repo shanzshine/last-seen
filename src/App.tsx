@@ -739,8 +739,8 @@ export function App() {
                       </p>
                       <p className="text-[11px] text-stone-700">
                         {lang === 'en'
-                          ? 'Check Messages, Gallery, Notes, Maps, Browser & Social.'
-                          : 'Buka Pesan, Galeri, Catatan, Maps, Browser & Sosmed.'}
+                          ? 'Check Messages, Gallery, Notes, Maps, Browser & Pulse.'
+                          : 'Buka Pesan, Galeri, Catatan, Maps, Browser & Pulse.'}
                       </p>
                     </div>
                   </li>
