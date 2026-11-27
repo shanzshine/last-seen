@@ -287,9 +287,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
 
                   {showLockHint ? (
                     <p className="mt-1.5 text-[10px] text-amber-300/90">
-                      {lang === 'en'
-                        ? `Last Seen time (${timeStr})`
-                        : `Jam Last Seen (${timeStr})`}
+                      {lang === 'en' ? 'Last Seen time (4 digits)' : 'Jam Last Seen (4 digit)'}
                     </p>
                   ) : (
                     <div className="mt-1.5 h-[15px]" />
