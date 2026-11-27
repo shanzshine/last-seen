@@ -924,7 +924,7 @@ export function App() {
       )}
 
       {/* Main Workspace */}
-      <main className="relative z-10 mx-auto grid max-w-6xl gap-6 px-2.5 py-3 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_auto_1fr] lg:items-start lg:py-8">
+      <main className="relative z-10 mx-auto grid max-w-6xl gap-6 px-2.5 py-3 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_336px_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
           <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">

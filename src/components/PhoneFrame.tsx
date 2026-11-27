@@ -75,7 +75,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const timeStr = caseData.lastSeenTime.slice(0, 5);
 
   return (
-    <div className="relative mx-auto flex h-[calc(100dvh-84px)] min-h-[540px] max-h-[680px] w-full max-w-[380px] flex-col overflow-hidden rounded-[36px] bg-black shadow-[0_25px_70px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/20 sm:h-[650px] sm:max-w-[336px] sm:rounded-[48px] sm:border-[5px] sm:border-zinc-800">
+    <div className="relative mx-auto flex h-[calc(100svh-84px)] min-h-[540px] max-h-[680px] w-full max-w-[380px] flex-col overflow-hidden rounded-[36px] bg-black shadow-[0_25px_70px_-15px_rgba(0,0,0,0.95)] ring-1 ring-white/20 sm:h-[650px] sm:w-[336px] sm:max-w-[336px] sm:rounded-[48px] sm:border-[5px] sm:border-zinc-800">
       {/* Hardware Side Buttons (Desktop) */}
       <div className="pointer-events-none absolute -left-[8px] top-28 hidden h-9 w-[3px] rounded-l bg-zinc-700 sm:block" />
       <div className="pointer-events-none absolute -left-[8px] top-40 hidden h-9 w-[3px] rounded-l bg-zinc-700 sm:block" />
@@ -112,7 +112,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
       </AnimatePresence>
 
       {/* Realistic Status Bar */}
-      <div className="z-20 flex items-center justify-between bg-black/40 px-6 pb-1.5 pt-3 text-[11px] font-semibold text-white backdrop-blur-md">
+      <div className="z-20 flex shrink-0 items-center justify-between bg-black/40 px-6 pb-1.5 pt-3 text-[11px] font-semibold text-white backdrop-blur-md">
         <span className="tracking-tight">{timeStr}</span>
 
         {/* Dynamic Island */}
@@ -142,7 +142,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
       </div>
 
       {/* Screen Content */}
-      <div className="relative flex-1 overflow-hidden">
+      <div className="relative min-h-0 flex-1 overflow-hidden">
         <AnimatePresence mode="wait">
           {activeApp === 'home' && (
             <motion.div
