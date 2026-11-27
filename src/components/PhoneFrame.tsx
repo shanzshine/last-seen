@@ -18,7 +18,7 @@ import {
   SocialAppIcon,
 } from './AppIcons';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookmarkCheck, ChevronLeft, LockOpen, MessageSquareWarning, RotateCcw, Wifi, X } from 'lucide-react';
+import { BookmarkCheck, ChevronLeft, Delete, LockOpen, MessageSquareWarning, RotateCcw, Wifi, X } from 'lucide-react';
 
 type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser' | 'social';
 
@@ -57,8 +57,13 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const [galleryTargetPhotoId, setGalleryTargetPhotoId] = useState<string | null>(null);
   const [batteryLevel, setBatteryLevel] = useState<number>(4);
   const [isLockedScreen, setIsLockedScreen] = useState<boolean>(true);
+  const [showPasscodePad, setShowPasscodePad] = useState<boolean>(false);
+  const [lockPin, setLockPin] = useState<string>('');
+  const [lockPinError, setLockPinError] = useState<boolean>(false);
   const [glitchActive, setGlitchActive] = useState<boolean>(false);
   const t = UI_STRINGS[lang];
+
+  const expectedLockPin = caseData.lastSeenTime.replace(/\D/g, '').slice(0, 4);
 
   const triggerGlitch = () => {
     sound.playSubtleGlitch();
@@ -72,6 +77,9 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
     appHistoryRef.current = [];
     setBackSignal(0);
     setIsLockedScreen(true);
+    setShowPasscodePad(false);
+    setLockPin('');
+    setLockPinError(false);
     const timer = window.setInterval(() => {
       setBatteryLevel((prev) => (prev > 2 ? prev - 1 : prev));
     }, 90000);
@@ -136,6 +144,32 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
     setActiveApp('gallery');
   };
 
+  const handleLockPinDigit = (digit: string) => {
+    if (lockPin.length >= 4) return;
+    sound.playPinKey();
+    const next = lockPin + digit;
+    setLockPin(next);
+    setLockPinError(false);
+
+    if (next.length === 4) {
+      if (next === expectedLockPin) {
+        sound.playPinUnlock();
+        window.setTimeout(() => {
+          setIsLockedScreen(false);
+          setShowPasscodePad(false);
+          setLockPin('');
+        }, 160);
+      } else {
+        sound.playPinError();
+        setLockPinError(true);
+        window.setTimeout(() => {
+          setLockPin('');
+          setLockPinError(false);
+        }, 600);
+      }
+    }
+  };
+
   const totalUnread = caseData.chats.reduce((acc, c) => acc + (c.unreadCount ?? 0), 0);
   const timeStr = caseData.lastSeenTime.slice(0, 5);
 
@@ -172,58 +206,146 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         </div>
       )}
 
-      {/* Victim Phone Lock Screen (on Case Entry) */}
+      {/* Victim Phone Lock Screen & Passcode Pad (on Case Entry) */}
       <AnimatePresence>
         {isLockedScreen && (
           <motion.div
             initial={{ opacity: 1 }}
             exit={{ opacity: 0, y: -24 }}
             transition={{ duration: 0.28 }}
-            className={`absolute inset-0 z-30 flex flex-col justify-between bg-gradient-to-b ${caseData.wallpaperGradient} px-5 pb-8 pt-14 text-white`}
+            className={`absolute inset-0 z-30 flex flex-col justify-between bg-gradient-to-b ${caseData.wallpaperGradient} px-5 pb-7 pt-12 text-white`}
           >
-            <div className="pointer-events-none absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+            <div className="pointer-events-none absolute inset-0 bg-black/55 backdrop-blur-md" />
 
-            <div className="relative z-10 text-center">
-              <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-400">
-                {t.phoneCloned}
-              </p>
-              <p className="mt-2 text-5xl font-thin tracking-tight text-white">{timeStr}</p>
-              <p className="mt-1 text-[11px] font-medium text-rose-300/90">
-                ● Last Seen {caseData.lastSeenTime}
-              </p>
+            {!showPasscodePad ? (
+              <>
+                <div className="relative z-10 text-center">
+                  <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-400">
+                    {t.phoneCloned}
+                  </p>
+                  <p className="mt-2 text-5xl font-thin tracking-tight text-white">{timeStr}</p>
+                  <p className="mt-1 text-[11px] font-medium text-rose-300/90">
+                    ● Last Seen {caseData.lastSeenTime}
+                  </p>
 
-              {/* Last Lockscreen Notification Teaser */}
-              {caseData.chats[0] && (
-                <div className="mt-7 rounded-2xl border border-white/10 bg-black/55 p-3 text-left backdrop-blur-xl">
-                  <div className="flex items-center justify-between text-[10px]">
-                    <span className="font-bold text-zinc-200">{caseData.chats[0].name}</span>
-                    <span className="font-mono text-[9px] text-zinc-500">
-                      {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.time}
-                    </span>
-                  </div>
-                  <p className="mt-1 line-clamp-2 text-[11px] text-zinc-300">
-                    {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.text}
+                  {/* Last Lockscreen Notification Teaser */}
+                  {caseData.chats[0] && (
+                    <div className="mt-7 rounded-2xl border border-white/10 bg-black/55 p-3 text-left backdrop-blur-xl">
+                      <div className="flex items-center justify-between text-[10px]">
+                        <span className="font-bold text-zinc-200">{caseData.chats[0].name}</span>
+                        <span className="font-mono text-[9px] text-zinc-500">
+                          {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.time}
+                        </span>
+                      </div>
+                      <p className="mt-1 line-clamp-2 text-[11px] text-zinc-300">
+                        {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.text}
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                <div className="relative z-10 flex flex-col items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setShowPasscodePad(true);
+                    }}
+                    className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white/15 py-3 text-xs font-semibold text-white backdrop-blur-xl ring-1 ring-white/20 transition hover:bg-white/25 active:scale-[0.98]"
+                  >
+                    <LockOpen className="h-3.5 w-3.5" />
+                    {lang === 'en' ? 'Unlock Device' : 'Buka Perangkat'}
+                  </button>
+                  <span className="font-mono text-[9px] text-zinc-400">
+                    {caseData.ownerName} • {batteryLevel}% BAT
+                  </span>
+                </div>
+              </>
+            ) : (
+              <div className="relative z-10 flex h-full flex-col items-center justify-between pt-2">
+                <div className="text-center">
+                  <p className="text-xs font-semibold text-white">
+                    {lang === 'en' ? 'Enter Passcode' : 'Masukkan Kode Sandi'}
+                  </p>
+                  <p className="mt-1 text-[10px] text-amber-300/90">
+                    {lang === 'en'
+                      ? `Hint: Last Seen time (${timeStr})`
+                      : `Petunjuk: Jam Last Seen (${timeStr})`}
+                  </p>
+
+                  {/* 4 Passcode Dots */}
+                  <motion.div
+                    animate={lockPinError ? { x: [-6, 6, -5, 5, 0] } : { x: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="mt-5 flex justify-center gap-4"
+                  >
+                    {[0, 1, 2, 3].map((idx) => (
+                      <span
+                        key={idx}
+                        className={`h-3 w-3 rounded-full border transition-all ${
+                          lockPinError
+                            ? 'border-rose-400 bg-rose-500'
+                            : idx < lockPin.length
+                              ? 'border-white bg-white'
+                              : 'border-white/50 bg-transparent'
+                        }`}
+                      />
+                    ))}
+                  </motion.div>
+
+                  <p className="mt-2 h-4 text-[10px] font-medium text-rose-400">
+                    {lockPinError
+                      ? lang === 'en'
+                        ? 'Wrong passcode'
+                        : 'Sandi salah, coba lagi'
+                      : ''}
                   </p>
                 </div>
-              )}
-            </div>
 
-            <div className="relative z-10 flex flex-col items-center gap-3">
-              <button
-                type="button"
-                onClick={() => {
-                  sound.playPinUnlock();
-                  setIsLockedScreen(false);
-                }}
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white/15 py-3 text-xs font-semibold text-white backdrop-blur-xl ring-1 ring-white/20 transition hover:bg-white/25 active:scale-[0.98]"
-              >
-                <LockOpen className="h-3.5 w-3.5" />
-                {lang === 'en' ? 'Unlock Device' : 'Buka Perangkat'}
-              </button>
-              <span className="font-mono text-[9px] text-zinc-400">
-                {caseData.ownerName} • {batteryLevel}% BAT
-              </span>
-            </div>
+                {/* Circular iOS Passcode Keypad */}
+                <div className="grid grid-cols-3 gap-x-5 gap-y-3">
+                  {['1', '2', '3', '4', '5', '6', '7', '8', '9'].map((digit) => (
+                    <button
+                      key={digit}
+                      type="button"
+                      onClick={() => handleLockPinDigit(digit)}
+                      className="flex h-14 w-14 items-center justify-center rounded-full bg-white/15 text-lg font-light text-white backdrop-blur-md transition hover:bg-white/25 active:scale-90"
+                    >
+                      {digit}
+                    </button>
+                  ))}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setShowPasscodePad(false);
+                      setLockPin('');
+                    }}
+                    className="flex h-14 w-14 items-center justify-center text-[10px] font-medium text-zinc-300 hover:text-white"
+                  >
+                    {lang === 'en' ? 'Cancel' : 'Batal'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleLockPinDigit('0')}
+                    className="flex h-14 w-14 items-center justify-center rounded-full bg-white/15 text-lg font-light text-white backdrop-blur-md transition hover:bg-white/25 active:scale-90"
+                  >
+                    0
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setLockPin((p) => p.slice(0, -1));
+                    }}
+                    className="flex h-14 w-14 items-center justify-center text-zinc-300 hover:text-white active:scale-90"
+                    aria-label="Backspace"
+                  >
+                    <Delete className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+            )}
           </motion.div>
         )}
       </AnimatePresence>
