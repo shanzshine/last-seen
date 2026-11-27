@@ -480,6 +480,12 @@ export function App() {
                     {rankSCount}
                   </p>
                 </div>
+                {solvedCount === cases.length && (
+                  <div className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                    <Trophy className="h-3.5 w-3.5" />
+                    {lang === 'en' ? 'Season 1 Cleared' : 'Season 1 Tamat'}
+                  </div>
+                )}
                 <button
                   onClick={() => {
                     sound.playTap();

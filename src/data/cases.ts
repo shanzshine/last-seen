@@ -16,6 +16,8 @@ import { CASE_8 } from './case8';
 import { CASE_8_EN } from './case8.en';
 import { CASE_9 } from './case9';
 import { CASE_9_EN } from './case9.en';
+import { CASE_10 } from './case10';
+import { CASE_10_EN } from './case10.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -32,8 +34,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN, CASE_8_EN, CASE_9_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7, CASE_8, CASE_9];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN, CASE_8_EN, CASE_9_EN, CASE_10_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7, CASE_8, CASE_9, CASE_10];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -46,6 +48,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c7 = cases[6];
   const c8 = cases[7];
   const c9 = cases[8];
+  const c10 = cases[9];
 
   return [
     {
@@ -191,6 +194,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Confinement, falsified death & medical conspiracy'
           : 'TW: Penyekapan, pemalsuan kematian & intimidasi',
+    },
+    {
+      id: c10.id,
+      number: 10,
+      title: c10.title,
+      subtitle: c10.subtitle,
+      difficulty: c10.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Season 1 Finale • High-Stakes Manhunt'
+          : 'Suasana: Finale Season 1 • Perburuan Dalang Utama',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Criminal mastermind pursuit & betrayal'
+          : 'TW: Perburuan dalang sindikat & pengkhianatan',
     },
   ];
 };
