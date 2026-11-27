@@ -532,12 +532,6 @@ export function App() {
                     : item.difficulty === 'Menengah'
                       ? 'border-l-amber-700'
                       : 'border-l-red-800';
-                const difficultyDot =
-                  item.difficulty === 'Mudah'
-                    ? 'bg-emerald-500'
-                    : item.difficulty === 'Menengah'
-                      ? 'bg-amber-500'
-                      : 'bg-red-500';
 
                 return (
                   <motion.div
@@ -557,14 +551,10 @@ export function App() {
                     </span>
 
                     <div className="relative p-4 sm:p-5">
-                      {/* Top row: case id + difficulty + rank */}
+                      {/* Top row: case id + rank */}
                       <div className="flex flex-wrap items-center gap-2.5">
                         <span className="rounded bg-zinc-900 px-1.5 py-0.5 font-mono text-[10px] font-bold tracking-wider text-zinc-300 ring-1 ring-white/5">
                           BERKAS #{String(item.number).padStart(2, '0')}
-                        </span>
-                        <span className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-400">
-                          <span className={`inline-block h-1.5 w-1.5 rounded-full ${difficultyDot}`} />
-                          {t.difficulty[item.difficulty]}
                         </span>
                         {rank && (
                           <span className="inline-flex items-center gap-1 rounded bg-amber-500/10 px-2 py-0.5 font-mono text-[10px] font-bold text-amber-300">
