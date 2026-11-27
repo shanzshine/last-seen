@@ -14,6 +14,8 @@ import { CASE_7 } from './case7';
 import { CASE_7_EN } from './case7.en';
 import { CASE_8 } from './case8';
 import { CASE_8_EN } from './case8.en';
+import { CASE_9 } from './case9';
+import { CASE_9_EN } from './case9.en';
 import type { CaseData } from '../types/case';
 import type { Language } from '../i18n/strings';
 
@@ -30,8 +32,8 @@ export interface CasePreview {
 
 export const getCases = (lang: Language): CaseData[] =>
   lang === 'en'
-    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN, CASE_8_EN]
-    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7, CASE_8];
+    ? [CASE_1_EN, CASE_2_EN, CASE_3_EN, CASE_4_EN, CASE_5_EN, CASE_6_EN, CASE_7_EN, CASE_8_EN, CASE_9_EN]
+    : [CASE_1, CASE_2, CASE_3, CASE_4, CASE_5, CASE_6, CASE_7, CASE_8, CASE_9];
 
 export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const cases = getCases(lang);
@@ -43,6 +45,7 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
   const c6 = cases[5];
   const c7 = cases[6];
   const c8 = cases[7];
+  const c9 = cases[8];
 
   return [
     {
@@ -172,6 +175,22 @@ export const getCaseRoadmap = (lang: Language): CasePreview[] => {
         lang === 'en'
           ? 'TW: Abandoned hospital isolation, pursuit & intimidation'
           : 'TW: Gedung tua terbengkalai, pengejaran & ancaman',
+    },
+    {
+      id: c9.id,
+      number: 9,
+      title: c9.title,
+      subtitle: c9.subtitle,
+      difficulty: c9.difficulty,
+      isUnlocked: true,
+      atmosphere:
+        lang === 'en'
+          ? 'Atmosphere: Medical Thriller • Midnight Hospital Conspiracy'
+          : 'Suasana: Thriller Medis • Konspirasi RS Tengah Malam',
+      contentWarning:
+        lang === 'en'
+          ? 'TW: Confinement, falsified death & medical conspiracy'
+          : 'TW: Penyekapan, pemalsuan kematian & intimidasi',
     },
   ];
 };
