@@ -85,6 +85,7 @@ export function App() {
   const [dismissedRecaps, setDismissedRecaps] = useState<string[]>([]);
   const [recapStep, setRecapStep] = useState(0);
   const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
+  const [typingThreadId, setTypingThreadId] = useState<string | null>(null);
   const [notification, setNotification] = useState<PhoneNotification | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
@@ -328,10 +329,18 @@ export function App() {
   }, [activeCase, dismissedRecaps, recapStep]);
 
   useEffect(() => {
+    setTypingThreadId(null);
     if (!baseCase?.liveAlert || liveTriggeredCases.includes(baseCase.id)) return;
     const alert = baseCase.liveAlert;
+    const typingDelay = Math.max(1200, alert.delayMs - 3000);
+
+    const typingTimer = window.setTimeout(() => {
+      setTypingThreadId(alert.threadId);
+    }, typingDelay);
+
     const timer = window.setTimeout(() => {
-      sound.playPinError();
+      setTypingThreadId(null);
+      sound.playKnockThud();
       setLiveTriggeredCases((prev) =>
         prev.includes(baseCase.id) ? prev : [...prev, baseCase.id]
       );
@@ -344,7 +353,10 @@ export function App() {
       );
     }, alert.delayMs);
 
-    return () => window.clearTimeout(timer);
+    return () => {
+      window.clearTimeout(typingTimer);
+      window.clearTimeout(timer);
+    };
   }, [baseCase, liveTriggeredCases, lang]);
 
   if (!activeCase) {
@@ -1006,6 +1018,7 @@ export function App() {
             discoveredClues={activeClues}
             unlockedNoteIds={activeUnlockedNotes}
             recoveredThreadIds={activeRecoveredThreads}
+            typingThreadId={typingThreadId}
             notification={notification}
             onDismissNotification={() => setNotification(null)}
             onDiscoverClue={handleDiscoverClue}

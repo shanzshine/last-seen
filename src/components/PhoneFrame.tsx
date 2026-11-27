@@ -28,6 +28,7 @@ interface PhoneFrameProps {
   discoveredClues: string[];
   unlockedNoteIds: string[];
   recoveredThreadIds: string[];
+  typingThreadId?: string | null;
   notification: PhoneNotification | null;
   onDismissNotification: () => void;
   onDiscoverClue: (clueId: string) => void;
@@ -42,6 +43,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   discoveredClues,
   unlockedNoteIds,
   recoveredThreadIds,
+  typingThreadId = null,
   notification,
   onDismissNotification,
   onDiscoverClue,
@@ -52,15 +54,43 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const [activeApp, setActiveApp] = useState<ActiveApp>('home');
   const [galleryTargetPhotoId, setGalleryTargetPhotoId] = useState<string | null>(null);
   const [batteryLevel, setBatteryLevel] = useState<number>(4);
+  const [isLockedScreen, setIsLockedScreen] = useState<boolean>(true);
+  const [glitchActive, setGlitchActive] = useState<boolean>(false);
   const t = UI_STRINGS[lang];
+
+  const triggerGlitch = () => {
+    sound.playSubtleGlitch();
+    setGlitchActive(true);
+    window.setTimeout(() => setGlitchActive(false), 260);
+  };
 
   useEffect(() => {
     setBatteryLevel(4);
+    setActiveApp('home');
+    setIsLockedScreen(true);
     const timer = window.setInterval(() => {
       setBatteryLevel((prev) => (prev > 2 ? prev - 1 : prev));
     }, 90000);
     return () => window.clearInterval(timer);
   }, [caseData.id]);
+
+  useEffect(() => {
+    if (batteryLevel < 4) {
+      triggerGlitch();
+    }
+  }, [batteryLevel]);
+
+  useEffect(() => {
+    if (notification?.kind === 'alert') {
+      triggerGlitch();
+    }
+  }, [notification?.id]);
+
+  useEffect(() => {
+    if (recoveredThreadIds.length > 0) {
+      triggerGlitch();
+    }
+  }, [recoveredThreadIds.length]);
 
   const openApp = (app: ActiveApp) => {
     sound.playTap();
@@ -96,6 +126,74 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
           strokeLinecap="round"
         />
       </svg>
+
+      {/* Low Battery (2%) Dimming Vignette */}
+      {batteryLevel <= 2 && (
+        <div className="pointer-events-none absolute inset-0 z-30 shadow-[inset_0_0_65px_rgba(0,0,0,0.85)] transition-opacity duration-700" />
+      )}
+
+      {/* Brief Horror Screen Glitch / Flicker Overlay */}
+      {glitchActive && (
+        <div className="pointer-events-none absolute inset-0 z-50 bg-red-950/20 mix-blend-screen">
+          <div className="h-full w-full animate-pulse bg-[repeating-linear-gradient(to_bottom,rgba(255,255,255,0.08)_0px,rgba(255,255,255,0.08)_2px,transparent_2px,transparent_6px)]" />
+        </div>
+      )}
+
+      {/* Victim Phone Lock Screen (on Case Entry) */}
+      <AnimatePresence>
+        {isLockedScreen && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0, y: -24 }}
+            transition={{ duration: 0.28 }}
+            className={`absolute inset-0 z-30 flex flex-col justify-between bg-gradient-to-b ${caseData.wallpaperGradient} px-5 pb-8 pt-14 text-white`}
+          >
+            <div className="pointer-events-none absolute inset-0 bg-black/45 backdrop-blur-[2px]" />
+
+            <div className="relative z-10 text-center">
+              <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-zinc-400">
+                {t.phoneCloned}
+              </p>
+              <p className="mt-2 text-5xl font-thin tracking-tight text-white">{timeStr}</p>
+              <p className="mt-1 text-[11px] font-medium text-rose-300/90">
+                ● Last Seen {caseData.lastSeenTime}
+              </p>
+
+              {/* Last Lockscreen Notification Teaser */}
+              {caseData.chats[0] && (
+                <div className="mt-7 rounded-2xl border border-white/10 bg-black/55 p-3 text-left backdrop-blur-xl">
+                  <div className="flex items-center justify-between text-[10px]">
+                    <span className="font-bold text-zinc-200">{caseData.chats[0].name}</span>
+                    <span className="font-mono text-[9px] text-zinc-500">
+                      {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.time}
+                    </span>
+                  </div>
+                  <p className="mt-1 line-clamp-2 text-[11px] text-zinc-300">
+                    {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.text}
+                  </p>
+                </div>
+              )}
+            </div>
+
+            <div className="relative z-10 flex flex-col items-center gap-3">
+              <button
+                type="button"
+                onClick={() => {
+                  sound.playPinUnlock();
+                  setIsLockedScreen(false);
+                }}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-white/15 py-3 text-xs font-semibold text-white backdrop-blur-xl ring-1 ring-white/20 transition hover:bg-white/25 active:scale-[0.98]"
+              >
+                <LockOpen className="h-3.5 w-3.5" />
+                {lang === 'en' ? 'Unlock Device' : 'Buka Perangkat'}
+              </button>
+              <span className="font-mono text-[9px] text-zinc-400">
+                {caseData.ownerName} • {batteryLevel}% BAT
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Rich Push Notification Banner */}
       <AnimatePresence>
@@ -378,6 +476,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 photos={caseData.photos}
                 discoveredClues={discoveredClues}
                 recoveredThreadIds={recoveredThreadIds}
+                typingThreadId={typingThreadId}
                 onDiscoverClue={onDiscoverClue}
                 onRecoverThread={onRecoverThread}
                 onOpenPhoto={openPhotoFromChat}

@@ -524,6 +524,46 @@ class SoundEngine {
       this.playTone(311.13, 0.32, 'sine', 0.2, 0.16);
     }
   }
+
+  playSubtleGlitch() {
+    const ctx = this.getContext();
+    if (!ctx) return;
+    try {
+      const duration = 0.22;
+      const bufferSize = Math.floor(ctx.sampleRate * duration);
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        data[i] = (Math.random() * 2 - 1) * (i % 7 === 0 ? 0.8 : 0.25);
+      }
+
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'bandpass';
+      filter.frequency.setValueAtTime(1600, ctx.currentTime);
+      filter.Q.setValueAtTime(1.4, ctx.currentTime);
+
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.06, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + duration);
+
+      noise.connect(filter);
+      filter.connect(gain);
+      gain.connect(ctx.destination);
+      noise.start();
+      noise.stop(ctx.currentTime + duration);
+    } catch {
+      // ignore
+    }
+  }
+
+  playKnockThud() {
+    this.vibrate([30, 60, 40]);
+    this.playTone(68, 0.14, 'sine', 0.24, 0);
+    this.playTone(54, 0.18, 'sine', 0.2, 0.18);
+  }
 }
 
 export const sound = new SoundEngine();
