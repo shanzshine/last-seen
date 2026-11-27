@@ -132,7 +132,52 @@ export const CASE_10: CaseData = {
       timestamp: '03:20 WIB',
       location: 'Villa Kabut',
       visualType: 'audit-transfer',
+      isPuzzle: true,
       caption: 'Dokumen final aliran dana Proyek Helios Rp 4 Miliar yang terhubung ke rekening #01.',
+    },
+  ],
+  callLogs: [
+    {
+      id: 'call10-1',
+      callerName: 'Dermaga Merak Charter',
+      phoneNumber: '+62 813-9001-4410',
+      type: 'outgoing',
+      time: '03:58 WIB',
+      duration: '2:15',
+      note: 'Konfirmasi sewa speedboat darurat pukul 05:00 WIB dari Dermaga Eksekutif Merak.',
+    },
+    {
+      id: 'call10-2',
+      callerName: 'Komisaris H',
+      phoneNumber: '+62 811-0029-881',
+      type: 'incoming',
+      time: '04:02 WIB',
+      duration: '0:31',
+      voicemailTranscript:
+        '"Ardian, tim Satgas sudah mengepung Villa Kabut. Segera bakar semua berkas dan bergerak ke Merak sekarang!"',
+    },
+  ],
+  files: [
+    {
+      id: 'file10-offshore',
+      filename: 'OFFSHORE_MANIFEST_01.zip',
+      fileType: 'zip',
+      size: '2.4 MB',
+      date: '04:01 WIB',
+      isLocked: true,
+      password: 'KUSUMA-01',
+      passwordHint: 'Kunci enkripsi server offshore yang tertulis di Catatan Ledger Utama #01',
+      content:
+        'ARSIP PEMINDAHAN DANA SINDIKAT\nPemilik Utama: Ardian Kusuma (#01)\nTujuan Pelarian: Dermaga Eksekutif Merak -> Speedboat 05:00 WIB\nRekening Tujuan: Cayman Holding #884-XK',
+    },
+    {
+      id: 'file10-passport',
+      filename: 'PASPOR_DARURAT_ARDIAN.pdf',
+      fileType: 'pdf',
+      size: '620 KB',
+      date: '03:45 WIB',
+      content:
+        'Permohonan Paspor Ekspres atas nama samaran: A. Wijaya (Foto: Ardian Kusuma). Status: Siap diambil di Merak.',
     },
   ],
   notes: [

@@ -155,3 +155,38 @@ export const SocialAppIcon: React.FC = () => (
   </svg>
 );
 
+export const CallsAppIcon: React.FC = () => (
+  <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
+    <rect width="64" height="64" rx="16" fill="url(#callGrad)" />
+    <path
+      d="M22.5 18.5C21 18.5 18.5 20.5 18.5 23.8C18.5 34.4 29.6 45.5 40.2 45.5C43.5 45.5 45.5 43 45.5 41.5L41.8 36.6C41.2 35.8 40 35.7 39.1 36.2L36.2 37.9C32.4 36.1 27.9 31.6 26.1 27.8L27.8 24.9C28.3 24 28.2 22.8 27.4 22.2L22.5 18.5Z"
+      fill="white"
+    />
+    <defs>
+      <linearGradient id="callGrad" x1="32" y1="0" x2="32" y2="64" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#34d399" />
+        <stop offset="1" stopColor="#059669" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+
+export const FilesAppIcon: React.FC = () => (
+  <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
+    <rect width="64" height="64" rx="16" fill="url(#fileBg)" />
+    <path
+      d="M14 21C14 18.8 15.8 17 18 17H27.5L31.5 21H46C48.2 21 50 22.8 50 25V44C50 46.2 48.2 48 46 48H18C15.8 48 14 46.2 14 44V21Z"
+      fill="#38bdf8"
+    />
+    <rect x="18" y="25" width="28" height="19" rx="2.5" fill="white" fillOpacity="0.92" />
+    <rect x="23" y="31" width="14" height="2.4" rx="1.2" fill="#0284c7" />
+    <rect x="23" y="36" width="10" height="2.4" rx="1.2" fill="#94a3b8" />
+    <defs>
+      <linearGradient id="fileBg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#1e293b" />
+        <stop offset="1" stopColor="#0f172a" />
+      </linearGradient>
+    </defs>
+  </svg>
+);
+

@@ -173,6 +173,7 @@ export const CASE_6: CaseData = {
       timestamp: '02:44 WIB',
       location: 'Lereng Sektor Terlarang',
       visualType: 'fog-silhouettes',
+      isPuzzle: true,
       caption: 'Foto buram malam berkabut: terlihat jelas dua sorot lampu truk besar dan tiga siluet orang menebang kayu di jalur terlarang.',
       clueId: 'clue6-photo-fog',
       clueLabel: 'Foto 02:44 membuktikan ada truk & penebangan ilegal di balik kabut',

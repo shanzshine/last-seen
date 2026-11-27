@@ -10,6 +10,7 @@ import {
   Clock,
   Info,
   MapPin,
+  Puzzle,
   X,
 } from 'lucide-react';
 
@@ -36,10 +37,15 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
   const [zoomOpen, setZoomOpen] = useState(false);
   const [detailsOpen, setDetailsOpen] = useState(false);
   const [starredIds, setStarredIds] = useState<string[]>([]);
+  const [solvedPuzzleIds, setSolvedPuzzleIds] = useState<string[]>([]);
+  const [puzzleOrder, setPuzzleOrder] = useState<number[]>([4, 0, 7, 2, 8, 1, 6, 3, 5]);
+  const [selectedTileIdx, setSelectedTileIdx] = useState<number | null>(null);
   const prevBackRef = useRef(backSignal);
 
   useEffect(() => {
     setDetailsOpen(false);
+    setSelectedTileIdx(null);
+    setPuzzleOrder([4, 0, 7, 2, 8, 1, 6, 3, 5]);
   }, [selectedId]);
 
   useEffect(() => {
@@ -160,18 +166,83 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
         </button>
       </div>
 
-      {/* Centered Photo Canvas — Clean, no text underneath */}
-      <div className="flex flex-1 items-center justify-center overflow-hidden bg-black p-3">
-        <button
-          type="button"
-          onClick={() => {
-            sound.playTap();
-            setZoomOpen(true);
-          }}
-          className="block aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-950 transition active:scale-[0.99]"
-        >
-          <PhotoVisual visualType={selectedPhoto.visualType} />
-        </button>
+      {/* Centered Photo Canvas — Clean, or 3x3 Swap Puzzle if corrupted */}
+      <div className="flex flex-1 flex-col items-center justify-center overflow-hidden bg-black p-3">
+        {selectedPhoto.isPuzzle && !solvedPuzzleIds.includes(selectedPhoto.id) ? (
+          <div className="w-full space-y-2.5">
+            <div className="flex items-center justify-between rounded-lg border border-amber-500/25 bg-amber-500/10 px-2.5 py-1.5 text-[10.5px] text-amber-200">
+              <span className="flex items-center gap-1.5 font-medium">
+                <Puzzle className="h-3.5 w-3.5 text-amber-300" />
+                {lang === 'en'
+                  ? 'Damaged file — tap 2 tiles to swap & restore'
+                  : 'File foto rusak — ketuk 2 kotak untuk menukar posisi'}
+              </span>
+            </div>
+
+            <div className="grid aspect-[4/3] w-full grid-cols-3 grid-rows-3 gap-1 overflow-hidden rounded-xl bg-zinc-900 p-1">
+              {puzzleOrder.map((pieceIdx, slotIdx) => {
+                const col = pieceIdx % 3;
+                const row = Math.floor(pieceIdx / 3);
+                const isSelected = selectedTileIdx === slotIdx;
+
+                return (
+                  <button
+                    key={slotIdx}
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      if (selectedTileIdx === null) {
+                        setSelectedTileIdx(slotIdx);
+                        return;
+                      }
+                      if (selectedTileIdx === slotIdx) {
+                        setSelectedTileIdx(null);
+                        return;
+                      }
+                      const next = [...puzzleOrder];
+                      [next[selectedTileIdx], next[slotIdx]] = [
+                        next[slotIdx],
+                        next[selectedTileIdx],
+                      ];
+                      setPuzzleOrder(next);
+                      setSelectedTileIdx(null);
+
+                      if (next.every((v, i) => v === i)) {
+                        sound.playPinUnlock();
+                        setSolvedPuzzleIds((prev) =>
+                          prev.includes(selectedPhoto.id) ? prev : [...prev, selectedPhoto.id]
+                        );
+                      }
+                    }}
+                    className={`relative overflow-hidden rounded-[4px] transition ${
+                      isSelected ? 'ring-2 ring-amber-400 brightness-110' : 'hover:brightness-110'
+                    }`}
+                  >
+                    <div
+                      className="pointer-events-none absolute left-0 top-0 h-[300%] w-[300%]"
+                      style={{
+                        transform: `translate(-${(col * 100) / 3}%, -${(row * 100) / 3}%)`,
+                      }}
+                    >
+                      <PhotoVisual visualType={selectedPhoto.visualType} />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            onClick={() => {
+              sound.playTap();
+              setZoomOpen(true);
+            }}
+            className="block aspect-[4/3] w-full overflow-hidden rounded-xl bg-zinc-950 transition active:scale-[0.99]"
+          >
+            <PhotoVisual visualType={selectedPhoto.visualType} />
+          </button>
+        )}
       </div>
 
       {/* Bottom Details Toggle Bar */}

@@ -169,7 +169,29 @@ export const CASE_8: CaseData = {
       timestamp: '02:02 WIB',
       location: 'Koridor Sektor B',
       visualType: 'office-cctv',
+      isPuzzle: true,
       caption: 'Tangkapan layar kamera pengawas tua yang sempat menyala sebentar di koridor.',
+    },
+  ],
+  callLogs: [
+    {
+      id: 'call8-1',
+      callerName: 'Nomor Tidak Dikenal',
+      phoneNumber: 'Private Number',
+      type: 'blocked',
+      time: '02:29 WIB',
+      duration: '0:09',
+      voicemailTranscript:
+        '"Anak itu masih di lantai B1. Jangan biarkan dia keluar dari gerbang belakang sebelum koper kita naik ke mobil boks."',
+    },
+    {
+      id: 'call8-2',
+      callerName: 'Kiki (Editor)',
+      phoneNumber: '+62 812-8840-1920',
+      type: 'missed',
+      time: '02:34 WIB',
+      duration: '0:00',
+      note: 'Panggilan masuk tak terjawab 1 menit setelah siaran terputus.',
     },
   ],
   notes: [

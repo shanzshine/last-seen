@@ -143,6 +143,7 @@ export const CASE_3: CaseData = {
       timestamp: 'Kemarin • 23:29',
       location: 'Kemang Selatan',
       visualType: 'taxi-plate',
+      isPuzzle: true,
       caption: 'Kebiasaan Keisha memfoto plat nomor mobil sebelum naik malam hari: B 2841 KJL.',
     },
     {

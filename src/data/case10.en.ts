@@ -132,7 +132,52 @@ export const CASE_10_EN: CaseData = {
       timestamp: '03:20 WIB',
       location: 'Misty Villa',
       visualType: 'audit-transfer',
+      isPuzzle: true,
       caption: 'Final Project Helios Rp 4 Billion audit trail linked directly to #01’s accounts.',
+    },
+  ],
+  callLogs: [
+    {
+      id: 'call10-1',
+      callerName: 'Merak Pier Charter',
+      phoneNumber: '+62 813-9001-4410',
+      type: 'outgoing',
+      time: '03:58 WIB',
+      duration: '2:15',
+      note: 'Confirmed emergency speedboat departure at 05:00 WIB from Merak Executive Pier.',
+    },
+    {
+      id: 'call10-2',
+      callerName: 'Commissioner H',
+      phoneNumber: '+62 811-0029-881',
+      type: 'incoming',
+      time: '04:02 WIB',
+      duration: '0:31',
+      voicemailTranscript:
+        '"Ardian, the task force has surrounded Misty Villa. Burn the files and head to Merak immediately!"',
+    },
+  ],
+  files: [
+    {
+      id: 'file10-offshore',
+      filename: 'OFFSHORE_MANIFEST_01.zip',
+      fileType: 'zip',
+      size: '2.4 MB',
+      date: '04:01 WIB',
+      isLocked: true,
+      password: 'KUSUMA-01',
+      passwordHint: 'Offshore server key written inside Master Syndicate Ledger #01 Note',
+      content:
+        'SYNDICATE WIRE ARCHIVE\nPrimary Owner: Ardian Kusuma (#01)\nEscape Route: Merak Executive Pier -> 05:00 WIB Speedboat\nDestination Account: Cayman Holding #884-XK',
+    },
+    {
+      id: 'file10-passport',
+      filename: 'EMERGENCY_PASSPORT_ARDIAN.pdf',
+      fileType: 'pdf',
+      size: '620 KB',
+      date: '03:45 WIB',
+      content:
+        'Express Passport Request under alias: A. Wijaya (Photo: Ardian Kusuma). Status: Ready for pickup at Merak.',
     },
   ],
   notes: [

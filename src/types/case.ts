@@ -53,6 +53,7 @@ export interface PhotoEvidence {
     | 'fog-silhouettes'
     | 'radio-ht';
   caption: string;
+  isPuzzle?: boolean;
   clueId?: string;
   clueLabel?: string;
 }
@@ -144,6 +145,33 @@ export interface SocialPost {
   clueLabel?: string;
 }
 
+export interface CallLogEntry {
+  id: string;
+  callerName: string;
+  phoneNumber: string;
+  type: 'incoming' | 'outgoing' | 'missed' | 'blocked';
+  time: string;
+  duration: string;
+  note?: string;
+  voicemailTranscript?: string;
+  clueId?: string;
+  clueLabel?: string;
+}
+
+export interface CaseFileItem {
+  id: string;
+  filename: string;
+  fileType: 'pdf' | 'doc' | 'zip';
+  size: string;
+  date: string;
+  isLocked?: boolean;
+  password?: string;
+  passwordHint?: string;
+  content: string;
+  clueId?: string;
+  clueLabel?: string;
+}
+
 export interface CaseData {
   id: string;
   number: number;
@@ -161,6 +189,8 @@ export interface CaseData {
   locations?: LocationLog[];
   browserHistory?: BrowserHistoryItem[];
   socialPosts?: SocialPost[];
+  callLogs?: CallLogEntry[];
+  files?: CaseFileItem[];
   liveAlert?: LiveAlert;
   hints: string[];
   totalClues: number;

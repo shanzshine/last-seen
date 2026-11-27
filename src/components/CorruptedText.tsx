@@ -57,3 +57,4 @@ export const CorruptedText: React.FC<CorruptedTextProps> = ({ text, lang, classN
     </div>
   );
 };
+

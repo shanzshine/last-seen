@@ -155,6 +155,50 @@ export const CASE_9_EN: CaseData = {
       caption: 'Security monitor photo of the 2nd-floor corridor right before cameras were manually shut down.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call9-1',
+      callerName: 'Dr. Hendra (Chief Surgeon)',
+      phoneNumber: '+62 811-7720-009',
+      type: 'incoming',
+      time: '02:18 WIB',
+      duration: '0:42',
+      note: 'Dr. Hendra called from the 2F Surgical Wing extension—despite claiming he stayed on 3F.',
+    },
+    {
+      id: 'call9-2',
+      callerName: 'Contact #01 (Masked)',
+      phoneNumber: 'Private Number',
+      type: 'blocked',
+      time: '02:49 WIB',
+      duration: '1:14',
+      voicemailTranscript:
+        '"Make sure the OR 09 patient death certificate is finalized before dawn. Do not let that nurse talk to the police."',
+    },
+  ],
+  files: [
+    {
+      id: 'file9-deathcert',
+      filename: 'DEATH_CERTIFICATE_OR09.pdf',
+      fileType: 'pdf',
+      size: '412 KB',
+      date: '02:50 WIB',
+      isLocked: true,
+      password: '0247',
+      passwordHint: 'Maya’s last seen time (4-digit HHMM)',
+      content:
+        'CERTIFICATE OF DEATH (INTERNAL DRAFT)\nPatient: Budi Santoso\nLocation: Operating Room 09 — Medika Utama Hospital\nStatus: Falsified under orders from Dr. Hendra & #01 to erase a key witness identity.',
+    },
+    {
+      id: 'file9-emr',
+      filename: 'OR_2F_ACCESS_LOG.doc',
+      fileType: 'doc',
+      size: '84 KB',
+      date: '02:05 WIB',
+      content:
+        'Keycard: DR-HENDRA-01\nDoor: Operating Room 09 (2nd Floor)\nStatus: UNLOCKED at 01:55 WIB (contradicts official report to Hospital Director).',
+    },
+  ],
   notes: [
     {
       id: 'n9-shift',

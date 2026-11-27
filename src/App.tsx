@@ -240,6 +240,12 @@ export function App() {
     activeCase.socialPosts?.forEach((s) => {
       if (s.clueId && s.clueLabel) map.set(s.clueId, s.clueLabel);
     });
+    activeCase.callLogs?.forEach((c) => {
+      if (c.clueId && c.clueLabel) map.set(c.clueId, c.clueLabel);
+    });
+    activeCase.files?.forEach((f) => {
+      if (f.clueId && f.clueLabel) map.set(f.clueId, f.clueLabel);
+    });
     return map;
   }, [activeCase]);
 

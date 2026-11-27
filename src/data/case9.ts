@@ -155,6 +155,50 @@ export const CASE_9: CaseData = {
       caption: 'Foto monitor keamanan koridor lantai 2 sesaat sebelum kamera dimatikan secara manual.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call9-1',
+      callerName: 'Dr. Hendra (Kepala Bedah)',
+      phoneNumber: '+62 811-7720-009',
+      type: 'incoming',
+      time: '02:18 WIB',
+      duration: '0:42',
+      note: 'Dr. Hendra menelepon dari ekstensi Ruang Bedah Lt. 2—padahal ia mengaku di lantai 3.',
+    },
+    {
+      id: 'call9-2',
+      callerName: 'Kontak #01 (Tersamar)',
+      phoneNumber: 'Private Number',
+      type: 'blocked',
+      time: '02:49 WIB',
+      duration: '1:14',
+      voicemailTranscript:
+        '"Pastikan surat kematian pasien Kamar 09 selesai sebelum subuh. Perawat itu jangan sampai bicara ke polisi."',
+    },
+  ],
+  files: [
+    {
+      id: 'file9-deathcert',
+      filename: 'SERTIFIKAT_KEMATIAN_09.pdf',
+      fileType: 'pdf',
+      size: '412 KB',
+      date: '02:50 WIB',
+      isLocked: true,
+      password: '0247',
+      passwordHint: 'Jam terakhir Maya aktif (4 digit HHMM)',
+      content:
+        'SURAT KETERANGAN KEMATIAN (DRAFT INTERNAL)\nNama Pasien: Budi Santoso\nLokasi: Kamar Operasi 09 — RS Medika Utama\nStatus: Dipalsukan atas instruksi Dr. Hendra & #01 untuk menghilangkan identitas saksi kunci.',
+    },
+    {
+      id: 'file9-emr',
+      filename: 'LOG_AKSES_BEDAH_LT2.doc',
+      fileType: 'doc',
+      size: '84 KB',
+      date: '02:05 WIB',
+      content:
+        'Kartu Akses: DR-HENDRA-01\nPintu: Ruang Bedah Kamar 09 (Lantai 2)\nStatus: TERBUKA pukul 01:55 WIB (bertentangan dengan laporan resmi ke direktur RS).',
+    },
+  ],
   notes: [
     {
       id: 'n9-shift',

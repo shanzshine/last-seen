@@ -173,6 +173,7 @@ export const CASE_6_EN: CaseData = {
       timestamp: '02:44 WIB',
       location: 'Restricted Ridge',
       visualType: 'fog-silhouettes',
+      isPuzzle: true,
       caption: 'Blurry night fog photo: clearly shows two heavy truck headlights and three silhouettes logging timber in the restricted zone.',
       clueId: 'clue6-photo-fog',
       clueLabel: '02:44 photo proves illegal trucks & logging in the fog',

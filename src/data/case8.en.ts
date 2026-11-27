@@ -169,7 +169,29 @@ export const CASE_8_EN: CaseData = {
       timestamp: '02:02 WIB',
       location: 'Sector B Corridor',
       visualType: 'office-cctv',
+      isPuzzle: true,
       caption: 'Old security monitor snapshot that flickered briefly in the corridor.',
+    },
+  ],
+  callLogs: [
+    {
+      id: 'call8-1',
+      callerName: 'Unknown Caller',
+      phoneNumber: 'Private Number',
+      type: 'blocked',
+      time: '02:29 WIB',
+      duration: '0:09',
+      voicemailTranscript:
+        '"That kid is still on B1. Do not let him out the back gate before our cases are loaded into the box truck."',
+    },
+    {
+      id: 'call8-2',
+      callerName: 'Kiki (Editor)',
+      phoneNumber: '+62 812-8840-1920',
+      type: 'missed',
+      time: '02:34 WIB',
+      duration: '0:00',
+      note: 'Missed call 1 minute after the livestream cut off.',
     },
   ],
   notes: [

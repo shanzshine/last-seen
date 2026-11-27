@@ -8,8 +8,12 @@ import { NotesApp } from './apps/NotesApp';
 import { MapsApp } from './apps/MapsApp';
 import { BrowserApp } from './apps/BrowserApp';
 import { SocialApp } from './apps/SocialApp';
+import { CallLogApp } from './apps/CallLogApp';
+import { FilesApp } from './apps/FilesApp';
 import {
   BrowserAppIcon,
+  CallsAppIcon,
+  FilesAppIcon,
   GalleryAppIcon,
   MapsAppIcon,
   MessagesAppIcon,
@@ -19,7 +23,16 @@ import {
 import { AnimatePresence, motion } from 'framer-motion';
 import { BookmarkCheck, ChevronLeft, Delete, HelpCircle, LockOpen, MessageSquareWarning, RotateCcw, Wifi, X } from 'lucide-react';
 
-type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser' | 'social';
+type ActiveApp =
+  | 'home'
+  | 'chat'
+  | 'gallery'
+  | 'notes'
+  | 'maps'
+  | 'browser'
+  | 'social'
+  | 'calls'
+  | 'files';
 
 interface PhoneFrameProps {
   caseData: CaseData;
@@ -547,7 +560,9 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 {/* Case-Specific Apps (centered 3-col grid so it always looks balanced) */}
                 {(Boolean(caseData.locations?.length) ||
                   Boolean(caseData.browserHistory?.length) ||
-                  Boolean(caseData.socialPosts?.length)) ? (
+                  Boolean(caseData.socialPosts?.length) ||
+                  Boolean(caseData.callLogs?.length) ||
+                  Boolean(caseData.files?.length)) ? (
                   <div className="grid grid-cols-3 gap-y-4 px-2 pt-1">
                     {caseData.locations && caseData.locations.length > 0 && (
                       <button
@@ -596,6 +611,40 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                         )}
                         <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appSocial}
+                        </span>
+                      </button>
+                    )}
+
+                    {caseData.callLogs && caseData.callLogs.length > 0 && (
+                      <button
+                        onClick={() => openApp('calls')}
+                        className="group relative flex flex-col items-center gap-1.5"
+                      >
+                        <div className="relative h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                          <CallsAppIcon />
+                        </div>
+                        {!visitedApps.includes('calls') && (
+                          <span className="absolute right-2.5 top-0 h-2.5 w-2.5 rounded-full bg-emerald-400 ring-2 ring-black/70" />
+                        )}
+                        <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
+                          {t.appCalls}
+                        </span>
+                      </button>
+                    )}
+
+                    {caseData.files && caseData.files.length > 0 && (
+                      <button
+                        onClick={() => openApp('files')}
+                        className="group relative flex flex-col items-center gap-1.5"
+                      >
+                        <div className="relative h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                          <FilesAppIcon />
+                        </div>
+                        {!visitedApps.includes('files') && (
+                          <span className="absolute right-2.5 top-0 h-2.5 w-2.5 rounded-full bg-sky-400 ring-2 ring-black/70" />
+                        )}
+                        <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
+                          {t.appFiles}
                         </span>
                       </button>
                     )}
@@ -780,6 +829,44 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 lang={lang}
                 history={caseData.browserHistory}
                 discoveredClues={discoveredClues}
+                onDiscoverClue={onDiscoverClue}
+              />
+            </motion.div>
+          )}
+
+          {activeApp === 'calls' && caseData.callLogs && (
+            <motion.div
+              key="calls"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 16 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <CallLogApp
+                lang={lang}
+                callLogs={caseData.callLogs}
+                discoveredClues={discoveredClues}
+                onDiscoverClue={onDiscoverClue}
+              />
+            </motion.div>
+          )}
+
+          {activeApp === 'files' && caseData.files && (
+            <motion.div
+              key="files"
+              initial={{ opacity: 0, x: 16 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 16 }}
+              transition={{ duration: 0.15 }}
+              className="h-full"
+            >
+              <FilesApp
+                lang={lang}
+                files={caseData.files}
+                discoveredClues={discoveredClues}
+                backSignal={backSignal}
+                onBackAtRoot={popAppHistory}
                 onDiscoverClue={onDiscoverClue}
               />
             </motion.div>

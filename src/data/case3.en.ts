@@ -143,6 +143,7 @@ export const CASE_3_EN: CaseData = {
       timestamp: 'Yesterday • 23:29',
       location: 'Kemang Selatan',
       visualType: 'taxi-plate',
+      isPuzzle: true,
       caption: 'Keisha’s habit of snapping the license plate before late-night rides: B 2841 KJL.',
     },
     {
