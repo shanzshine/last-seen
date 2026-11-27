@@ -1,0 +1,25 @@
+{
+  "name": "Last Seen — Investigasi Digital",
+  "short_name": "Last Seen",
+  "description": "Game misteri forensik digital: periksa salinan HP korban dan pecahkan kasusnya.",
+  "start_url": "/last-seen/",
+  "scope": "/last-seen/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#050507",
+  "theme_color": "#050507",
+  "icons": [
+    {
+      "src": "/last-seen/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/last-seen/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
