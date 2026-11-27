@@ -131,14 +131,13 @@ export const ReportAppIcon: React.FC = () => (
 export const SocialAppIcon: React.FC = () => (
   <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
     <rect width="64" height="64" rx="16" fill="url(#socGrad)" />
-    <rect x="15" y="15" width="34" height="34" rx="10" stroke="white" strokeWidth="3.5" />
-    <circle cx="32" cy="32" r="8" stroke="white" strokeWidth="3.5" />
-    <circle cx="42" cy="22" r="2.2" fill="white" />
+    <circle cx="32" cy="32" r="16" stroke="white" strokeWidth="3.2" strokeDasharray="76 24" strokeLinecap="round" />
+    <circle cx="32" cy="32" r="6.5" stroke="#38bdf8" strokeWidth="3.2" />
+    <circle cx="44" cy="20" r="3" fill="#a855f7" />
     <defs>
-      <linearGradient id="socGrad" x1="8" y1="56" x2="56" y2="8" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#f59e0b" />
-        <stop offset="0.5" stopColor="#ec4899" />
-        <stop offset="1" stopColor="#7c3aed" />
+      <linearGradient id="socGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#27272a" />
+        <stop offset="1" stopColor="#09090b" />
       </linearGradient>
     </defs>
   </svg>
