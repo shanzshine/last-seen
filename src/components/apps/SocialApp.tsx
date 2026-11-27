@@ -22,7 +22,7 @@ interface SocialAppProps {
   lang: Language;
   posts: SocialPost[];
   discoveredClues: string[];
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
 }
 
 export const SocialApp: React.FC<SocialAppProps> = ({
@@ -280,9 +280,14 @@ export const SocialApp: React.FC<SocialAppProps> = ({
                           if (post.clueId) {
                             onDiscoverClue(post.clueId);
                           } else {
-                            sound.playTap();
+                            const isCurrentlyStarred = starredPostIds.includes(post.id);
+                            if (!isCurrentlyStarred) {
+                              onDiscoverClue(undefined);
+                            } else {
+                              sound.playTap();
+                            }
                             setStarredPostIds((prev) =>
-                              prev.includes(post.id)
+                              isCurrentlyStarred
                                 ? prev.filter((id) => id !== post.id)
                                 : [...prev, post.id]
                             );

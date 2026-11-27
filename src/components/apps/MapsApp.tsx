@@ -8,7 +8,7 @@ interface MapsAppProps {
   lang: Language;
   locations: LocationLog[];
   discoveredClues: string[];
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
 }
 
 export const MapsApp: React.FC<MapsAppProps> = ({
@@ -127,9 +127,14 @@ export const MapsApp: React.FC<MapsAppProps> = ({
                       if (loc.clueId) {
                         onDiscoverClue(loc.clueId);
                       } else {
-                        sound.playTap();
+                        const isCurrentlyStarred = starredIds.includes(loc.id);
+                        if (!isCurrentlyStarred) {
+                          onDiscoverClue(undefined);
+                        } else {
+                          sound.playTap();
+                        }
                         setStarredIds((prev) =>
-                          prev.includes(loc.id)
+                          isCurrentlyStarred
                             ? prev.filter((id) => id !== loc.id)
                             : [...prev, loc.id]
                         );

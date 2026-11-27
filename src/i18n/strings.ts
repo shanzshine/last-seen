@@ -18,7 +18,7 @@ export const UI_STRINGS = {
     briefingTitle: 'Briefing Kasus',
     evidenceBoardTitle: 'Papan Bukti',
     evidenceEmpty:
-      'Belum ada bukti yang dicatat. Saat membaca pesan, foto, atau catatan mencurigakan, klik Catat Bukti untuk menyimpannya di sini.',
+      'Belum ada bukti tercatat. Ketuk ikon bookmark pada pesan, foto, catatan, lokasi, atau postingan yang terasa janggal atau mematahkan alibi untuk menyimpannya di sini.',
     tipsLabel: 'Tips Investigasi:',
     tipsText:
       'Periksa semua chat, cocokkan waktu di foto Galeri, dan temukan PIN untuk membuka Catatan yang terkunci.',
@@ -122,7 +122,7 @@ export const UI_STRINGS = {
     briefingTitle: 'Case Briefing',
     evidenceBoardTitle: 'Evidence Board',
     evidenceEmpty:
-      'No clues recorded yet. Tap "Record Clue" on suspicious messages, photos, or notes to pin them here.',
+      'No evidence pinned yet. Tap the bookmark icon on any message, photo, note, location, or post that seems suspicious or breaks an alibi to pin it here.',
     tipsLabel: 'Investigation Tip:',
     tipsText:
       'Check all chats, cross-reference timestamps in Gallery photos, and find the PIN to unlock hidden Notes.',

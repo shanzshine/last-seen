@@ -26,7 +26,7 @@ interface ChatAppProps {
   typingThreadId?: string | null;
   backSignal?: number;
   onBackAtRoot?: () => void;
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
   onRecoverThread: (threadId: string) => void;
   onOpenPhoto: (photoId: string) => void;
 }
@@ -271,9 +271,14 @@ export const ChatApp: React.FC<ChatAppProps> = ({
                 if (msg.clueId) {
                   onDiscoverClue(msg.clueId);
                 } else {
-                  sound.playTap();
+                  const isCurrentlyStarred = starredMsgIds.includes(msg.id);
+                  if (!isCurrentlyStarred) {
+                    onDiscoverClue(undefined);
+                  } else {
+                    sound.playTap();
+                  }
                   setStarredMsgIds((prev) =>
-                    prev.includes(msg.id)
+                    isCurrentlyStarred
                       ? prev.filter((id) => id !== msg.id)
                       : [...prev, msg.id]
                   );

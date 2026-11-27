@@ -13,7 +13,7 @@ interface NotesAppProps {
   backSignal?: number;
   onBackAtRoot?: () => void;
   onUnlockNote: (noteId: string) => void;
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
 }
 
 export const NotesApp: React.FC<NotesAppProps> = ({
@@ -137,9 +137,14 @@ export const NotesApp: React.FC<NotesAppProps> = ({
               if (selectedNote.clueId) {
                 onDiscoverClue(selectedNote.clueId);
               } else {
-                sound.playTap();
+                const isCurrentlyStarred = starredNoteIds.includes(selectedNote.id);
+                if (!isCurrentlyStarred) {
+                  onDiscoverClue(undefined);
+                } else {
+                  sound.playTap();
+                }
                 setStarredNoteIds((prev) =>
-                  prev.includes(selectedNote.id)
+                  isCurrentlyStarred
                     ? prev.filter((id) => id !== selectedNote.id)
                     : [...prev, selectedNote.id]
                 );

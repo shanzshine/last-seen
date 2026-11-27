@@ -20,7 +20,7 @@ interface GalleryAppProps {
   discoveredClues: string[];
   backSignal?: number;
   onBackAtRoot?: () => void;
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
 }
 
 export const GalleryApp: React.FC<GalleryAppProps> = ({
@@ -104,9 +104,14 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
     if (selectedPhoto.clueId) {
       onDiscoverClue(selectedPhoto.clueId);
     } else {
-      sound.playTap();
+      const isCurrentlyStarred = starredIds.includes(selectedPhoto.id);
+      if (!isCurrentlyStarred) {
+        onDiscoverClue(undefined);
+      } else {
+        sound.playTap();
+      }
       setStarredIds((prev) =>
-        prev.includes(selectedPhoto.id)
+        isCurrentlyStarred
           ? prev.filter((id) => id !== selectedPhoto.id)
           : [...prev, selectedPhoto.id]
       );

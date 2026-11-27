@@ -239,8 +239,21 @@ export function App() {
       Array.from({ length: activeHintsUsed }, (_, i) => i)
     : [];
 
-  const handleDiscoverClue = (clueId: string) => {
+  const handleDiscoverClue = (clueId?: string) => {
     if (!activeCase) return;
+    if (!clueId) {
+      sound.playTap();
+      pushNotification(
+        'recover',
+        lang === 'en' ? 'Personal Bookmark' : 'Ditandai Pribadi',
+        lang === 'en'
+          ? 'Not a key case clue — look for contradictions or alibi breaks.'
+          : 'Bukan bukti utama kasus — cari detail yang janggal atau mematahkan alibi.',
+        undefined,
+        3000
+      );
+      return;
+    }
     const existing = progress.discoveredClues[activeCase.id] ?? [];
     if (existing.includes(clueId)) return;
 

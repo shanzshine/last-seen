@@ -30,7 +30,7 @@ interface PhoneFrameProps {
   typingThreadId?: string | null;
   notification: PhoneNotification | null;
   onDismissNotification: () => void;
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
   onUnlockNote: (noteId: string) => void;
   onRecoverThread: (threadId: string) => void;
 }
