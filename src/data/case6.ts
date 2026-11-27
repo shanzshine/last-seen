@@ -9,7 +9,7 @@ export const CASE_6: CaseData = {
   ownerName: 'Bagas Pratama',
   lastSeenTime: '03:18 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #05 • Sebelumnya...',
     points: [
       'Setelah kasus Kamar 404 mengguncang pelabuhan, jaringan pencucian uang sindikat mulai mengalihkan aset ke sektor pembalakan liar di pegunungan.',
       'Bagas Pratama (23), seorang dokumentalis independen, mendaki malam ke Puncak Kabut bersama timnya untuk menyelidiki truk-truk misterius yang masuk hutan lindung.',

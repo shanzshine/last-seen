@@ -9,7 +9,7 @@ export const CASE_5: CaseData = {
   ownerName: 'Reza Mahendra',
   lastSeenTime: '01:22 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #04 • Sebelumnya...',
     points: [
       'Satgas Siber Independen menggerebek Gudang 4 Sunda Kelapa dan meringkus Komisaris Hendro.',
       'Namun dalang utama #01 (The Broker) berhasil kabur di detik terakhir.',

@@ -9,7 +9,7 @@ export const CASE_5_EN: CaseData = {
   ownerName: 'Reza Mahendra',
   lastSeenTime: '01:22 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #04 • Previously...',
     points: [
       'The Independent Cyber Taskforce raided Sunda Kelapa Warehouse 4 and arrested Commissioner Hendro.',
       'However, the mastermind #01 (The Broker) escaped at the last second.',

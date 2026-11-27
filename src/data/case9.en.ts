@@ -9,7 +9,7 @@ export const CASE_9_EN: CaseData = {
   ownerName: 'Maya Lestari',
   lastSeenTime: '02:47 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #08 • Previously...',
     points: [
       'After rescuing Dika Mahendra at the Abandoned Harbor Hospital, the Task Force traced surgical supply shipments from the syndicate’s box truck to Medika Utama Hospital.',
       'At 02:47 WIB, night-shift nurse Maya Lestari (27) vanished right before the end of her shift.',

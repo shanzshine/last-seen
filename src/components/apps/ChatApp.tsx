@@ -254,9 +254,8 @@ export const ChatApp: React.FC<ChatAppProps> = ({
               </div>
 
               {playedVoiceIds.includes(msg.id) && (
-                <div className="space-y-1 rounded-lg bg-black/25 p-2 text-[10.5px] leading-relaxed">
+                <div className="rounded-lg bg-black/25 p-2 text-[10.5px] leading-relaxed">
                   <p className="text-zinc-100">{msg.voiceNote.transcript}</p>
-                  <p className="font-medium text-amber-300">{msg.voiceNote.backgroundCue}</p>
                 </div>
               )}
             </div>

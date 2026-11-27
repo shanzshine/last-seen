@@ -9,7 +9,7 @@ export const CASE_10_EN: CaseData = {
   ownerName: '#01 (The Broker)',
   lastSeenTime: '04:05 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #09 • Previously...',
     points: [
       'From Boarding Room 07 and Project Helios to Operating Room 09—every thread led back to one shadow mastermind: #01 (The Broker).',
       'Using Nurse Maya’s emergency coordinates, the Task Force raided Misty Villa in Puncak before dawn.',
@@ -215,3 +215,4 @@ export const CASE_10_EN: CaseData = {
   epiloguePartial:
     'SEASON 1 COMPLETE (PARTIAL). Ardian Kusuma was apprehended at Merak, though a few evidence nodes in the Master Ledger remain under review.',
 };
+

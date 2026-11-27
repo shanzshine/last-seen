@@ -9,7 +9,7 @@ export const CASE_6_EN: CaseData = {
   ownerName: 'Bagas Pratama',
   lastSeenTime: '03:18 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #05 • Previously...',
     points: [
       'After the Room 404 case shook the harbor, the syndicate’s laundering network shifted funds into illegal mountain logging.',
       'Bagas Pratama (23), an independent documentarian, hiked Misty Peak at night with his crew to investigate mysterious trucks entering the protected forest.',

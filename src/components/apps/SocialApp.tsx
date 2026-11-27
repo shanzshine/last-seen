@@ -453,19 +453,37 @@ export const SocialApp: React.FC<SocialAppProps> = ({
                 {lang === 'en' ? 'Posts' : 'Postingan'}
               </div>
               <div className="grid grid-cols-3 gap-1">
-                {visiblePosts.map((post) => (
-                  <button
-                    key={post.id}
-                    type="button"
-                    onClick={() => {
-                      sound.playTap();
-                      setNavTab('feed');
-                    }}
-                    className="flex aspect-square items-center justify-center rounded bg-zinc-900 p-2 text-left text-[9px] leading-tight text-zinc-300 hover:bg-zinc-800"
-                  >
-                    <span className="line-clamp-4">{post.caption}</span>
-                  </button>
-                ))}
+                {visiblePosts.map((post) => {
+                  const isLivePost = post.caption.toUpperCase().includes('LIVE');
+                  return (
+                    <button
+                      key={post.id}
+                      type="button"
+                      onClick={() => {
+                        sound.playTap();
+                        setNavTab('feed');
+                      }}
+                      className={`relative flex aspect-square flex-col items-center justify-center rounded-md border border-white/[0.06] transition hover:brightness-125 ${
+                        post.isCloseFriends
+                          ? 'bg-gradient-to-br from-emerald-950 via-zinc-900 to-black'
+                          : isLivePost
+                            ? 'bg-gradient-to-br from-rose-950 via-zinc-900 to-black'
+                            : 'bg-gradient-to-br from-zinc-800/80 via-zinc-900 to-black'
+                      }`}
+                    >
+                      {isLivePost ? (
+                        <Radio className="h-5 w-5 text-rose-400" />
+                      ) : post.isCloseFriends ? (
+                        <Star className="h-5 w-5 text-emerald-400" />
+                      ) : (
+                        <MapPin className="h-5 w-5 text-zinc-400" />
+                      )}
+                      <span className="mt-1.5 font-mono text-[8.5px] font-bold text-zinc-300">
+                        {isLivePost ? 'LIVE' : post.isCloseFriends ? 'CF' : post.time.slice(0, 5)}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
           </div>

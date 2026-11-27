@@ -17,6 +17,7 @@ class SoundEngine {
 
   private voiceNoiseSrc: AudioBufferSourceNode | null = null;
   private voiceNoiseGain: GainNode | null = null;
+  private voiceTimer: number | null = null;
   private voiceOnEnd: (() => void) | null = null;
 
   private gestureBound = false;
@@ -336,7 +337,7 @@ class SoundEngine {
     this.playTone(880, 0.26, 'sine', 0.24, 0.09);
   }
 
-  playVoiceNote(transcript: string, lang: 'id' | 'en', onEnd?: () => void) {
+  playVoiceNote(_transcript: string, _lang: 'id' | 'en', onEnd?: () => void) {
     this.stopVoiceNote();
     if (this.muted || typeof window === 'undefined') {
       onEnd?.();
@@ -345,20 +346,24 @@ class SoundEngine {
 
     this.voiceOnEnd = onEnd ?? null;
 
-    // Duck background horror music slightly so voice is clear
+    // Duck background horror music slightly during recording playback
     if (this.bgAudio && !this.bgAudio.paused) {
       this.fadeBgVolume(this.bgAudio, 0.1);
     }
 
-    // Start subtle atmospheric mic/tape static bed during playback
+    const playDurationMs = 3600;
     const ctx = this.getContext();
     if (ctx) {
       try {
+        // Realistic filtered tape/mic static + subtle room wind
         const bufferSize = ctx.sampleRate * 2;
         const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
         const data = buffer.getChannelData(0);
+        let lastOut = 0;
         for (let i = 0; i < bufferSize; i++) {
-          data[i] = (Math.random() * 2 - 1) * 0.38;
+          const white = Math.random() * 2 - 1;
+          lastOut = (lastOut + 0.08 * white) / 1.08;
+          data[i] = lastOut * 2.2;
         }
 
         const noise = ctx.createBufferSource();
@@ -367,12 +372,12 @@ class SoundEngine {
 
         const bandpass = ctx.createBiquadFilter();
         bandpass.type = 'bandpass';
-        bandpass.frequency.setValueAtTime(950, ctx.currentTime);
-        bandpass.Q.setValueAtTime(0.75, ctx.currentTime);
+        bandpass.frequency.setValueAtTime(720, ctx.currentTime);
+        bandpass.Q.setValueAtTime(0.6, ctx.currentTime);
 
         const gain = ctx.createGain();
         gain.gain.setValueAtTime(0.0001, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.032, ctx.currentTime + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.09, ctx.currentTime + 0.25);
 
         noise.connect(bandpass);
         bandpass.connect(gain);
@@ -381,72 +386,29 @@ class SoundEngine {
 
         this.voiceNoiseSrc = noise;
         this.voiceNoiseGain = gain;
+
+        // Subtle muffled footsteps / ambient thuds during the recording
+        this.playTone(72, 0.12, 'sine', 0.14, 0.55);
+        this.playTone(64, 0.12, 'sine', 0.12, 1.15);
+        this.playTone(68, 0.14, 'sine', 0.14, 1.8);
+        this.playTone(58, 0.16, 'sine', 0.11, 2.55);
       } catch {
         // ignore audio buffer errors
       }
     }
 
-    // Clean transcript for natural spoken delivery
-    const spokenText = transcript
-      .replace(/^["']|["']$/g, '')
-      .replace(/█/g, '... ')
-      .replace(/—/g, ', ');
-
-    if ('speechSynthesis' in window) {
-      try {
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(spokenText);
-        const targetLang = lang === 'en' ? 'en' : 'id';
-        utterance.lang = lang === 'en' ? 'en-US' : 'id-ID';
-        utterance.rate = 1.04;
-        utterance.pitch = 0.96;
-        utterance.volume = 1;
-
-        const voices = window.speechSynthesis.getVoices();
-        const matchingVoices = voices.filter((v) =>
-          v.lang.toLowerCase().startsWith(targetLang)
-        );
-        const preferred =
-          matchingVoices.find((v) => /google|natural|online|microsoft/i.test(v.name)) ??
-          matchingVoices[0];
-        if (preferred) {
-          utterance.voice = preferred;
-        }
-
-        const finish = () => {
-          const cb = this.voiceOnEnd;
-          this.stopVoiceNote(false);
-          cb?.();
-        };
-
-        utterance.onend = finish;
-        utterance.onerror = finish;
-
-        window.speechSynthesis.speak(utterance);
-        return;
-      } catch {
-        // fallback below if speechSynthesis fails
-      }
-    }
-
-    // Fallback if browser doesn't support speechSynthesis
-    this.playVoiceNoteCue();
-    window.setTimeout(() => {
+    this.voiceTimer = window.setTimeout(() => {
       const cb = this.voiceOnEnd;
-      this.stopVoiceNote(false);
+      this.stopVoiceNote();
       cb?.();
-    }, 1500);
+    }, playDurationMs);
   }
 
-  stopVoiceNote(cancelSpeech = true) {
+  stopVoiceNote() {
     this.voiceOnEnd = null;
-
-    if (cancelSpeech && typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      try {
-        window.speechSynthesis.cancel();
-      } catch {
-        // ignore
-      }
+    if (this.voiceTimer !== null) {
+      window.clearTimeout(this.voiceTimer);
+      this.voiceTimer = null;
     }
 
     if (this.voiceNoiseSrc) {
@@ -456,8 +418,8 @@ class SoundEngine {
       this.voiceNoiseGain = null;
       try {
         if (this.ctx && gain) {
-          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.15);
-          src.stop(this.ctx.currentTime + 0.18);
+          gain.gain.exponentialRampToValueAtTime(0.0001, this.ctx.currentTime + 0.18);
+          src.stop(this.ctx.currentTime + 0.22);
         } else {
           src.stop();
         }

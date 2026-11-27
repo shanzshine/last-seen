@@ -9,7 +9,7 @@ export const CASE_7_EN: CaseData = {
   ownerName: 'Clarina Putri',
   lastSeenTime: '23:52 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #06 • Previously...',
     points: [
       'After Bagas Pratama was rescued at Misty Peak, the Task Force traced syndicate #01’s money laundering to a major digital talent agency.',
       'Clarina Putri (24), a popular lifestyle influencer, was found unconscious in her apartment from a sedative overdose, while her work laptop vanished.',

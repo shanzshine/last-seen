@@ -9,7 +9,7 @@ export const CASE_8: CaseData = {
   ownerName: 'Dika Mahendra',
   lastSeenTime: '02:33 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #07 • Sebelumnya...',
     points: [
       'Setelah kasus Akun Kedua membongkar pencucian uang agensi digital, jaringan sindikat #01 (The Broker) semakin terdesak dan terpaksa berpindah-pindah tempat persembunyian.',
       'Dika Mahendra (25), seorang konten kreator uji nyali, menggelar livestream tengah malam di Bekas RS Tua Pelabuhan tanpa tahu bahwa basemen gedung itu sedang dipakai pihak lain.',

@@ -9,7 +9,7 @@ export const CASE_8_EN: CaseData = {
   ownerName: 'Dika Mahendra',
   lastSeenTime: '02:33 WIB',
   recap: {
-    title: 'Previously on Last Seen...',
+    title: 'Continued from Case #07 • Previously...',
     points: [
       'After the Second Account case exposed the digital agency’s laundering scheme, #01 (The Broker)’s syndicate was forced into hiding.',
       'Dika Mahendra (25), an urban-exploration livestreamer, began a midnight ghost hunt at the Abandoned Harbor Hospital without knowing its basement was in use.',

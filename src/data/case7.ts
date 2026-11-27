@@ -9,7 +9,7 @@ export const CASE_7: CaseData = {
   ownerName: 'Clarina Putri',
   lastSeenTime: '23:52 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #06 • Sebelumnya...',
     points: [
       'Setelah Bagas Pratama diselamatkan di Puncak Kabut, Satgas menemukan aliran dana sindikat #01 juga mengalir lewat agensi digital & endorsement fiktif di ibu kota.',
       'Clarina Putri (24), seorang selebgram populer, ditemukan tak sadarkan diri di apartemennya akibat dosis obat tidur berlebih, sementara laptop kerjanya raib.',

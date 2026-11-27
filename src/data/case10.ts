@@ -9,7 +9,7 @@ export const CASE_10: CaseData = {
   ownerName: '#01 (The Broker)',
   lastSeenTime: '04:05 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #09 • Sebelumnya...',
     points: [
       'Dari Kos Melati, Proyek Helios, hingga Kamar Operasi 09—seluruh benang merah kejahatan mengarah pada satu sosok bayangan: #01 (The Broker).',
       'Berkat catatan darurat Suster Maya, tim taktis Satgas menggerebek Villa Kabut Puncak sebelum fajar.',
@@ -215,3 +215,4 @@ export const CASE_10: CaseData = {
   epiloguePartial:
     'SEASON 1 SELESAI (SEBAGIAN). Ardian Kusuma berhasil diamankan di Merak, namun beberapa simpul bukti di Ledger Utama masih perlu ditelusuri lebih lanjut.',
 };
+

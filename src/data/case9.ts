@@ -9,7 +9,7 @@ export const CASE_9: CaseData = {
   ownerName: 'Maya Lestari',
   lastSeenTime: '02:47 WIB',
   recap: {
-    title: 'Sebelumnya di Last Seen...',
+    title: 'Lanjutan dari Case #08 • Sebelumnya...',
     points: [
       'Setelah menyelamatkan Dika Mahendra di RS Tua Pelabuhan, Satgas menemukan bukti pengiriman peralatan bedah dari mobil boks sindikat menuju RS Medika Utama.',
       'Pukul 02:47 WIB, Maya Lestari (27), seorang perawat jaga malam, menghilang secara misterius di penghujung shift-nya.',
