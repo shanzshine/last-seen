@@ -17,7 +17,7 @@ import {
   SocialAppIcon,
 } from './AppIcons';
 import { AnimatePresence, motion } from 'framer-motion';
-import { BookmarkCheck, ChevronLeft, Delete, LockOpen, MessageSquareWarning, RotateCcw, Wifi, X } from 'lucide-react';
+import { BookmarkCheck, ChevronLeft, Delete, HelpCircle, LockOpen, MessageSquareWarning, RotateCcw, Wifi, X } from 'lucide-react';
 
 type ActiveApp = 'home' | 'chat' | 'gallery' | 'notes' | 'maps' | 'browser' | 'social';
 
@@ -55,6 +55,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   const [batteryLevel, setBatteryLevel] = useState<number>(4);
   const [isLockedScreen, setIsLockedScreen] = useState<boolean>(true);
   const [showPasscodePad, setShowPasscodePad] = useState<boolean>(false);
+  const [showLockHint, setShowLockHint] = useState<boolean>(false);
   const [lockPin, setLockPin] = useState<string>('');
   const [lockPinError, setLockPinError] = useState<boolean>(false);
   const [glitchActive, setGlitchActive] = useState<boolean>(false);
@@ -75,6 +76,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
     setBackSignal(0);
     setIsLockedScreen(true);
     setShowPasscodePad(false);
+    setShowLockHint(false);
     setLockPin('');
     setLockPinError(false);
     const timer = window.setInterval(() => {
@@ -261,14 +263,37 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
             ) : (
               <div className="relative z-10 flex h-full flex-col items-center justify-between pt-2">
                 <div className="text-center">
-                  <p className="text-xs font-semibold text-white">
-                    {lang === 'en' ? 'Enter Passcode' : 'Masukkan Kode Sandi'}
-                  </p>
-                  <p className="mt-1 text-[10px] text-amber-300/90">
-                    {lang === 'en'
-                      ? `Hint: Last Seen time (${timeStr})`
-                      : `Petunjuk: Jam Last Seen (${timeStr})`}
-                  </p>
+                  <div className="inline-flex items-center justify-center gap-1.5">
+                    <p className="text-xs font-semibold text-white">
+                      {lang === 'en' ? 'Enter Passcode' : 'Masukkan Kode Sandi'}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        sound.playTap();
+                        setShowLockHint((v) => !v);
+                      }}
+                      className={`rounded-full p-0.5 transition ${
+                        showLockHint
+                          ? 'bg-amber-400/20 text-amber-300'
+                          : 'text-zinc-400 hover:bg-white/10 hover:text-white'
+                      }`}
+                      aria-label="Hint"
+                      title={lang === 'en' ? 'Hint' : 'Petunjuk'}
+                    >
+                      <HelpCircle className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+
+                  {showLockHint ? (
+                    <p className="mt-1.5 text-[10px] text-amber-300/90">
+                      {lang === 'en'
+                        ? `Last Seen time (${timeStr})`
+                        : `Jam Last Seen (${timeStr})`}
+                    </p>
+                  ) : (
+                    <div className="mt-1.5 h-[15px]" />
+                  )}
 
                   {/* 4 Passcode Dots */}
                   <motion.div
