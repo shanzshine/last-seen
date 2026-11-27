@@ -131,13 +131,25 @@ export const ReportAppIcon: React.FC = () => (
 export const SocialAppIcon: React.FC = () => (
   <svg viewBox="0 0 64 64" className="h-full w-full" fill="none">
     <rect width="64" height="64" rx="16" fill="url(#socGrad)" />
-    <circle cx="32" cy="32" r="16" stroke="white" strokeWidth="3.2" strokeDasharray="76 24" strokeLinecap="round" />
-    <circle cx="32" cy="32" r="6.5" stroke="#38bdf8" strokeWidth="3.2" />
-    <circle cx="44" cy="20" r="3" fill="#a855f7" />
+    {/* Clean rounded speech-bubble silhouette */}
+    <path
+      d="M17 28C17 20.8203 23.7157 15 32 15C40.2843 15 47 20.8203 47 28C47 35.1797 40.2843 41 32 41C29.4 41 26.95 40.42 24.8 39.4L18.5 43.2C17.6 43.75 16.5 42.95 16.8 41.95L18.4 36.6C17.5 34.05 17 31.1 17 28Z"
+      fill="white"
+      fillOpacity="0.96"
+    />
+    {/* Crisp '@' mark inside bubble */}
+    <circle cx="32" cy="28" r="4.5" stroke="#e11d48" strokeWidth="2.6" />
+    <path
+      d="M36.5 24V29.5C36.5 31.2 37.8 32.2 39.1 31.8C40.6 31.3 41.3 29.7 41.3 27.9C41.3 22.8 37.2 19.2 32 19.2C26.7 19.2 22.7 23.2 22.7 28.2C22.7 33.4 26.9 37 32.3 37C34.5 37 36.5 36.4 38 35.4"
+      stroke="#e11d48"
+      strokeWidth="2.4"
+      strokeLinecap="round"
+    />
     <defs>
-      <linearGradient id="socGrad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
-        <stop stopColor="#27272a" />
-        <stop offset="1" stopColor="#09090b" />
+      <linearGradient id="socGrad" x1="8" y1="8" x2="56" y2="56" gradientUnits="userSpaceOnUse">
+        <stop stopColor="#fb7185" />
+        <stop offset="0.55" stopColor="#e11d48" />
+        <stop offset="1" stopColor="#9f1239" />
       </linearGradient>
     </defs>
   </svg>
