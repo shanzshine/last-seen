@@ -460,31 +460,38 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
         )}
       </AnimatePresence>
 
-      {/* Realistic Status Bar */}
-      <div className="z-20 flex shrink-0 items-center justify-between bg-black/40 px-6 pb-1.5 pt-3 text-[11px] font-semibold text-white backdrop-blur-md">
+      {/* Realistic Status Bar — transparent on Home/Lockscreen so wallpaper flows to top bezel */}
+      <div
+        className={`z-20 flex shrink-0 items-center justify-between px-6 pb-2 pt-3 text-[11px] font-semibold text-white transition-colors ${
+          activeApp === 'home' || isLockedScreen ? 'bg-transparent' : 'bg-black/85 backdrop-blur-md'
+        }`}
+      >
         <span className="tracking-tight">{timeStr}</span>
 
         {/* Dynamic Island */}
-        <div className="flex h-[18px] w-[76px] items-center justify-end rounded-full bg-black px-2 ring-1 ring-white/10">
-          <span className="h-2 w-2 rounded-full bg-zinc-900 ring-1 ring-zinc-700/60" />
+        <div className="flex h-[20px] w-[80px] items-center justify-end rounded-full bg-black px-2.5 ring-1 ring-white/10">
+          <span className="h-2 w-2 rounded-full bg-zinc-900 ring-1 ring-zinc-700/70" />
         </div>
 
-        {/* Signal + Wifi + 4% Battery */}
+        {/* Signal + Wifi + Low Battery */}
         <div className="flex items-center gap-1.5">
           <div className="flex items-end gap-[1.5px]">
             <span className="h-1 w-[2px] rounded-full bg-white" />
             <span className="h-1.5 w-[2px] rounded-full bg-white" />
-            <span className="h-2 w-[2px] rounded-full bg-white/35" />
-            <span className="h-2.5 w-[2px] rounded-full bg-white/35" />
+            <span className="h-2 w-[2px] rounded-full bg-white/30" />
+            <span className="h-2.5 w-[2px] rounded-full bg-white/30" />
           </div>
           <Wifi className="h-3 w-3 text-white" />
           <div className="flex items-center gap-0.5">
             <span className="text-[9px] font-bold text-rose-400">{batteryLevel}%</span>
-            <div className="flex h-[10px] w-[18px] items-center rounded-[3px] border border-white/40 p-[1.5px]">
-              <div
-                className="h-full rounded-[1px] bg-rose-500 transition-all"
-                style={{ width: `${Math.max(2, batteryLevel)}px` }}
-              />
+            <div className="flex items-center">
+              <div className="flex h-[10px] w-[18px] items-center rounded-[3px] border border-white/45 p-[1.5px]">
+                <div
+                  className="h-full rounded-[1px] bg-rose-500 transition-all"
+                  style={{ width: `${Math.max(2, batteryLevel)}px` }}
+                />
+              </div>
+              <div className="h-[4px] w-[1.5px] rounded-r-full bg-white/45" />
             </div>
           </div>
         </div>
@@ -500,46 +507,52 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.98 }}
               transition={{ duration: 0.15 }}
-              className={`relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-br ${caseData.wallpaperGradient} px-4 pb-3 pt-4`}
+              className={`relative flex h-full flex-col justify-between overflow-hidden bg-gradient-to-b ${caseData.wallpaperGradient} px-4 pb-3.5 pt-3`}
             >
-              {/* Soft Wallpaper Depth */}
-              <div className="pointer-events-none absolute -left-12 top-6 h-52 w-52 rounded-full bg-emerald-400/15 blur-3xl" />
-              <div className="pointer-events-none absolute -right-12 bottom-16 h-56 w-56 rounded-full bg-indigo-400/20 blur-3xl" />
+              {/* Subtle Dark Wallpaper Vignette */}
+              <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_20%,rgba(255,255,255,0.06),transparent_60%)]" />
 
-              {/* Top Natural Home Grid & Widgets */}
-              <div className="relative z-10 space-y-5">
-                {/* Clock / Owner / Evidence Progress Widget */}
-                <div className="rounded-2xl bg-black/35 px-4 py-3.5 backdrop-blur-xl ring-1 ring-white/10">
-                  <div className="flex items-baseline justify-between">
-                    <span className="text-[32px] font-thin tracking-tight text-white">{timeStr}</span>
-                    <span className="text-[9px] font-medium uppercase tracking-wider text-white/55">
-                      {caseData.ownerName}
+              {/* Top Widgets + App Grid */}
+              <div className="relative z-10 space-y-4">
+                {/* Clean Minimalist Clock & Owner Widget */}
+                <div className="rounded-[22px] bg-black/35 px-4 py-3.5 backdrop-blur-xl ring-1 ring-white/10">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[34px] font-extralight leading-none tracking-tight text-white">
+                      {timeStr}
                     </span>
+                    <div className="text-right">
+                      <p className="text-[10px] font-semibold text-white/80">
+                        {caseData.ownerName}
+                      </p>
+                      <p className="mt-0.5 font-mono text-[9px] text-rose-300/85">
+                        Last Seen {caseData.lastSeenTime}
+                      </p>
+                    </div>
                   </div>
-                  <div className="mt-1.5 flex items-center justify-between gap-2">
-                    <p className="text-[10px] text-rose-300/85">
-                      ● Last Seen {caseData.lastSeenTime}
-                    </p>
-                    <span className="rounded-full bg-white/10 px-2 py-0.5 font-mono text-[9px] font-semibold text-emerald-300">
-                      {t.evidenceBtn}: {discoveredClues.length}/{caseData.totalClues}
+                  <div className="mt-2.5 flex items-center justify-between border-t border-white/[0.08] pt-2 text-[9.5px]">
+                    <span className="text-zinc-400">
+                      {lang === 'en' ? 'Evidence Pinned' : 'Bukti Tercatat'}
+                    </span>
+                    <span className="font-mono font-bold text-emerald-400">
+                      {discoveredClues.length}/{caseData.totalClues}
                     </span>
                   </div>
                 </div>
 
-                {/* Case-Specific Apps (No duplicates with Dock!) */}
+                {/* Case-Specific Apps (centered 3-col grid so it always looks balanced) */}
                 {(Boolean(caseData.locations?.length) ||
                   Boolean(caseData.browserHistory?.length) ||
-                  Boolean(caseData.socialPosts?.length)) && (
-                  <div className="grid grid-cols-4 gap-x-2 gap-y-4 px-0.5">
+                  Boolean(caseData.socialPosts?.length)) ? (
+                  <div className="grid grid-cols-3 gap-y-4 px-2 pt-1">
                     {caseData.locations && caseData.locations.length > 0 && (
                       <button
                         onClick={() => openApp('maps')}
                         className="group flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <MapsAppIcon />
                         </div>
-                        <span className="text-[9.5px] font-medium leading-none text-white/90 drop-shadow-sm">
+                        <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appMaps}
                         </span>
                       </button>
@@ -550,10 +563,10 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                         onClick={() => openApp('browser')}
                         className="group flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <BrowserAppIcon />
                         </div>
-                        <span className="text-[9.5px] font-medium leading-none text-white/90 drop-shadow-sm">
+                        <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appBrowser}
                         </span>
                       </button>
@@ -564,35 +577,58 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                         onClick={() => openApp('social')}
                         className="group flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[52px] w-[52px] overflow-hidden rounded-[14px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <SocialAppIcon />
                         </div>
-                        <span className="text-[9.5px] font-medium leading-none text-white/90 drop-shadow-sm">
+                        <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appSocial}
                         </span>
                       </button>
                     )}
                   </div>
+                ) : (
+                  /* Subtle Recent Activity Widget when no extra apps in Case #1 */
+                  caseData.chats[0] && (
+                    <button
+                      type="button"
+                      onClick={() => openApp('chat')}
+                      className="w-full rounded-[20px] bg-black/25 p-3.5 text-left backdrop-blur-xl ring-1 ring-white/10 transition hover:bg-black/35"
+                    >
+                      <div className="flex items-center justify-between text-[9.5px] text-zinc-400">
+                        <span className="font-semibold uppercase tracking-wider text-zinc-300">
+                          {lang === 'en' ? 'Recent Message' : 'Pesan Terakhir'}
+                        </span>
+                        <span className="font-mono">
+                          {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.time}
+                        </span>
+                      </div>
+                      <p className="mt-1.5 text-[11px] font-semibold text-white">
+                        {caseData.chats[0].name}
+                      </p>
+                      <p className="mt-0.5 line-clamp-2 text-[10.5px] leading-snug text-zinc-300">
+                        {caseData.chats[0].messages[caseData.chats[0].messages.length - 1]?.text}
+                      </p>
+                    </button>
+                  )
                 )}
               </div>
 
-              {/* Bottom Frosted Dock (3 Core Victim Phone Apps) */}
-              <div className="relative z-10 grid grid-cols-3 gap-2 rounded-[24px] bg-white/12 px-4 py-2.5 backdrop-blur-2xl ring-1 ring-white/10">
+              {/* Authentic Label-less iOS Frosted Dock */}
+              <div className="relative z-10 mx-auto flex w-full items-center justify-around rounded-[26px] bg-white/12 px-4 py-3 backdrop-blur-2xl ring-1 ring-white/15">
                 <button
                   onClick={() => openApp('chat')}
-                  className="group flex flex-col items-center gap-1"
+                  className="group relative h-[50px] w-[50px] transition hover:scale-105 active:scale-90"
+                  aria-label={t.appMessages}
+                  title={t.appMessages}
                 >
-                  <div className="relative h-[48px] w-[48px] transition group-hover:scale-105 group-active:scale-90">
-                    <div className="h-full w-full overflow-hidden rounded-[13px] shadow-md">
-                      <MessagesAppIcon />
-                    </div>
-                    {totalUnread > 0 && (
-                      <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-md">
-                        {totalUnread}
-                      </span>
-                    )}
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
+                    <MessagesAppIcon />
                   </div>
-                  <span className="text-[9px] font-medium text-white/85">{t.appMessages}</span>
+                  {totalUnread > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-rose-500 px-1 text-[9px] font-bold text-white shadow-md">
+                      {totalUnread}
+                    </span>
+                  )}
                 </button>
 
                 <button
@@ -600,22 +636,20 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     setGalleryTargetPhotoId(null);
                     openApp('gallery');
                   }}
-                  className="group flex flex-col items-center gap-1"
+                  className="group h-[50px] w-[50px] overflow-hidden rounded-[14px] shadow-md transition hover:scale-105 active:scale-90"
+                  aria-label={t.appGallery}
+                  title={t.appGallery}
                 >
-                  <div className="h-[48px] w-[48px] overflow-hidden rounded-[13px] shadow-md transition group-hover:scale-105 group-active:scale-90">
-                    <GalleryAppIcon />
-                  </div>
-                  <span className="text-[9px] font-medium text-white/85">{t.appGallery}</span>
+                  <GalleryAppIcon />
                 </button>
 
                 <button
                   onClick={() => openApp('notes')}
-                  className="group flex flex-col items-center gap-1"
+                  className="group h-[50px] w-[50px] overflow-hidden rounded-[14px] shadow-md transition hover:scale-105 active:scale-90"
+                  aria-label={t.appNotes}
+                  title={t.appNotes}
                 >
-                  <div className="h-[48px] w-[48px] overflow-hidden rounded-[13px] shadow-md transition group-hover:scale-105 group-active:scale-90">
-                    <NotesAppIcon />
-                  </div>
-                  <span className="text-[9px] font-medium text-white/85">{t.appNotes}</span>
+                  <NotesAppIcon />
                 </button>
               </div>
             </motion.div>
