@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { ChatMessage, ChatThread, PhotoEvidence } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
+import { CorruptedText } from '../CorruptedText';
 import {
   ArrowLeft,
   Bookmark,
@@ -255,12 +256,12 @@ export const ChatApp: React.FC<ChatAppProps> = ({
 
               {playedVoiceIds.includes(msg.id) && (
                 <div className="rounded-lg bg-black/25 p-2 text-[10.5px] leading-relaxed">
-                  <p className="text-zinc-100">{msg.voiceNote.transcript}</p>
+                  <CorruptedText text={msg.voiceNote.transcript} lang={lang} className="text-zinc-100" />
                 </div>
               )}
             </div>
           ) : (
-            <p>{msg.text}</p>
+            <CorruptedText text={msg.text} lang={lang} />
           )}
 
           <div className="mt-1 flex items-center justify-end gap-1.5">

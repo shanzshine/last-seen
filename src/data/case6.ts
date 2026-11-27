@@ -51,7 +51,7 @@ export const CASE_6: CaseData = {
           id: 'c6-n2',
           senderName: 'Bagas Pratama',
           senderType: 'owner',
-          text: 'Udah Nis. Tapi aneh bgt... kabutnya tebel & di bawah ada suara mesin truk jam segini.',
+          text: 'Udah Nis. Tapi aneh bgt... {{corrupt:kabut}}nya tebel & di bawah ada {{corrupt:suara}} mesin truk jam segini.',
           time: '02:48',
         },
         {
@@ -63,7 +63,7 @@ export const CASE_6: CaseData = {
           voiceNote: {
             duration: '0:14',
             transcript:
-              '"Nis... jangan percaya cerita hantu Pos 3... aku kepergok ngerekam mereka—HP ini bakal kutinggal biar nggak ketahuan GPS—"',
+              '"Nis... {{corrupt:jangan}} percaya cerita hantu Pos 3... aku kepergok ngerekam mereka—HP ini bakal kutinggal biar nggak ketahuan GPS—"',
             backgroundCue:
               'Suara latar: deru mesin truk diesel di kejauhan, bunyi statis HT, dan suara Pak Yanto berbisik keras: "Kejar anak itu, ambil memory card-nya sebelum fajar!"',
           },
@@ -125,7 +125,7 @@ export const CASE_6: CaseData = {
           id: 'c6-g3',
           senderName: 'Bagas Pratama',
           senderType: 'owner',
-          text: 'Guys... jangan ikutin jalur Yanto. Dia ngarahin kita menjauh biar truk di bawah nggak kelihatan.',
+          text: '{{corrupt:Guys}}... {{corrupt:jangan}} ikutin jalur Yanto. Dia {{corrupt:ngarahin}} kita menjauh biar {{corrupt:truk}} di bawah nggak kelihatan.',
           time: '02:55',
         },
       ],

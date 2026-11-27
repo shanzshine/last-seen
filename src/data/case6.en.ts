@@ -51,7 +51,7 @@ export const CASE_6_EN: CaseData = {
           id: 'c6-n2',
           senderName: 'Bagas Pratama',
           senderType: 'owner',
-          text: 'Yeah Nis. Something’s weird tho... fog is thick & there’s a truck engine rumbling below at this hour.',
+          text: 'Yeah Nis. Something’s weird tho... {{corrupt:fog}} is thick & there’s a {{corrupt:truck}} engine rumbling below at this hour.',
           time: '02:48',
         },
         {
@@ -63,7 +63,7 @@ export const CASE_6_EN: CaseData = {
           voiceNote: {
             duration: '0:14',
             transcript:
-              '"Nis... don’t believe the Post 3 ghost story... they caught me filming—I’m leaving this phone behind so they can’t track my GPS—"',
+              '"Nis... {{corrupt:don’t}} believe the Post 3 ghost story... they caught me filming—I’m leaving this phone behind so they can’t track my GPS—"',
             backgroundCue:
               'Background audio: diesel truck rumbling below, radio static, and Pak Yanto whispering harshly: "Chase that kid, grab his memory card before dawn!"',
           },
@@ -125,7 +125,7 @@ export const CASE_6_EN: CaseData = {
           id: 'c6-g3',
           senderName: 'Bagas Pratama',
           senderType: 'owner',
-          text: 'Guys... don’t follow Yanto’s route. He’s leading us away so we don’t see the trucks below.',
+          text: '{{corrupt:Guys}}... don’t {{corrupt:follow}} Yanto’s route. He’s {{corrupt:leading}} us away so we don’t see the {{corrupt:trucks}} below.',
           time: '02:55',
         },
       ],

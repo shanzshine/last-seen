@@ -243,7 +243,7 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                   )}
                 </div>
 
-                <div className="relative z-10 flex flex-col items-center gap-3">
+                <div className="relative z-10 flex flex-col items-center">
                   <button
                     type="button"
                     onClick={() => {
@@ -255,9 +255,6 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     <LockOpen className="h-3.5 w-3.5" />
                     {lang === 'en' ? 'Unlock Device' : 'Buka Perangkat'}
                   </button>
-                  <span className="font-mono text-[9px] text-zinc-400">
-                    {caseData.ownerName} • {batteryLevel}% BAT
-                  </span>
                 </div>
               </>
             ) : (

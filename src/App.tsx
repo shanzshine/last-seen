@@ -28,8 +28,35 @@ interface SavedProgress {
   unlockedNotes: Record<string, string[]>;
   recoveredThreads: Record<string, string[]>;
   hintsUsed: Record<string, number>;
+  revealedHintIndices?: Record<string, number[]>;
   solvedRanks: Record<string, 'S' | 'A' | 'B'>;
 }
+
+const getHintTopic = (hint: string, lang: Language): string => {
+  const h = hint.toLowerCase();
+  if (/terhapus|deleted|kata kunci|keyword|pulihkan|recover|backup/.test(h)) {
+    return lang === 'en' ? 'Deleted Chat / Backup' : 'Pesan Terhapus / Backup';
+  }
+  if (/\bpin\b|sandi|passcode|terkunci|locked/.test(h)) {
+    return lang === 'en' ? 'Locked Note PIN' : 'PIN Catatan';
+  }
+  if (/pulse|sosmed|akun kedua|2nd account|close friends/.test(h)) {
+    return 'Pulse';
+  }
+  if (/maps|gps|lokasi|location/.test(h)) {
+    return lang === 'en' ? 'Maps & GPS' : 'Peta & Lokasi';
+  }
+  if (/voice|suara|audio/.test(h)) {
+    return 'Voice Note';
+  }
+  if (/galeri|gallery|foto|photo|exif/.test(h)) {
+    return lang === 'en' ? 'Gallery' : 'Galeri Foto';
+  }
+  if (/browser|riwayat|history/.test(h)) {
+    return 'Browser';
+  }
+  return lang === 'en' ? 'Investigation Clue' : 'Petunjuk Kasus';
+};
 
 const STORAGE_KEY = 'last-seen-save-v1';
 const LANG_KEY = 'last-seen-lang';
@@ -45,6 +72,7 @@ const loadProgress = (): SavedProgress => {
         unlockedNotes: parsed.unlockedNotes ?? {},
         recoveredThreads: parsed.recoveredThreads ?? {},
         hintsUsed: parsed.hintsUsed ?? {},
+        revealedHintIndices: parsed.revealedHintIndices ?? {},
         solvedRanks: parsed.solvedRanks ?? {},
       };
     }
@@ -56,6 +84,7 @@ const loadProgress = (): SavedProgress => {
     unlockedNotes: {},
     recoveredThreads: {},
     hintsUsed: {},
+    revealedHintIndices: {},
     solvedRanks: {},
   };
 };
@@ -205,6 +234,10 @@ export function App() {
   const activeUnlockedNotes = activeCase ? progress.unlockedNotes[activeCase.id] ?? [] : [];
   const activeRecoveredThreads = activeCase ? progress.recoveredThreads[activeCase.id] ?? [] : [];
   const activeHintsUsed = activeCase ? progress.hintsUsed[activeCase.id] ?? 0 : 0;
+  const activeRevealedHints = activeCase
+    ? progress.revealedHintIndices?.[activeCase.id] ??
+      Array.from({ length: activeHintsUsed }, (_, i) => i)
+    : [];
 
   const handleDiscoverClue = (clueId: string) => {
     if (!activeCase) return;
@@ -271,14 +304,23 @@ export function App() {
     }));
   };
 
-  const handleUseHint = () => {
-    if (!activeCase || activeHintsUsed >= MAX_HINTS) return;
+  const handleUseHint = (hintIdx: number) => {
+    if (!activeCase) return;
+    const currentIndices =
+      progress.revealedHintIndices?.[activeCase.id] ??
+      Array.from({ length: activeHintsUsed }, (_, i) => i);
+    if (currentIndices.includes(hintIdx) || currentIndices.length >= MAX_HINTS) return;
     sound.playTap();
+    const nextIndices = [...currentIndices, hintIdx];
     setProgress((prev) => ({
       ...prev,
       hintsUsed: {
         ...prev.hintsUsed,
-        [activeCase.id]: (prev.hintsUsed[activeCase.id] ?? 0) + 1,
+        [activeCase.id]: nextIndices.length,
+      },
+      revealedHintIndices: {
+        ...(prev.revealedHintIndices ?? {}),
+        [activeCase.id]: nextIndices,
       },
     }));
   };
@@ -302,6 +344,7 @@ export function App() {
       unlockedNotes: { ...prev.unlockedNotes, [activeCase.id]: [] },
       recoveredThreads: { ...prev.recoveredThreads, [activeCase.id]: [] },
       hintsUsed: { ...prev.hintsUsed, [activeCase.id]: 0 },
+      revealedHintIndices: { ...(prev.revealedHintIndices ?? {}), [activeCase.id]: [] },
     }));
   };
 
@@ -914,28 +957,43 @@ export function App() {
                 <p className="font-mono text-[11px] font-bold text-emerald-400">
                   {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
                 </p>
-                <button
-                  disabled={activeHintsUsed >= MAX_HINTS}
-                  onClick={handleUseHint}
-                  className="inline-flex items-center gap-1 rounded-lg bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
-                >
-                  <Lightbulb className="h-3.5 w-3.5" />
-                  {t.deduction.hintLabel} ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
-                </button>
+                <span className="font-mono text-[10px] text-amber-300/80">
+                  💡 {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
+                </span>
               </div>
 
-              {activeHintsUsed > 0 && (
-                <div className="mt-2 space-y-1.5">
-                  {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
-                    <p
+              <div className="mt-2 space-y-1.5">
+                {activeCase.hints.map((hint, idx) => {
+                  const isRevealed = activeRevealedHints.includes(idx);
+                  const topic = getHintTopic(hint, lang);
+                  return isRevealed ? (
+                    <div
                       key={idx}
-                      className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-200"
+                      className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-100"
                     >
-                      💡 Hint {idx + 1}: {hint}
-                    </p>
-                  ))}
-                </div>
-              )}
+                      <span className="font-mono text-[9.5px] font-bold uppercase tracking-wider text-amber-300">
+                        💡 {topic}
+                      </span>
+                      <p className="mt-0.5 leading-relaxed">{hint}</p>
+                    </div>
+                  ) : (
+                    <button
+                      key={idx}
+                      disabled={activeHintsUsed >= MAX_HINTS}
+                      onClick={() => handleUseHint(idx)}
+                      className="flex w-full items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-2.5 py-1.5 text-left text-[11px] font-semibold text-amber-200 transition hover:bg-amber-500/20 disabled:opacity-40"
+                    >
+                      <span className="flex items-center gap-1.5">
+                        <Lightbulb className="h-3.5 w-3.5 text-amber-300" />
+                        {lang === 'en' ? `Hint: ${topic}` : `Buka Hint: ${topic}`}
+                      </span>
+                      <span className="font-mono text-[9px] text-amber-300/70">
+                        {lang === 'en' ? 'Affects Rank S' : '-Rank S'}
+                      </span>
+                    </button>
+                  );
+                })}
+              </div>
 
               {activeClues.length === 0 ? (
                 <p className="mt-2 text-xs text-zinc-500">{t.evidenceEmpty}</p>
@@ -971,9 +1029,6 @@ export function App() {
               {activeCase.title}
             </h2>
             <p className="mt-2 text-xs leading-relaxed text-zinc-400">{activeCase.briefing}</p>
-            <div className="mt-4 rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-3 text-[11px] leading-relaxed text-zinc-400">
-              <strong className="text-zinc-200">{t.tipsLabel}</strong> {t.tipsText}
-            </div>
           </div>
 
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
@@ -985,30 +1040,44 @@ export function App() {
                 {t.hintRemaining} {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
               </span>
             </div>
+            <p className="mt-1 text-[10.5px] text-zinc-500">
+              {lang === 'en'
+                ? 'Choose the topic you are stuck on (affects Rank S).'
+                : 'Pilih topik petunjuk yang kamu butuhkan (memengaruhi Rank S).'}
+            </p>
 
-            {activeHintsUsed > 0 && (
-              <div className="mt-3 space-y-2">
-                {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
+            <div className="mt-3 space-y-2">
+              {activeCase.hints.map((hint, idx) => {
+                const isRevealed = activeRevealedHints.includes(idx);
+                const topic = getHintTopic(hint, lang);
+                return isRevealed ? (
                   <div
                     key={idx}
                     className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-100"
                   >
-                    <strong className="text-amber-300">Hint #{idx + 1}:</strong> {hint}
+                    <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
+                      💡 {topic}
+                    </p>
+                    <p className="mt-1">{hint}</p>
                   </div>
-                ))}
-              </div>
-            )}
-
-            <button
-              disabled={activeHintsUsed >= MAX_HINTS}
-              onClick={handleUseHint}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
-            >
-              <Lightbulb className="h-3.5 w-3.5" />
-              {activeHintsUsed >= MAX_HINTS
-                ? t.hintExhausted
-                : `${t.hintOpenPrefix}${activeHintsUsed + 1} ${t.hintRankNote}`}
-            </button>
+                ) : (
+                  <button
+                    key={idx}
+                    disabled={activeHintsUsed >= MAX_HINTS}
+                    onClick={() => handleUseHint(idx)}
+                    className="flex w-full items-center justify-between rounded-lg border border-amber-500/20 bg-amber-500/10 px-3 py-2.5 text-left text-xs font-semibold text-amber-200 transition hover:bg-amber-500/20 disabled:cursor-not-allowed disabled:opacity-40"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Lightbulb className="h-3.5 w-3.5 shrink-0 text-amber-300" />
+                      {lang === 'en' ? `Open Hint: ${topic}` : `Buka Hint: ${topic}`}
+                    </span>
+                    <span className="font-mono text-[10px] text-amber-300/70">
+                      {lang === 'en' ? 'Reveal' : 'Buka'}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
           </div>
         </section>
 
