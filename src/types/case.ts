@@ -109,6 +109,14 @@ export interface LiveAlert {
   time: string;
 }
 
+export interface PhoneNotification {
+  id: number;
+  kind: 'clue' | 'unlock' | 'recover' | 'alert';
+  title: string;
+  body: string;
+  time?: string;
+}
+
 export interface CaseRecap {
   title: string;
   points: string[];

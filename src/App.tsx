@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { getCaseRoadmap, getCases } from './data/cases';
-import type { CaseData } from './types/case';
+import type { CaseData, PhoneNotification } from './types/case';
 import { UI_STRINGS, type Language } from './i18n/strings';
 import { sound } from './utils/sound';
 import { PhoneFrame } from './components/PhoneFrame';
@@ -84,7 +84,7 @@ export function App() {
   const [mobileCluesOpen, setMobileCluesOpen] = useState(false);
   const [dismissedRecaps, setDismissedRecaps] = useState<string[]>([]);
   const [liveTriggeredCases, setLiveTriggeredCases] = useState<string[]>([]);
-  const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [notification, setNotification] = useState<PhoneNotification | null>(null);
   const toastTimerRef = useRef<number | null>(null);
 
   const t = UI_STRINGS[lang];
@@ -99,10 +99,16 @@ export function App() {
     }
   }, [progress]);
 
-  const showToast = (msg: string) => {
-    setToastMessage(msg);
+  const pushNotification = (
+    kind: PhoneNotification['kind'],
+    title: string,
+    body: string,
+    time?: string,
+    durationMs = 4200
+  ) => {
+    setNotification({ id: Date.now(), kind, title, body, time });
     if (toastTimerRef.current) window.clearTimeout(toastTimerRef.current);
-    toastTimerRef.current = window.setTimeout(() => setToastMessage(null), 2600);
+    toastTimerRef.current = window.setTimeout(() => setNotification(null), durationMs);
   };
 
   const toggleLanguage = () => {
@@ -195,7 +201,12 @@ export function App() {
     if (existing.includes(clueId)) return;
 
     sound.playClueFound();
-    showToast(t.toastClue);
+    const clueText = clueLabelsMap.get(clueId) ?? t.toastClue;
+    pushNotification(
+      'clue',
+      lang === 'en' ? 'Evidence Pinned' : 'Bukti Tercatat',
+      clueText
+    );
     setProgress((prev) => ({
       ...prev,
       discoveredClues: {
@@ -210,7 +221,12 @@ export function App() {
     const existing = progress.unlockedNotes[activeCase.id] ?? [];
     if (existing.includes(noteId)) return;
 
-    showToast(t.toastUnlock);
+    const noteTitle = activeCase.notes.find((n) => n.id === noteId)?.title;
+    pushNotification(
+      'unlock',
+      lang === 'en' ? 'Note Unlocked' : 'Catatan Terbuka',
+      noteTitle ? `${noteTitle}` : t.toastUnlock
+    );
     setProgress((prev) => ({
       ...prev,
       unlockedNotes: {
@@ -225,7 +241,16 @@ export function App() {
     const existing = progress.recoveredThreads[activeCase.id] ?? [];
     if (existing.includes(threadId)) return;
 
-    showToast(t.toastRecover);
+    const threadName = activeCase.chats.find((c) => c.id === threadId)?.name;
+    pushNotification(
+      'recover',
+      lang === 'en' ? 'Backup Restored' : 'Pesan Dipulihkan',
+      threadName
+        ? lang === 'en'
+          ? `Deleted messages in ${threadName} restored.`
+          : `Pesan terhapus di ${threadName} berhasil dipulihkan.`
+        : t.toastRecover
+    );
     setProgress((prev) => ({
       ...prev,
       recoveredThreads: {
@@ -295,10 +320,12 @@ export function App() {
       setLiveTriggeredCases((prev) =>
         prev.includes(baseCase.id) ? prev : [...prev, baseCase.id]
       );
-      showToast(
-        lang === 'en'
-          ? `New message from ${alert.senderName}!`
-          : `Pesan baru dari ${alert.senderName}!`
+      pushNotification(
+        'alert',
+        `${alert.senderName}`,
+        alert.text,
+        alert.time,
+        6500
       );
     }, alert.delayMs);
 
@@ -804,27 +831,27 @@ export function App() {
   }
 
   return (
-    <div className="forensic-grid relative min-h-screen overflow-hidden bg-[#05070a] text-zinc-100">
-      <div className="pointer-events-none fixed left-1/2 top-1/3 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-500/8 blur-[140px]" />
+    <div className="forensic-grid forensic-noise relative min-h-screen overflow-hidden text-zinc-100">
       {/* Top Bar */}
-      <header className="relative z-20 border-b border-zinc-800/60 bg-zinc-950/85 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3">
+      <header className="relative z-20 border-b border-zinc-800/70 bg-zinc-950/90 px-3 py-2.5 backdrop-blur-md sm:px-4 sm:py-3">
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-2">
           <div className="flex items-center gap-2.5">
             <button
               onClick={() => {
                 sound.playTap();
                 setActiveCaseId(null);
+                setNotification(null);
               }}
-              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900/90 px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-3"
+              className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-900 px-2.5 py-1.5 text-xs font-medium text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-3"
             >
               <ArrowLeft className="h-3.5 w-3.5" />
               <span className="hidden sm:inline">{t.backToDesk}</span>
             </button>
-            <div className="hidden sm:block">
-              <p className="text-xs font-bold text-white">
-                Case #{activeCase.number}: {activeCase.title}
+            <div className="min-w-0">
+              <p className="truncate text-xs font-bold text-white">
+                Case #{String(activeCase.number).padStart(2, '0')}: {activeCase.title}
               </p>
-              <p className="text-[11px] text-zinc-400">
+              <p className="hidden truncate text-[11px] text-zinc-400 sm:block">
                 {t.ownerLabel}: {activeCase.ownerName}
               </p>
             </div>
@@ -833,33 +860,37 @@ export function App() {
           <div className="flex items-center gap-1.5 sm:gap-2">
             <button
               onClick={toggleLanguage}
-              className="inline-flex items-center gap-1 rounded-lg bg-zinc-900/90 px-2 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-2.5"
+              className="inline-flex items-center gap-1 rounded-lg bg-zinc-900 px-2 py-1.5 text-[11px] font-semibold text-zinc-300 transition hover:bg-zinc-800 hover:text-white sm:px-2.5"
               title={t.switchLang}
             >
-              <Globe className="h-3.5 w-3.5 text-emerald-400" />
+              <Globe className="h-3.5 w-3.5 text-zinc-400" />
               {lang.toUpperCase()}
             </button>
             <button
               onClick={toggleMute}
-              className="rounded-lg bg-zinc-900/90 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
+              className="rounded-lg bg-zinc-900 p-1.5 text-zinc-300 transition hover:bg-zinc-800"
               title={muted ? t.muteOn : !audioUnlocked ? t.audioTapHint : t.muteOff}
             >
               {muted ? (
                 <VolumeX className="h-4 w-4 text-zinc-500" />
               ) : (
                 <span className="relative inline-flex">
-                  <Volume2 className="h-4 w-4 text-emerald-400" />
+                  <Volume2 className="h-4 w-4 text-zinc-200" />
                   {!audioUnlocked && (
-                    <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-ping rounded-full bg-emerald-400" />
+                    <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 animate-ping rounded-full bg-red-500" />
                   )}
                 </span>
               )}
             </button>
             <button
               onClick={() => setMobileCluesOpen((v) => !v)}
-              className="inline-flex items-center gap-1 rounded-lg bg-zinc-900/90 px-2.5 py-1.5 text-[11px] font-semibold text-emerald-300 transition hover:bg-zinc-800 lg:hidden"
+              className={`inline-flex items-center gap-1 rounded-lg px-2.5 py-1.5 text-[11px] font-semibold transition lg:hidden ${
+                mobileCluesOpen
+                  ? 'bg-zinc-800 text-white'
+                  : 'bg-zinc-900 text-zinc-200 hover:bg-zinc-800'
+              }`}
             >
-              <ClipboardList className="h-3.5 w-3.5" />
+              <ClipboardList className="h-3.5 w-3.5 text-emerald-400" />
               {activeClues.length}/{activeCase.totalClues}
             </button>
             <button
@@ -867,7 +898,7 @@ export function App() {
                 sound.playTap();
                 setShowDeduction(true);
               }}
-              className="rounded-lg bg-emerald-500 px-3 py-1.5 text-[11px] font-bold text-zinc-950 transition hover:bg-emerald-400 sm:px-3.5 sm:text-xs"
+              className="rounded-lg bg-zinc-100 px-3 py-1.5 text-[11px] font-bold text-zinc-950 transition hover:bg-white sm:px-3.5 sm:text-xs"
             >
               {t.solveCaseBtn}
             </button>
@@ -876,74 +907,92 @@ export function App() {
       </header>
 
       {/* Mobile Clue & Hint Drawer */}
-      {mobileCluesOpen && (
-        <div className="relative z-20 border-b border-zinc-800/80 bg-zinc-900/95 p-4 backdrop-blur-md lg:hidden">
-          <p className="text-xs font-bold text-white">{t.briefingTitle}</p>
-          <p className="mt-1 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
+      <AnimatePresence>
+        {mobileCluesOpen && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            className="relative z-20 overflow-hidden border-b border-zinc-800/80 bg-zinc-950/95 backdrop-blur-md lg:hidden"
+          >
+            <div className="p-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+                {t.briefingTitle}
+              </p>
+              <p className="mt-1 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
 
-          <div className="mt-3 flex items-center justify-between">
-            <p className="text-xs font-bold text-emerald-400">
-              {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
-            </p>
-            <button
-              disabled={activeHintsUsed >= MAX_HINTS}
-              onClick={handleUseHint}
-              className="inline-flex items-center gap-1 rounded-lg bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
-            >
-              <Lightbulb className="h-3.5 w-3.5" />
-              {t.deduction.hintLabel} ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
-            </button>
-          </div>
-
-          {activeHintsUsed > 0 && (
-            <div className="mt-2 space-y-1.5">
-              {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
-                <p
-                  key={idx}
-                  className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-200"
-                >
-                  💡 Hint {idx + 1}: {hint}
+              <div className="mt-3 flex items-center justify-between">
+                <p className="font-mono text-[11px] font-bold text-emerald-400">
+                  {t.evidenceBoardTitle} ({activeClues.length}/{activeCase.totalClues})
                 </p>
-              ))}
-            </div>
-          )}
+                <button
+                  disabled={activeHintsUsed >= MAX_HINTS}
+                  onClick={handleUseHint}
+                  className="inline-flex items-center gap-1 rounded-lg bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold text-amber-300 disabled:opacity-40"
+                >
+                  <Lightbulb className="h-3.5 w-3.5" />
+                  {t.deduction.hintLabel} ({MAX_HINTS - activeHintsUsed}/{MAX_HINTS})
+                </button>
+              </div>
 
-          {activeClues.length === 0 ? (
-            <p className="mt-2 text-xs text-zinc-500">{t.evidenceEmpty}</p>
-          ) : (
-            <ul className="mt-2 space-y-1.5">
-              {activeClues.map((id) => (
-                <li key={id} className="flex items-start gap-2 text-xs text-zinc-200">
-                  <BookmarkCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-emerald-400" />
-                  <span>{clueLabelsMap.get(id)}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+              {activeHintsUsed > 0 && (
+                <div className="mt-2 space-y-1.5">
+                  {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
+                    <p
+                      key={idx}
+                      className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-2 text-[11px] text-amber-200"
+                    >
+                      💡 Hint {idx + 1}: {hint}
+                    </p>
+                  ))}
+                </div>
+              )}
+
+              {activeClues.length === 0 ? (
+                <p className="mt-2 text-xs text-zinc-500">{t.evidenceEmpty}</p>
+              ) : (
+                <ul className="mt-2 space-y-1.5">
+                  {activeClues.map((id, idx) => (
+                    <li
+                      key={id}
+                      className="flex items-start gap-2 rounded-lg border border-zinc-800/80 bg-zinc-900/60 p-2 text-xs text-zinc-200"
+                    >
+                      <span className="mt-0.5 font-mono text-[10px] font-bold text-emerald-400">
+                        {String(idx + 1).padStart(2, '0')}
+                      </span>
+                      <span>{clueLabelsMap.get(id)}</span>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Workspace */}
       <main className="relative z-10 mx-auto grid max-w-6xl gap-6 px-2.5 py-3 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_336px_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
-            <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-emerald-400">
-              <Search className="h-4 w-4" /> {t.briefingTitle}
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
+            <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+              <Search className="h-3.5 w-3.5 text-zinc-400" /> {t.briefingTitle}
             </div>
-            <h2 className="mt-2 text-lg font-bold text-white">{activeCase.title}</h2>
-            <p className="mt-2 text-xs leading-relaxed text-zinc-300">{activeCase.briefing}</p>
-            <div className="mt-4 rounded-xl border border-zinc-800 bg-zinc-950/70 p-3 text-[11px] text-zinc-400">
+            <h2 className="mt-2 text-lg font-bold tracking-tight text-white">
+              {activeCase.title}
+            </h2>
+            <p className="mt-2 text-xs leading-relaxed text-zinc-400">{activeCase.briefing}</p>
+            <div className="mt-4 rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-3 text-[11px] leading-relaxed text-zinc-400">
               <strong className="text-zinc-200">{t.tipsLabel}</strong> {t.tipsText}
             </div>
           </div>
 
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
             <div className="flex items-center justify-between">
-              <span className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-amber-300">
-                <Lightbulb className="h-4 w-4" /> {t.hintTitle}
+              <span className="flex items-center gap-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-amber-300">
+                <Lightbulb className="h-3.5 w-3.5" /> {t.hintTitle}
               </span>
-              <span className="font-mono text-[11px] text-zinc-400">
+              <span className="font-mono text-[11px] text-zinc-500">
                 {t.hintRemaining} {MAX_HINTS - activeHintsUsed}/{MAX_HINTS}
               </span>
             </div>
@@ -953,7 +1002,7 @@ export function App() {
                 {activeCase.hints.slice(0, activeHintsUsed).map((hint, idx) => (
                   <div
                     key={idx}
-                    className="rounded-xl border border-amber-500/20 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-100"
+                    className="rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-xs leading-relaxed text-amber-100"
                   >
                     <strong className="text-amber-300">Hint #{idx + 1}:</strong> {hint}
                   </div>
@@ -964,7 +1013,7 @@ export function App() {
             <button
               disabled={activeHintsUsed >= MAX_HINTS}
               onClick={handleUseHint}
-              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-xl bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
+              className="mt-3 flex w-full items-center justify-center gap-1.5 rounded-lg bg-amber-500/15 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/25 disabled:cursor-not-allowed disabled:opacity-40"
             >
               <Lightbulb className="h-3.5 w-3.5" />
               {activeHintsUsed >= MAX_HINTS
@@ -982,7 +1031,8 @@ export function App() {
             discoveredClues={activeClues}
             unlockedNoteIds={activeUnlockedNotes}
             recoveredThreadIds={activeRecoveredThreads}
-            toastMessage={toastMessage}
+            notification={notification}
+            onDismissNotification={() => setNotification(null)}
             onDiscoverClue={handleDiscoverClue}
             onUnlockNote={handleUnlockNote}
             onRecoverThread={handleRecoverThread}
@@ -992,26 +1042,38 @@ export function App() {
 
         {/* Right: Evidence Board */}
         <section className="hidden space-y-4 lg:block">
-          <div className="rounded-2xl border border-zinc-800 bg-zinc-900/50 p-5">
+          <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-400">
-                <ClipboardList className="h-4 w-4" /> {t.evidenceBoardTitle}
+              <div className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-zinc-400">
+                <ClipboardList className="h-3.5 w-3.5 text-emerald-400" /> {t.evidenceBoardTitle}
               </div>
-              <span className="rounded-full bg-zinc-800 px-2.5 py-0.5 font-mono text-xs font-bold text-white">
+              <span className="rounded bg-zinc-900 px-2 py-0.5 font-mono text-[11px] font-bold text-zinc-200 ring-1 ring-white/5">
                 {activeClues.length}/{activeCase.totalClues}
               </span>
+            </div>
+
+            {/* Clean progress bar */}
+            <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-zinc-800">
+              <div
+                className="h-full rounded-full bg-emerald-500 transition-all duration-300"
+                style={{
+                  width: `${Math.min(100, (activeClues.length / activeCase.totalClues) * 100)}%`,
+                }}
+              />
             </div>
 
             {activeClues.length === 0 ? (
               <p className="mt-4 text-xs leading-relaxed text-zinc-500">{t.evidenceEmpty}</p>
             ) : (
-              <ul className="mt-4 space-y-2.5">
-                {activeClues.map((id) => (
+              <ul className="mt-4 space-y-2">
+                {activeClues.map((id, idx) => (
                   <li
                     key={id}
-                    className="flex items-start gap-2.5 rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-3 text-xs leading-relaxed text-zinc-200"
+                    className="flex items-start gap-2.5 rounded-lg border border-zinc-800/80 bg-zinc-900/50 p-3 text-xs leading-relaxed text-zinc-200"
                   >
-                    <BookmarkCheck className="mt-0.5 h-4 w-4 shrink-0 text-emerald-400" />
+                    <span className="mt-0.5 font-mono text-[10px] font-bold text-emerald-400">
+                      {String(idx + 1).padStart(2, '0')}
+                    </span>
                     <span>{clueLabelsMap.get(id)}</span>
                   </li>
                 ))}
@@ -1034,43 +1096,56 @@ export function App() {
       )}
 
       {/* "Previously on Last Seen..." Recap Modal */}
-      {activeCase.recap && !dismissedRecaps.includes(activeCase.id) && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md">
-          <div className="w-full max-w-md rounded-2xl bg-zinc-950 p-6 shadow-2xl ring-1 ring-white/15">
-            <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-amber-400">
-              {activeCase.recap.title}
-            </p>
-            <h2 className="mt-1.5 text-xl font-black text-white">
-              Case #{activeCase.number}: {activeCase.title}
-            </h2>
-
-            <ul className="mt-4 space-y-2.5">
-              {activeCase.recap.points.map((pt, idx) => (
-                <li
-                  key={idx}
-                  className="flex items-start gap-2.5 rounded-xl bg-zinc-900/80 p-3 text-xs leading-relaxed text-zinc-200"
-                >
-                  <span className="mt-0.5 font-mono text-[10px] font-bold text-emerald-400">
-                    0{idx + 1}
-                  </span>
-                  <span>{pt}</span>
-                </li>
-              ))}
-            </ul>
-
-            <button
-              onClick={() => {
-                sound.playTap();
-                setDismissedRecaps((prev) => [...prev, activeCase.id]);
-              }}
-              className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-500 py-3 text-xs font-bold text-zinc-950 transition hover:bg-emerald-400 active:scale-[0.98]"
+      <AnimatePresence>
+        {activeCase.recap && !dismissedRecaps.includes(activeCase.id) && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.96, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 8 }}
+              transition={{ duration: 0.22 }}
+              className="w-full max-w-md rounded-2xl border border-zinc-800 bg-zinc-950 p-6 shadow-2xl"
             >
-              <Play className="h-4 w-4 fill-current" />
-              {t.startCase}
-            </button>
-          </div>
-        </div>
-      )}
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-red-400">
+                {activeCase.recap.title}
+              </p>
+              <h2 className="mt-1.5 text-xl font-black text-white">
+                Case #{String(activeCase.number).padStart(2, '0')}: {activeCase.title}
+              </h2>
+
+              <ul className="mt-4 space-y-2.5">
+                {activeCase.recap.points.map((pt, idx) => (
+                  <li
+                    key={idx}
+                    className="flex items-start gap-2.5 rounded-xl border border-zinc-800/70 bg-zinc-900/60 p-3 text-xs leading-relaxed text-zinc-200"
+                  >
+                    <span className="mt-0.5 font-mono text-[10px] font-bold text-zinc-400">
+                      0{idx + 1}
+                    </span>
+                    <span>{pt}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                onClick={() => {
+                  sound.playTap();
+                  setDismissedRecaps((prev) => [...prev, activeCase.id]);
+                }}
+                className="mt-5 flex w-full items-center justify-center gap-2 rounded-xl bg-zinc-100 py-3 text-xs font-bold text-zinc-950 transition hover:bg-white active:scale-[0.98]"
+              >
+                <Play className="h-4 w-4 fill-current" />
+                {t.startCase}
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
