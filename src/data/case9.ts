@@ -249,6 +249,18 @@ export const CASE_9: CaseData = {
       clueLabel: 'Browser 02:30 membuktikan pasien Kamar 09 berstatus DPO sindikat #01 yang dipalsukan kematiannya',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Dr. Hendra (Kepala Bedah)',
+    suspectClaim:
+      'Saya berada di bangsal lantai 3 sepanjang malam. Kamar Operasi 09 kosong dan terkunci sejak pukul 23:00 WIB.',
+    prompt: 'Bukti mana yang membuktikan Dr. Hendra berbohong?',
+    options: [
+      { id: 'a', label: 'Catatan shift malam stok infus bangsal 3A–3D' },
+      { id: 'b', label: 'Log akses kartu DR-HENDRA-01 di Kamar 09 pukul 01:55 & panggilan dari ekstensi Lt. 2' },
+      { id: 'c', label: 'Status baterai HP Maya yang tersisa 4%' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q9-culprit',

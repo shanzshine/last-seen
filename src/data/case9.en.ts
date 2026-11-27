@@ -249,6 +249,18 @@ export const CASE_9_EN: CaseData = {
       clueLabel: '02:30 Browser proves OR 09 patient is a #01 fugitive whose death was faked',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Dr. Hendra (Chief Surgeon)',
+    suspectClaim:
+      'I remained on the 3rd-floor wards all night. Operating Room 09 has been empty and locked since 23:00 WIB.',
+    prompt: 'Which evidence proves Dr. Hendra is lying?',
+    options: [
+      { id: 'a', label: 'Night shift IV stock checklist for Wards 3A–3D' },
+      { id: 'b', label: 'Keycard log DR-HENDRA-01 opening OR 09 at 01:55 & call from 2F Surgical Wing' },
+      { id: 'c', label: 'Maya’s phone battery level at 4%' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q9-culprit',

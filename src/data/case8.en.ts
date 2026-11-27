@@ -243,6 +243,18 @@ export const CASE_8_EN: CaseData = {
       snippet: '3-story abandoned building with a basement ramp connecting directly to the back pier road.',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Pak Haris (Caretaker)',
+    suspectClaim:
+      'The old hospital was completely empty and the Basement B gate was padlocked—no one and no vehicle entered that night.',
+    prompt: 'Which evidence directly contradicts Pak Haris’s claim?',
+    options: [
+      { id: 'a', label: 'Dika’s ghost-hunting camera gear checklist' },
+      { id: 'b', label: 'Recovered chat of Pak Haris taking a payoff & opening Basement B for a box truck' },
+      { id: 'c', label: 'Follower count on @dika.explore’s Pulse profile' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q8-culprit',

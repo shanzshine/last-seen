@@ -186,6 +186,18 @@ export const CASE_5: CaseData = {
       snippet: 'Dermaga 2 Pelabuhan Muara Baru • Keberangkatan kapal tujuan Batam pukul 03:00 WIB.',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Fajar (Resepsionis)',
+    suspectClaim:
+      'Saya di meja resepsionis lobi terus sepanjang malam dan tidak pernah naik ke lantai 4 atau membuka Kamar 404.',
+    prompt: 'Bukti mana yang langsung mematahkan alibi Fajar?',
+    options: [
+      { id: 'a', label: 'Pemesanan kamar atas nama Reza di lantai 4' },
+      { id: 'b', label: 'Foto log kartu Master Key resepsionis yang dipakai pukul 01:12 di Kamar 404' },
+      { id: 'c', label: 'Jadwal kapal kargo Pelabuhan Muara Baru' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'c5-q1',

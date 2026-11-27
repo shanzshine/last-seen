@@ -223,6 +223,18 @@ export const CASE_10: CaseData = {
       clueLabel: 'Browser 03:50 mencatat pemesanan speedboat Merak pukul 04:45 atas nama Ardian Kusuma',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Ardian Kusuma (#01)',
+    suspectClaim:
+      'Saya hanyalah mantan pejabat yang sudah pensiun dan sedang beristirahat di villa—tidak ada kaitan dengan sindikat atau rencana kabur.',
+    prompt: 'Bukti mana yang mengunci keterlibatan & rencana pelarian Ardian Kusuma?',
+    options: [
+      { id: 'a', label: 'Foto pemandangan Villa Kabut tanpa metadata' },
+      { id: 'b', label: 'Ledger Utama #01, arsip OFFSHORE_MANIFEST_01.zip, & panggilan charter speedboat Merak pukul 05:00' },
+      { id: 'c', label: 'Ucapan selamat pagi dari resepsionis villa' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q10-identity',

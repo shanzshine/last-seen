@@ -243,6 +243,18 @@ export const CASE_8: CaseData = {
       snippet: 'Gedung 3 lantai dengan akses basemen langsung tembus ke jalan belakang dermaga.',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Pak Haris (Penjaga Gedung)',
+    suspectClaim:
+      'Gedung RS Tua kosong melompong dan gerbang Basemen B digembok rapat dari luar—tidak ada orang atau kendaraan yang masuk malam itu.',
+    prompt: 'Bukti mana yang paling telak membantah klaim Pak Haris?',
+    options: [
+      { id: 'a', label: 'Checklist perlengkapan kamera uji nyali Dika' },
+      { id: 'b', label: 'Chat terhapus Pak Haris menerima bayaran & pesan soal akses mobil boks ke Basemen B' },
+      { id: 'c', label: 'Jumlah followers akun Pulse @dika.explore' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q8-culprit',

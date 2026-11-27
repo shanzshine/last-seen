@@ -223,6 +223,18 @@ export const CASE_10_EN: CaseData = {
       clueLabel: '03:50 Browser logs a 04:45 Merak speedboat booking under Ardian Kusuma',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Ardian Kusuma (#01)',
+    suspectClaim:
+      'I am merely a retired official resting at my villa—I have zero ties to any syndicate or escape plan.',
+    prompt: 'Which evidence seals Ardian Kusuma’s involvement and escape plan?',
+    options: [
+      { id: 'a', label: 'A scenic photo of Misty Villa with no metadata' },
+      { id: 'b', label: 'Master Ledger #01, OFFSHORE_MANIFEST_01.zip, & 05:00 Merak speedboat charter call' },
+      { id: 'c', label: 'Morning greeting from the villa receptionist' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'q10-identity',

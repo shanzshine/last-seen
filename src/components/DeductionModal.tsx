@@ -25,6 +25,9 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
 }) => {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [submitted, setSubmitted] = useState(false);
+  const [alibiBroken, setAlibiBroken] = useState(!caseData.alibiChallenge);
+  const [alibiPick, setAlibiPick] = useState<string | null>(null);
+  const [alibiError, setAlibiError] = useState(false);
 
   const t = UI_STRINGS[lang].deduction;
   const allAnswered = caseData.deductions.every((q) => Boolean(answers[q.id]));
@@ -70,7 +73,72 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
           </button>
         </div>
 
-        {!submitted ? (
+        {!alibiBroken && caseData.alibiChallenge ? (
+          <div className="mt-5 space-y-4">
+            <div className="rounded-xl border border-rose-500/30 bg-rose-950/25 p-4">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-wider text-rose-300">
+                {lang === 'en'
+                  ? `Step 1: Break ${caseData.alibiChallenge.suspectName}'s Alibi`
+                  : `Tahap 1: Patahkan Alibi ${caseData.alibiChallenge.suspectName}`}
+              </p>
+              <p className="mt-2 text-xs italic leading-relaxed text-zinc-200">
+                "{caseData.alibiChallenge.suspectClaim}"
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <p className="text-sm font-semibold text-zinc-100">
+                {caseData.alibiChallenge.prompt}
+              </p>
+              {caseData.alibiChallenge.options.map((opt) => {
+                const selected = alibiPick === opt.id;
+                return (
+                  <button
+                    key={opt.id}
+                    type="button"
+                    onClick={() => {
+                      sound.playTap();
+                      setAlibiPick(opt.id);
+                      setAlibiError(false);
+                    }}
+                    className={`w-full rounded-xl border px-3.5 py-2.5 text-left text-xs transition ${
+                      selected
+                        ? 'border-rose-400 bg-rose-500/15 font-semibold text-rose-100'
+                        : 'border-zinc-800 bg-zinc-900/70 text-zinc-300 hover:border-zinc-700'
+                    }`}
+                  >
+                    {opt.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            {alibiError && (
+              <p className="text-xs text-rose-400">
+                {lang === 'en'
+                  ? 'That evidence does not contradict the alibi. Check the phone logs again.'
+                  : 'Bukti tersebut belum mematahkan alibi di atas. Cek lagi kontradiksinya di HP.'}
+              </p>
+            )}
+
+            <button
+              type="button"
+              disabled={!alibiPick}
+              onClick={() => {
+                if (alibiPick === caseData.alibiChallenge?.correctOptionId) {
+                  sound.playPinUnlock();
+                  setAlibiBroken(true);
+                } else {
+                  sound.playPinError();
+                  setAlibiError(true);
+                }
+              }}
+              className="w-full rounded-xl bg-rose-500 py-2.5 text-xs font-bold text-white transition hover:bg-rose-400 disabled:cursor-not-allowed disabled:opacity-40"
+            >
+              {lang === 'en' ? 'Confront Alibi →' : 'Bantah Alibi →'}
+            </button>
+          </div>
+        ) : !submitted ? (
           <div className="mt-5 space-y-5">
             {discoveredCluesCount < Math.min(3, caseData.totalClues) && (
               <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 text-xs text-amber-200">

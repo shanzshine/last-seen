@@ -172,6 +172,14 @@ export interface CaseFileItem {
   clueLabel?: string;
 }
 
+export interface AlibiChallenge {
+  suspectName: string;
+  suspectClaim: string;
+  prompt: string;
+  options: DeductionOption[];
+  correctOptionId: string;
+}
+
 export interface CaseData {
   id: string;
   number: number;
@@ -194,6 +202,7 @@ export interface CaseData {
   liveAlert?: LiveAlert;
   hints: string[];
   totalClues: number;
+  alibiChallenge?: AlibiChallenge;
   deductions: DeductionQuestion[];
   epilogueSuccess: string;
   epiloguePartial: string;

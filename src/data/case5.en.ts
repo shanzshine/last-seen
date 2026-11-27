@@ -186,6 +186,18 @@ export const CASE_5_EN: CaseData = {
       snippet: 'Pier 2 Muara Baru Port • Cargo vessel bound for Batam departs 03:00 WIB.',
     },
   ],
+  alibiChallenge: {
+    suspectName: 'Fajar (Receptionist)',
+    suspectClaim:
+      'I stayed at the lobby front desk all night and never went up to the 4th floor or opened Room 404.',
+    prompt: 'Which evidence directly shatters Fajar’s alibi?',
+    options: [
+      { id: 'a', label: 'Room booking under Reza’s name on the 4th floor' },
+      { id: 'b', label: 'Photo of the receptionist Master Key card log used at 01:12 on Room 404' },
+      { id: 'c', label: 'Cargo ship schedule at Muara Baru Port' },
+    ],
+    correctOptionId: 'b',
+  },
   deductions: [
     {
       id: 'c5-q1',
