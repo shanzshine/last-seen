@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { getCaseRoadmap, getCases } from './data/cases';
+import { getCaseRoadmap, loadCaseById, TOTAL_CASES } from './data/cases';
 import type { CaseData, PhoneNotification } from './types/case';
 import { UI_STRINGS, type Language } from './i18n/strings';
 import { sound } from './utils/sound';
@@ -9,7 +9,6 @@ import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertTriangle,
   ArrowLeft,
-  BookmarkCheck,
   ClipboardList,
   Globe,
   HelpCircle,
@@ -106,6 +105,8 @@ export function App() {
   const [muted, setMuted] = useState<boolean>(() => sound.isMuted());
   const [audioUnlocked, setAudioUnlocked] = useState<boolean>(() => sound.isAudioUnlocked());
   const [activeCaseId, setActiveCaseId] = useState<string | null>(null);
+  const [loadedCase, setLoadedCase] = useState<CaseData | null>(null);
+  const [caseFilter, setCaseFilter] = useState<'all' | 'unsolved' | 'solved'>('all');
   const [showDeduction, setShowDeduction] = useState(false);
   const [showHowToPlay, setShowHowToPlay] = useState(false);
   const [mobileTab, setMobileTab] = useState<'phone' | 'briefing' | 'clues'>('phone');
@@ -117,8 +118,22 @@ export function App() {
   const toastTimerRef = useRef<number | null>(null);
 
   const t = UI_STRINGS[lang];
-  const cases = useMemo(() => getCases(lang), [lang]);
   const roadmap = useMemo(() => getCaseRoadmap(lang), [lang]);
+
+  useEffect(() => {
+    let cancelled = false;
+    if (!activeCaseId) {
+      setLoadedCase(null);
+      return;
+    }
+    setLoadedCase(null);
+    loadCaseById(activeCaseId, lang).then((data) => {
+      if (!cancelled) setLoadedCase(data);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeCaseId, lang]);
 
   useEffect(() => {
     try {
@@ -157,10 +172,7 @@ export function App() {
     setMuted(sound.toggleMute());
   };
 
-  const baseCase: CaseData | null = useMemo(
-    () => cases.find((c) => c.id === activeCaseId) ?? null,
-    [cases, activeCaseId]
-  );
+  const baseCase: CaseData | null = loadedCase;
 
   const activeCase: CaseData | null = useMemo(() => {
     if (!baseCase) return null;
@@ -426,6 +438,19 @@ export function App() {
     };
   }, [baseCase, liveTriggeredCases, lang]);
 
+  if (activeCaseId && !activeCase) {
+    return (
+      <div className="forensic-grid flex min-h-screen items-center justify-center text-zinc-400">
+        <div className="flex flex-col items-center gap-3">
+          <div className="h-6 w-6 animate-spin rounded-full border-2 border-zinc-700 border-t-red-500" />
+          <p className="font-mono text-xs tracking-wider">
+            {lang === 'en' ? 'Decrypting device backup...' : 'Membuka salinan perangkat...'}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   if (!activeCase) {
     const solvedCount = Object.keys(progress.solvedRanks).length;
     const rankSCount = Object.values(progress.solvedRanks).filter((r) => r === 'S').length;
@@ -433,6 +458,12 @@ export function App() {
       (sum, arr) => sum + arr.length,
       0
     );
+    const filteredRoadmap = roadmap.filter((item) => {
+      const isSolved = Boolean(progress.solvedRanks[item.id]);
+      if (caseFilter === 'unsolved') return !isSolved;
+      if (caseFilter === 'solved') return isSolved;
+      return true;
+    });
 
     return (
       <div className="forensic-grid forensic-noise relative min-h-screen overflow-hidden text-zinc-100">
@@ -530,7 +561,7 @@ export function App() {
                   </p>
                   <p className="mt-0.5 font-mono text-lg font-extrabold text-zinc-100">
                     {solvedCount}
-                    <span className="text-xs font-normal text-zinc-600">/{cases.length}</span>
+                    <span className="text-xs font-normal text-zinc-600">/{TOTAL_CASES}</span>
                   </p>
                 </div>
                 <div className="rounded-xl border border-zinc-800/70 bg-zinc-950/80 px-4 py-2.5">
@@ -549,7 +580,7 @@ export function App() {
                     {rankSCount}
                   </p>
                 </div>
-                {solvedCount === cases.length && (
+                {solvedCount === TOTAL_CASES && (
                   <div className="inline-flex items-center gap-2 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 font-mono text-[10px] font-bold uppercase tracking-wider text-amber-300">
                     <Trophy className="h-3.5 w-3.5" />
                     {lang === 'en' ? 'Season 1 Cleared' : 'Season 1 Tamat'}
@@ -621,22 +652,57 @@ export function App() {
 
           {/* Case Roadmap */}
           <div className="mt-9">
-            <div className="mb-4 flex items-center justify-between">
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-2.5">
               <h2 className="font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400">
                 {t.caseListTitle}
               </h2>
-              <span className="flex items-center gap-1.5 font-mono text-[10px] text-zinc-500">
-                <BookmarkCheck className="h-3 w-3 text-zinc-500" />
-                {t.autoSaved}
-              </span>
+              <div className="flex items-center gap-1 rounded-lg border border-zinc-800/80 bg-zinc-950 p-1">
+                {(['all', 'unsolved', 'solved'] as const).map((f) => {
+                  const label =
+                    f === 'all'
+                      ? lang === 'en'
+                        ? 'All'
+                        : 'Semua'
+                      : f === 'unsolved'
+                        ? lang === 'en'
+                          ? 'Unsolved'
+                          : 'Belum Selesai'
+                        : lang === 'en'
+                          ? 'Solved'
+                          : 'Selesai';
+                  return (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => {
+                        sound.playTap();
+                        setCaseFilter(f);
+                      }}
+                      className={`rounded-md px-2.5 py-1 text-[11px] font-semibold transition ${
+                        caseFilter === f
+                          ? 'bg-zinc-100 text-zinc-950'
+                          : 'text-zinc-400 hover:text-zinc-200'
+                      }`}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="grid gap-3.5">
-              {roadmap.map((item, idx) => {
+              {filteredRoadmap.length === 0 ? (
+                <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/60 p-6 text-center text-xs text-zinc-500">
+                  {lang === 'en'
+                    ? 'No cases match this filter yet.'
+                    : 'Belum ada kasus di kategori ini.'}
+                </div>
+              ) : (
+                filteredRoadmap.map((item, idx) => {
                 const rank = progress.solvedRanks[item.id];
                 const cluesCount = progress.discoveredClues[item.id]?.length ?? 0;
-                const caseObj = cases.find((c) => c.id === item.id);
-                const totalClues = caseObj?.totalClues ?? 6;
+                const totalClues = item.totalClues;
                 const accentBorder =
                   item.difficulty === 'Mudah'
                     ? 'border-l-emerald-700'
@@ -735,7 +801,8 @@ export function App() {
                     </div>
                   </motion.div>
                 );
-              })}
+              })
+              )}
             </div>
           </div>
         </div>

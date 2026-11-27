@@ -72,6 +72,16 @@ export const DeductionModal: React.FC<DeductionModalProps> = ({
 
         {!submitted ? (
           <div className="mt-5 space-y-5">
+            {discoveredCluesCount < Math.min(3, caseData.totalClues) && (
+              <div className="flex items-start gap-2.5 rounded-xl border border-amber-500/30 bg-amber-500/10 px-3.5 py-2.5 text-xs text-amber-200">
+                <ShieldAlert className="mt-0.5 h-4 w-4 shrink-0 text-amber-400" />
+                <span>
+                  {lang === 'en'
+                    ? `Only ${discoveredCluesCount}/${caseData.totalClues} clues pinned so far. Check more apps on the victim's phone before concluding.`
+                    : `Baru ${discoveredCluesCount}/${caseData.totalClues} bukti tercatat. Sebaiknya periksa HP korban lebih lanjut sebelum menyimpulkan.`}
+                </span>
+              </div>
+            )}
             {caseData.deductions.map((q, index) => (
               <div key={q.id} className="space-y-2">
                 <p className="text-sm font-semibold text-zinc-100">

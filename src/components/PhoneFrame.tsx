@@ -69,9 +69,12 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
     window.setTimeout(() => setGlitchActive(false), 260);
   };
 
+  const [visitedApps, setVisitedApps] = useState<string[]>([]);
+
   useEffect(() => {
     setBatteryLevel(4);
     setActiveApp('home');
+    setVisitedApps([]);
     appHistoryRef.current = [];
     setBackSignal(0);
     setIsLockedScreen(true);
@@ -110,11 +113,16 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
       setActiveApp('home');
       return;
     }
+    setVisitedApps((prev) => (prev.includes(app) ? prev : [...prev, app]));
     if (activeApp !== app) {
       appHistoryRef.current = [...appHistoryRef.current, activeApp];
     }
     setActiveApp(app);
   };
+
+  const lockedNotesCount = caseData.notes.filter(
+    (n) => n.isLocked && !unlockedNoteIds.includes(n.id)
+  ).length;
 
   const popAppHistory = () => {
     const prev = appHistoryRef.current;
@@ -544,11 +552,14 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     {caseData.locations && caseData.locations.length > 0 && (
                       <button
                         onClick={() => openApp('maps')}
-                        className="group flex flex-col items-center gap-1.5"
+                        className="group relative flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="relative h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <MapsAppIcon />
                         </div>
+                        {!visitedApps.includes('maps') && (
+                          <span className="absolute right-2.5 top-0 h-2.5 w-2.5 rounded-full bg-sky-400 ring-2 ring-black/70" />
+                        )}
                         <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appMaps}
                         </span>
@@ -558,11 +569,14 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     {caseData.browserHistory && caseData.browserHistory.length > 0 && (
                       <button
                         onClick={() => openApp('browser')}
-                        className="group flex flex-col items-center gap-1.5"
+                        className="group relative flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="relative h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <BrowserAppIcon />
                         </div>
+                        {!visitedApps.includes('browser') && (
+                          <span className="absolute right-2.5 top-0 h-2.5 w-2.5 rounded-full bg-sky-400 ring-2 ring-black/70" />
+                        )}
                         <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appBrowser}
                         </span>
@@ -572,11 +586,14 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     {caseData.socialPosts && caseData.socialPosts.length > 0 && (
                       <button
                         onClick={() => openApp('social')}
-                        className="group flex flex-col items-center gap-1.5"
+                        className="group relative flex flex-col items-center gap-1.5"
                       >
-                        <div className="h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
+                        <div className="relative h-[54px] w-[54px] overflow-hidden rounded-[15px] shadow-lg transition group-hover:scale-105 group-active:scale-90">
                           <SocialAppIcon />
                         </div>
+                        {!visitedApps.includes('social') && (
+                          <span className="absolute right-2.5 top-0 h-2.5 w-2.5 rounded-full bg-rose-500 ring-2 ring-black/70" />
+                        )}
                         <span className="text-[10px] font-medium leading-none text-white/90 drop-shadow-sm">
                           {t.appSocial}
                         </span>
@@ -633,20 +650,32 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     setGalleryTargetPhotoId(null);
                     openApp('gallery');
                   }}
-                  className="group h-[50px] w-[50px] overflow-hidden rounded-[14px] shadow-md transition hover:scale-105 active:scale-90"
+                  className="group relative h-[50px] w-[50px] transition hover:scale-105 active:scale-90"
                   aria-label={t.appGallery}
                   title={t.appGallery}
                 >
-                  <GalleryAppIcon />
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
+                    <GalleryAppIcon />
+                  </div>
+                  {!visitedApps.includes('gallery') && (
+                    <span className="absolute -right-0.5 -top-0.5 h-2.5 w-2.5 rounded-full bg-sky-400 ring-2 ring-black/70" />
+                  )}
                 </button>
 
                 <button
                   onClick={() => openApp('notes')}
-                  className="group h-[50px] w-[50px] overflow-hidden rounded-[14px] shadow-md transition hover:scale-105 active:scale-90"
+                  className="group relative h-[50px] w-[50px] transition hover:scale-105 active:scale-90"
                   aria-label={t.appNotes}
                   title={t.appNotes}
                 >
-                  <NotesAppIcon />
+                  <div className="h-full w-full overflow-hidden rounded-[14px] shadow-md">
+                    <NotesAppIcon />
+                  </div>
+                  {lockedNotesCount > 0 && (
+                    <span className="absolute -right-1 -top-1 flex h-4 min-w-[16px] items-center justify-center rounded-full bg-amber-500 px-1 font-mono text-[8.5px] font-black text-zinc-950 shadow-md">
+                      {lockedNotesCount}
+                    </span>
+                  )}
                 </button>
               </div>
             </motion.div>

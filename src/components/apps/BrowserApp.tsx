@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import type { BrowserHistoryItem } from '../../types/case';
 import type { Language } from '../../i18n/strings';
-import { BookmarkCheck, BookmarkPlus, Globe, Search } from 'lucide-react';
+import { sound } from '../../utils/sound';
+import { Bookmark, BookmarkCheck, Globe, Search } from 'lucide-react';
 
 interface BrowserAppProps {
   lang: Language;
   history: BrowserHistoryItem[];
   discoveredClues: string[];
-  onDiscoverClue: (clueId: string) => void;
+  onDiscoverClue: (clueId?: string) => void;
 }
 
 export const BrowserApp: React.FC<BrowserAppProps> = ({
@@ -16,6 +17,8 @@ export const BrowserApp: React.FC<BrowserAppProps> = ({
   discoveredClues,
   onDiscoverClue,
 }) => {
+  const [starredIds, setStarredIds] = useState<string[]>([]);
+
   return (
     <div className="flex h-full flex-col bg-zinc-950">
       <div className="bg-zinc-900/90 px-4 pb-3 pt-3.5">
@@ -28,6 +31,7 @@ export const BrowserApp: React.FC<BrowserAppProps> = ({
       <div className="phone-scroll flex-1 divide-y divide-white/[0.06] overflow-y-auto px-3 py-2">
         {history.map((item) => {
           const isFound = item.clueId ? discoveredClues.includes(item.clueId) : false;
+          const isStarred = isFound || starredIds.includes(item.id);
 
           return (
             <div key={item.id} className="space-y-1.5 py-3">
@@ -36,34 +40,48 @@ export const BrowserApp: React.FC<BrowserAppProps> = ({
                   <Globe className="h-3 w-3 shrink-0 text-sky-400" />
                   <span className="truncate">{item.title}</span>
                 </span>
-                <span className="shrink-0 font-mono text-[10px] text-zinc-500">{item.time}</span>
+                <div className="flex shrink-0 items-center gap-1.5">
+                  <span className="font-mono text-[10px] text-zinc-500">{item.time}</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (item.clueId) {
+                        onDiscoverClue(item.clueId);
+                      } else {
+                        const isCurrentlyStarred = starredIds.includes(item.id);
+                        if (!isCurrentlyStarred) {
+                          onDiscoverClue(undefined);
+                        } else {
+                          sound.playTap();
+                        }
+                        setStarredIds((prev) =>
+                          isCurrentlyStarred
+                            ? prev.filter((id) => id !== item.id)
+                            : [...prev, item.id]
+                        );
+                      }
+                    }}
+                    className={`rounded p-1 transition ${
+                      isFound
+                        ? 'text-emerald-400'
+                        : isStarred
+                          ? 'text-white'
+                          : 'text-zinc-500 hover:text-zinc-200'
+                    }`}
+                    aria-label="Bookmark history"
+                    title={lang === 'en' ? 'Bookmark' : 'Tandai'}
+                  >
+                    {isFound ? (
+                      <BookmarkCheck className="h-3.5 w-3.5" />
+                    ) : (
+                      <Bookmark className={`h-3.5 w-3.5 ${isStarred ? 'fill-current' : ''}`} />
+                    )}
+                  </button>
+                </div>
               </div>
 
               <p className="truncate font-mono text-[10px] text-emerald-400/75">{item.url}</p>
               <p className="text-[11px] leading-relaxed text-zinc-300">{item.snippet}</p>
-
-              {item.clueId && (
-                <button
-                  onClick={() => onDiscoverClue(item.clueId!)}
-                  className={`mt-1 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-[10.5px] font-semibold transition ${
-                    isFound
-                      ? 'bg-emerald-500/15 text-emerald-300'
-                      : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
-                  }`}
-                >
-                  {isFound ? (
-                    <>
-                      <BookmarkCheck className="h-3 w-3" />
-                      {lang === 'en' ? 'Clue Pinned' : 'Bukti Tercatat'}
-                    </>
-                  ) : (
-                    <>
-                      <BookmarkPlus className="h-3 w-3" />
-                      {lang === 'en' ? 'Pin History' : 'Catat Riwayat'}
-                    </>
-                  )}
-                </button>
-              )}
             </div>
           );
         })}
