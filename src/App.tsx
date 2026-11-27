@@ -943,7 +943,7 @@ export function App() {
       </AnimatePresence>
 
       {/* Main Workspace */}
-      <main className="relative z-10 mx-auto grid max-w-6xl gap-6 px-2.5 py-3 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_336px_1fr] lg:items-start lg:py-8">
+      <main className="relative z-10 mx-auto grid w-full min-w-0 max-w-6xl gap-6 px-3 py-2.5 sm:gap-8 sm:px-4 sm:py-6 lg:grid-cols-[1fr_336px_1fr] lg:items-start lg:py-8">
         {/* Left: Briefing & Hints */}
         <section className="hidden space-y-4 lg:block">
           <div className="rounded-xl border border-zinc-800/80 bg-zinc-950/80 p-5">
@@ -996,7 +996,7 @@ export function App() {
         </section>
 
         {/* Center: Cloned Phone */}
-        <section className="flex justify-center">
+        <section className="flex w-full min-w-0 justify-center">
           <PhoneFrame
             caseData={activeCase}
             lang={lang}
