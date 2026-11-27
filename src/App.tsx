@@ -669,6 +669,23 @@ export function App() {
               })}
             </div>
           </div>
+
+          <footer className="mt-10 flex flex-col items-center justify-between gap-2 border-t border-zinc-800/60 pt-5 text-center sm:flex-row sm:text-left">
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-zinc-600">
+              LAST SEEN // DIGITAL FORENSIC ARCHIVE
+            </p>
+            <p className="font-mono text-[11px] text-zinc-500">
+              {lang === 'en' ? 'Created by' : 'Dibuat oleh'}{' '}
+              <a
+                href="https://github.com/shanzshine"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-bold tracking-wide text-red-400 transition hover:text-red-300"
+              >
+                @shanzshine
+              </a>
+            </p>
+          </footer>
         </div>
 
         {/* How to Play Modal — Compact Aged Forensic Paper Memo */}
