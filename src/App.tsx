@@ -420,6 +420,7 @@ export function App() {
     const typingDelay = Math.max(1200, alert.delayMs - 3000);
 
     const typingTimer = window.setTimeout(() => {
+      sound.playTap();
       setTypingThreadId(alert.threadId);
     }, typingDelay);
 

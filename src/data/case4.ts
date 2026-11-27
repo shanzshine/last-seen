@@ -108,6 +108,41 @@ export const CASE_4: CaseData = {
       caption: 'Foto lama barang bukti loker penyimpanan.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call4-1',
+      callerName: 'Kontak #01',
+      phoneNumber: 'Encrypted VoIP',
+      type: 'incoming',
+      time: '02:58 WIB',
+      duration: '0:48',
+      voicemailTranscript:
+        '"Semua jejak Kos Melati dan Tol Cikunir harus bersih malam ini. Jangan sampai ada saksi tersisa."',
+    },
+    {
+      id: 'call4-2',
+      callerName: 'Kontak #04',
+      phoneNumber: 'Encrypted VoIP',
+      type: 'outgoing',
+      time: '03:09 WIB',
+      duration: '0:22',
+      note: 'Panggilan singkat sesaat sebelum kloningan HP ini dikirim anonim.',
+    },
+  ],
+  files: [
+    {
+      id: 'file4-protocol',
+      filename: 'PROTOKOL_PEMBERSIHAN.zip',
+      fileType: 'zip',
+      size: '1.1 MB',
+      date: '03:05 WIB',
+      isLocked: true,
+      password: '0311',
+      passwordHint: 'Jam terakhir perangkat anonim ini aktif (4 digit HHMM)',
+      content:
+        'DAFTAR TARGET OPERASI:\n- Kos Melati (#01-K07)\n- Audit Proyek Helios\n- Saksi Kunci Kamar 404 (Reza Mahendra)\nStatus: Menunggu eksekusi lanjutan dari #01.',
+    },
+  ],
   notes: [
     {
       id: 'note4-codes',

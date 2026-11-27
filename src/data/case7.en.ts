@@ -169,6 +169,41 @@ export const CASE_7_EN: CaseData = {
       caption: 'Afternoon coffee receipt before Clarina returned to her apartment.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call7-1',
+      callerName: 'Rendy (Manager)',
+      phoneNumber: '+62 812-3300-8812',
+      type: 'incoming',
+      time: '22:48 WIB',
+      duration: '1:32',
+      note: 'Rendy called from Clarina’s apartment lobby—contradicting his chat alibi.',
+    },
+    {
+      id: 'call7-2',
+      callerName: 'Vina (Best Friend)',
+      phoneNumber: '+62 813-4421-9001',
+      type: 'missed',
+      time: '23:55 WIB',
+      duration: '0:00',
+      voicemailTranscript:
+        '"Clar?! Security told me an ambulance just pulled up to your unit! Please pick up if you can hear this!"',
+    },
+  ],
+  files: [
+    {
+      id: 'file7-contract',
+      filename: 'FAKE_ENDORSE_CONTRACT.pdf',
+      fileType: 'pdf',
+      size: '518 KB',
+      date: '21:10 WIB',
+      isLocked: true,
+      password: 'ENDORSE',
+      passwordHint: '1-word term for influencer brand promotion (uppercase)',
+      content:
+        'RENDY AGENCY CONTRACT CLAUSE\nIncoming Wire: Rp 850,000,000 under Clarina Putri’s name for a shell campaign.\nPurpose: Laundering #01 syndicate funds without the talent’s knowledge.',
+    },
+  ],
   notes: [
     {
       id: 'n7-vault',

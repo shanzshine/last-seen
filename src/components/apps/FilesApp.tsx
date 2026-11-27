@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import type { CaseFileItem } from '../../types/case';
 import type { Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
+import { motion } from 'framer-motion';
 import {
   ArrowLeft,
   Bookmark,
@@ -186,7 +187,11 @@ export const FilesApp: React.FC<FilesAppProps> = ({
 
       <div className="phone-scroll flex-1 overflow-y-auto p-4">
         {!isUnlocked ? (
-          <div className="mt-6 rounded-2xl border border-white/10 bg-zinc-900/80 p-4 text-center">
+          <motion.div
+            animate={passwordError ? { x: [0, -6, 6, -4, 4, 0] } : { x: 0 }}
+            transition={{ duration: 0.32 }}
+            className="mt-6 rounded-2xl border border-white/10 bg-zinc-900/80 p-4 text-center"
+          >
             <div className="mx-auto flex h-10 w-10 items-center justify-center rounded-full bg-amber-500/15 text-amber-400">
               <Lock className="h-5 w-5" />
             </div>
@@ -244,7 +249,7 @@ export const FilesApp: React.FC<FilesAppProps> = ({
                 {lang === 'en' ? 'Unlock File' : 'Buka Berkas'}
               </button>
             </form>
-          </div>
+          </motion.div>
         ) : (
           <div className="rounded-2xl border border-white/10 bg-zinc-900/60 p-4">
             <div className="mb-3 flex items-center justify-between border-b border-white/[0.08] pb-2">
@@ -262,3 +267,4 @@ export const FilesApp: React.FC<FilesAppProps> = ({
     </div>
   );
 };
+

@@ -160,6 +160,41 @@ export const CASE_2_EN: CaseData = {
       caption: 'Sent by Tania as proof she was already heading home to Bekasi.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call2-1',
+      callerName: 'Hendro (Director)',
+      phoneNumber: '+62 811-2204-819',
+      type: 'incoming',
+      time: '01:42 WIB',
+      duration: '1:05',
+      note: 'Hendro called Bima asking for finance server access shortly before the incident.',
+    },
+    {
+      id: 'call2-2',
+      callerName: 'Tania (Finance)',
+      phoneNumber: '+62 812-7731-045',
+      type: 'missed',
+      time: '02:10 WIB',
+      duration: '0:00',
+      voicemailTranscript:
+        '"Bima, sorry I just passed the Bekasi toll gate—wait, why is your office light still on in the CCTV feed?"',
+    },
+  ],
+  files: [
+    {
+      id: 'file2-helios',
+      filename: 'HELIOS_AUDIT_DRAFT.pdf',
+      fileType: 'pdf',
+      size: '340 KB',
+      date: '01:55 WIB',
+      isLocked: true,
+      password: '0214',
+      passwordHint: 'Bima’s last seen time (4-digit HHMM)',
+      content:
+        'PROJECT HELIOS DISCREPANCY SUMMARY\nMissing Funds: Rp 4,000,000,000\nAuthorized By: Hendro (CEO) — bypassing CFO sign-off.\nBima’s Note: "Reporting this to the board tomorrow morning."',
+    },
+  ],
   notes: [
     {
       id: 'note2-lembur',

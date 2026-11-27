@@ -160,6 +160,41 @@ export const CASE_2: CaseData = {
       caption: 'Dikirim Tania sebagai bukti sudah perjalanan pulang ke Bekasi.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call2-1',
+      callerName: 'Hendro (Direktur)',
+      phoneNumber: '+62 811-2204-819',
+      type: 'incoming',
+      time: '01:42 WIB',
+      duration: '1:05',
+      note: 'Hendro menelepon Bima untuk menanyakan akses server keuangan sebelum insiden.',
+    },
+    {
+      id: 'call2-2',
+      callerName: 'Tania (Finance)',
+      phoneNumber: '+62 812-7731-045',
+      type: 'missed',
+      time: '02:10 WIB',
+      duration: '0:00',
+      voicemailTranscript:
+        '"Bim, maaf aku baru keluar gerbang tol Bekasi—tapi kok lampu ruanganmu masih nyala ya di CCTV kantor?"',
+    },
+  ],
+  files: [
+    {
+      id: 'file2-helios',
+      filename: 'DRAFT_AUDIT_HELIOS.pdf',
+      fileType: 'pdf',
+      size: '340 KB',
+      date: '01:55 WIB',
+      isLocked: true,
+      password: '0214',
+      passwordHint: 'Jam Bima terakhir terlihat aktif (4 digit HHMM)',
+      content:
+        'RINGKASAN ANOMALI DANA PROYEK HELIOS\nTotal Selisih: Rp 4.000.000.000\nPersetujuan: Hendro (CEO) — tanpa tanda tangan CFO.\nCatatan Bima: "Akan kulaporkan ke dewan komisaris besok pagi."',
+    },
+  ],
   notes: [
     {
       id: 'note2-lembur',

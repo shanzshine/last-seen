@@ -169,6 +169,41 @@ export const CASE_7: CaseData = {
       caption: 'Foto struk pertemuan sore Clarina sebelum pulang ke apartemen.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call7-1',
+      callerName: 'Rendy (Manajer)',
+      phoneNumber: '+62 812-3300-8812',
+      type: 'incoming',
+      time: '22:48 WIB',
+      duration: '1:32',
+      note: 'Rendy menelepon dari lobi apartemen Clarina—bertentangan dengan pengakuannya di chat.',
+    },
+    {
+      id: 'call7-2',
+      callerName: 'Vina (Sahabat)',
+      phoneNumber: '+62 813-4421-9001',
+      type: 'missed',
+      time: '23:55 WIB',
+      duration: '0:00',
+      voicemailTranscript:
+        '"Clar?! Aku denger dari satpam ambulans datang ke unitmu! Tolong angkat kalau kamu masih sadar!"',
+    },
+  ],
+  files: [
+    {
+      id: 'file7-contract',
+      filename: 'KONTRAK_ENDORSE_FIKTIF.pdf',
+      fileType: 'pdf',
+      size: '518 KB',
+      date: '21:10 WIB',
+      isLocked: true,
+      password: 'ENDORSE',
+      passwordHint: 'Kata kunci kerja sama promosi brand/selebgram (1 kata huruf kapital)',
+      content:
+        'KLAUSUL KONTRAK AGENSI RENDY\nDana masuk: Rp 850.000.000 atas nama Clarina Putri untuk kampanye fiktif.\nTujuan: Pencucian dana sindikat #01 tanpa sepengetahuan talent.',
+    },
+  ],
   notes: [
     {
       id: 'n7-vault',

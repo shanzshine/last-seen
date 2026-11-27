@@ -146,6 +146,38 @@ export const CASE_5: CaseData = {
       caption: 'Notifikasi akses lift lantai 4.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call5-1',
+      callerName: 'Resepsionis (Fajar)',
+      phoneNumber: 'Ext. 101',
+      type: 'incoming',
+      time: '01:05 WIB',
+      duration: '0:19',
+      note: 'Fajar menanyakan apakah Reza masih di dalam Kamar 404—padahal shift malam tak ada housekeeping.',
+    },
+    {
+      id: 'call5-2',
+      callerName: 'Agent Tari (Satgas)',
+      phoneNumber: '+62 811-9044-210',
+      type: 'missed',
+      time: '01:24 WIB',
+      duration: '0:00',
+      voicemailTranscript:
+        '"Reza! Jangan buka pintu untuk siapa pun! Tim Satgas sedang menuju Hotel Senja sekarang!"',
+    },
+  ],
+  files: [
+    {
+      id: 'file5-keylog',
+      filename: 'LOG_AKSES_KAMAR_404.doc',
+      fileType: 'doc',
+      size: '62 KB',
+      date: '01:15 WIB',
+      content:
+        'CATATAN PINTU ELEKTRONIK HOTEL SENJA\nKamar: 404 (Lantai 4)\n01:12 WIB — Dibuka menggunakan MASTER KEY #02 (Terdaftar atas nama: Fajar, Resepsionis).',
+    },
+  ],
   notes: [
     {
       id: 'note5-wajah',

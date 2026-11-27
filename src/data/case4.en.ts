@@ -108,6 +108,41 @@ export const CASE_4_EN: CaseData = {
       caption: 'Old evidence photo of a storage locker.',
     },
   ],
+  callLogs: [
+    {
+      id: 'call4-1',
+      callerName: 'Contact #01',
+      phoneNumber: 'Encrypted VoIP',
+      type: 'incoming',
+      time: '02:58 WIB',
+      duration: '0:48',
+      voicemailTranscript:
+        '"All traces of Kos Melati and Cikunir Toll must be wiped tonight. Leave zero witnesses."',
+    },
+    {
+      id: 'call4-2',
+      callerName: 'Contact #04',
+      phoneNumber: 'Encrypted VoIP',
+      type: 'outgoing',
+      time: '03:09 WIB',
+      duration: '0:22',
+      note: 'Brief call moments before this cloned phone was anonymously delivered.',
+    },
+  ],
+  files: [
+    {
+      id: 'file4-protocol',
+      filename: 'CLEANUP_PROTOCOL.zip',
+      fileType: 'zip',
+      size: '1.1 MB',
+      date: '03:05 WIB',
+      isLocked: true,
+      password: '0311',
+      passwordHint: 'Last active time on this anonymous device (4-digit HHMM)',
+      content:
+        'OPERATION TARGET LIST:\n- Kos Melati (#01-K07)\n- Project Helios Audit\n- Room 404 Key Witness (Reza Mahendra)\nStatus: Awaiting further orders from #01.',
+    },
+  ],
   notes: [
     {
       id: 'note4-codes',
