@@ -5,9 +5,10 @@ import { PhotoVisual } from '../PhotoVisual';
 import { sound } from '../../utils/sound';
 import {
   ArrowLeft,
+  Bookmark,
   BookmarkCheck,
-  BookmarkPlus,
   Clock,
+  Info,
   MapPin,
   X,
 } from 'lucide-react';
@@ -33,19 +34,27 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
 }) => {
   const [selectedId, setSelectedId] = useState<string | null>(initialPhotoId);
   const [zoomOpen, setZoomOpen] = useState(false);
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [starredIds, setStarredIds] = useState<string[]>([]);
   const prevBackRef = useRef(backSignal);
+
+  useEffect(() => {
+    setDetailsOpen(false);
+  }, [selectedId]);
 
   useEffect(() => {
     if (backSignal === prevBackRef.current) return;
     prevBackRef.current = backSignal;
     if (zoomOpen) {
       setZoomOpen(false);
+    } else if (detailsOpen) {
+      setDetailsOpen(false);
     } else if (selectedId !== null) {
       setSelectedId(null);
     } else {
       onBackAtRoot?.();
     }
-  }, [backSignal, zoomOpen, selectedId, onBackAtRoot]);
+  }, [backSignal, zoomOpen, detailsOpen, selectedId, onBackAtRoot]);
   const selectedPhoto = photos.find((p) => p.id === selectedId) ?? null;
   const t = UI_STRINGS[lang].gallery;
 
@@ -89,26 +98,65 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
   const isClueFound = selectedPhoto.clueId
     ? discoveredClues.includes(selectedPhoto.clueId)
     : false;
+  const isStarred = isClueFound || starredIds.includes(selectedPhoto.id);
+
+  const handleToggleBookmark = () => {
+    if (selectedPhoto.clueId) {
+      onDiscoverClue(selectedPhoto.clueId);
+    } else {
+      sound.playTap();
+      setStarredIds((prev) =>
+        prev.includes(selectedPhoto.id)
+          ? prev.filter((id) => id !== selectedPhoto.id)
+          : [...prev, selectedPhoto.id]
+      );
+    }
+  };
 
   return (
-    <div className="flex h-full flex-col bg-black">
-      <div className="flex items-center gap-2 bg-zinc-950/90 px-3 py-2.5">
+    <div className="relative flex h-full flex-col bg-black">
+      {/* Top Bar */}
+      <div className="flex items-center justify-between gap-2 bg-zinc-950/90 px-3 py-2.5">
+        <div className="flex min-w-0 items-center gap-2">
+          <button
+            onClick={() => {
+              setZoomOpen(false);
+              setDetailsOpen(false);
+              setSelectedId(null);
+            }}
+            className="rounded-lg p-1 text-zinc-300 transition hover:bg-white/10"
+            aria-label="Back"
+          >
+            <ArrowLeft className="h-4 w-4" />
+          </button>
+          <p className="truncate font-mono text-xs font-medium text-zinc-200">
+            {selectedPhoto.title}
+          </p>
+        </div>
+
         <button
-          onClick={() => {
-            setZoomOpen(false);
-            setSelectedId(null);
-          }}
-          className="rounded-lg p-1 text-zinc-300 transition hover:bg-white/10"
-          aria-label="Back"
+          type="button"
+          onClick={handleToggleBookmark}
+          className={`rounded-lg p-1.5 transition ${
+            isClueFound
+              ? 'bg-emerald-500/15 text-emerald-400'
+              : isStarred
+                ? 'bg-white/10 text-white'
+                : 'text-zinc-400 hover:bg-white/10 hover:text-zinc-200'
+          }`}
+          aria-label="Bookmark photo"
+          title={lang === 'en' ? 'Bookmark' : 'Tandai'}
         >
-          <ArrowLeft className="h-4 w-4" />
+          {isClueFound ? (
+            <BookmarkCheck className="h-4 w-4" />
+          ) : (
+            <Bookmark className={`h-4 w-4 ${isStarred ? 'fill-current' : ''}`} />
+          )}
         </button>
-        <p className="truncate font-mono text-xs font-medium text-zinc-200">
-          {selectedPhoto.title}
-        </p>
       </div>
 
-      <div className="phone-scroll flex-1 overflow-y-auto p-3">
+      {/* Centered Photo Canvas — Clean, no text underneath */}
+      <div className="flex flex-1 items-center justify-center overflow-hidden bg-black p-3">
         <button
           type="button"
           onClick={() => {
@@ -119,10 +167,44 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
         >
           <PhotoVisual visualType={selectedPhoto.visualType} />
         </button>
+      </div>
 
-        <div className="mt-3 space-y-2 rounded-xl bg-zinc-900/80 p-3">
+      {/* Bottom Details Toggle Bar */}
+      <div className="flex items-center justify-center bg-zinc-950/80 px-4 py-2">
+        <button
+          type="button"
+          onClick={() => {
+            sound.playTap();
+            setDetailsOpen((v) => !v);
+          }}
+          className={`inline-flex items-center gap-1.5 rounded-full px-3.5 py-1.5 text-[11px] font-medium transition ${
+            detailsOpen
+              ? 'bg-white/15 text-white'
+              : 'bg-zinc-900 text-zinc-300 hover:bg-zinc-800 hover:text-white'
+          }`}
+        >
+          <Info className="h-3.5 w-3.5" />
+          {lang === 'en' ? 'Details' : 'Detail'}
+        </button>
+      </div>
+
+      {/* Slide-up Details Drawer (only when Details is clicked) */}
+      {detailsOpen && (
+        <div className="absolute inset-x-0 bottom-10 z-20 mx-2.5 rounded-2xl border border-white/10 bg-zinc-900/95 p-3.5 shadow-2xl backdrop-blur-xl">
+          <div className="flex items-center justify-between gap-2 pb-2">
+            <span className="font-mono text-[10px] font-bold uppercase tracking-wider text-zinc-400">
+              {lang === 'en' ? 'Photo Info' : 'Info Foto'}
+            </span>
+            <button
+              type="button"
+              onClick={() => setDetailsOpen(false)}
+              className="rounded p-0.5 text-zinc-400 hover:bg-white/10 hover:text-white"
+            >
+              <X className="h-3.5 w-3.5" />
+            </button>
+          </div>
           <p className="text-xs leading-relaxed text-zinc-200">{selectedPhoto.caption}</p>
-          <div className="flex flex-wrap gap-x-4 gap-y-1 pt-1 text-[11px] text-zinc-400">
+          <div className="mt-2.5 flex flex-wrap gap-x-4 gap-y-1 text-[11px] text-zinc-400">
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3 w-3 text-zinc-500" /> {selectedPhoto.timestamp}
             </span>
@@ -130,29 +212,8 @@ export const GalleryApp: React.FC<GalleryAppProps> = ({
               <MapPin className="h-3 w-3 text-zinc-500" /> {selectedPhoto.location}
             </span>
           </div>
-
-          {selectedPhoto.clueId && (
-            <button
-              onClick={() => onDiscoverClue(selectedPhoto.clueId!)}
-              className={`mt-2 flex w-full items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-semibold transition ${
-                isClueFound
-                  ? 'bg-emerald-500/15 text-emerald-300'
-                  : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
-              }`}
-            >
-              {isClueFound ? (
-                <>
-                  <BookmarkCheck className="h-3.5 w-3.5" /> {t.alreadyRecorded}
-                </>
-              ) : (
-                <>
-                  <BookmarkPlus className="h-3.5 w-3.5" /> {t.recordPhoto}
-                </>
-              )}
-            </button>
-          )}
         </div>
-      </div>
+      )}
 
       {/* Fullscreen Lightbox Popup */}
       {zoomOpen && (

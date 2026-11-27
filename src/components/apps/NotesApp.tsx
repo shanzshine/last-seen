@@ -3,7 +3,7 @@ import type { NoteItem } from '../../types/case';
 import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
 import { motion } from 'framer-motion';
-import { ArrowLeft, BookmarkCheck, BookmarkPlus, Delete, Lock, Unlock } from 'lucide-react';
+import { ArrowLeft, Bookmark, BookmarkCheck, Delete, Lock, Unlock } from 'lucide-react';
 
 interface NotesAppProps {
   lang: Language;
@@ -29,6 +29,7 @@ export const NotesApp: React.FC<NotesAppProps> = ({
   const [selectedNoteId, setSelectedNoteId] = useState<string | null>(null);
   const [pinInput, setPinInput] = useState('');
   const [pinError, setPinError] = useState(false);
+  const [starredNoteIds, setStarredNoteIds] = useState<string[]>([]);
   const prevBackRef = useRef(backSignal);
 
   useEffect(() => {
@@ -115,10 +116,11 @@ export const NotesApp: React.FC<NotesAppProps> = ({
 
   const isUnlocked = !selectedNote.isLocked || unlockedNoteIds.includes(selectedNote.id);
   const isClueFound = selectedNote.clueId ? discoveredClues.includes(selectedNote.clueId) : false;
+  const isStarred = isClueFound || starredNoteIds.includes(selectedNote.id);
 
   return (
     <div className="flex h-full flex-col bg-zinc-950">
-      <div className="flex items-center gap-2 px-3 py-2.5">
+      <div className="flex items-center justify-between gap-2 px-3 py-2.5">
         <button
           onClick={() => setSelectedNoteId(null)}
           className="inline-flex items-center gap-1 rounded-lg px-1.5 py-1 text-xs font-medium text-amber-400 transition hover:bg-white/10"
@@ -127,6 +129,39 @@ export const NotesApp: React.FC<NotesAppProps> = ({
           <ArrowLeft className="h-4 w-4" />
           <span>{t.title}</span>
         </button>
+
+        {isUnlocked && (
+          <button
+            type="button"
+            onClick={() => {
+              if (selectedNote.clueId) {
+                onDiscoverClue(selectedNote.clueId);
+              } else {
+                sound.playTap();
+                setStarredNoteIds((prev) =>
+                  prev.includes(selectedNote.id)
+                    ? prev.filter((id) => id !== selectedNote.id)
+                    : [...prev, selectedNote.id]
+                );
+              }
+            }}
+            className={`rounded-lg p-1.5 transition ${
+              isClueFound
+                ? 'bg-emerald-500/15 text-emerald-400'
+                : isStarred
+                  ? 'bg-white/10 text-amber-300'
+                  : 'text-zinc-400 hover:bg-white/10 hover:text-zinc-200'
+            }`}
+            aria-label="Bookmark note"
+            title={isClueFound ? t.alreadyRecorded : t.recordNote}
+          >
+            {isClueFound ? (
+              <BookmarkCheck className="h-4 w-4" />
+            ) : (
+              <Bookmark className={`h-4 w-4 ${isStarred ? 'fill-current' : ''}`} />
+            )}
+          </button>
+        )}
       </div>
 
       {!isUnlocked ? (
@@ -194,27 +229,6 @@ export const NotesApp: React.FC<NotesAppProps> = ({
           <div className="mt-3 whitespace-pre-line text-xs leading-relaxed text-zinc-200">
             {selectedNote.content}
           </div>
-
-          {selectedNote.clueId && (
-            <button
-              onClick={() => onDiscoverClue(selectedNote.clueId!)}
-              className={`mt-4 flex w-full items-center justify-center gap-1.5 rounded-xl py-2.5 text-xs font-semibold transition ${
-                isClueFound
-                  ? 'bg-emerald-500/15 text-emerald-300'
-                  : 'bg-amber-500 text-zinc-950 hover:bg-amber-400'
-              }`}
-            >
-              {isClueFound ? (
-                <>
-                  <BookmarkCheck className="h-3.5 w-3.5" /> {t.alreadyRecorded}
-                </>
-              ) : (
-                <>
-                  <BookmarkPlus className="h-3.5 w-3.5" /> {t.recordNote}
-                </>
-              )}
-            </button>
-          )}
         </div>
       )}
     </div>

@@ -4,8 +4,8 @@ import { UI_STRINGS, type Language } from '../../i18n/strings';
 import { sound } from '../../utils/sound';
 import {
   ArrowLeft,
+  Bookmark,
   BookmarkCheck,
-  BookmarkPlus,
   CheckCheck,
   Image as ImageIcon,
   Mic,
@@ -47,6 +47,7 @@ export const ChatApp: React.FC<ChatAppProps> = ({
   const [activeThreadId, setActiveThreadId] = useState<string | null>(null);
   const [playedVoiceIds, setPlayedVoiceIds] = useState<string[]>([]);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
+  const [starredMsgIds, setStarredMsgIds] = useState<string[]>([]);
   const [keywordInput, setKeywordInput] = useState('');
   const [keywordError, setKeywordError] = useState(false);
 
@@ -264,26 +265,38 @@ export const ChatApp: React.FC<ChatAppProps> = ({
           )}
 
           <div className="mt-1 flex items-center justify-end gap-1.5">
-            {msg.clueId && (
-              <button
-                onClick={() => onDiscoverClue(msg.clueId!)}
-                className={`mr-auto inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[9.5px] font-semibold transition ${
-                  isClueFound
-                    ? 'bg-emerald-400/20 text-emerald-200'
-                    : 'bg-amber-400/20 text-amber-200 hover:bg-amber-400/35'
-                }`}
-              >
-                {isClueFound ? (
-                  <>
-                    <BookmarkCheck className="h-2.5 w-2.5" /> {t.recorded}
-                  </>
-                ) : (
-                  <>
-                    <BookmarkPlus className="h-2.5 w-2.5" /> {t.recordClue}
-                  </>
-                )}
-              </button>
-            )}
+            <button
+              type="button"
+              onClick={() => {
+                if (msg.clueId) {
+                  onDiscoverClue(msg.clueId);
+                } else {
+                  sound.playTap();
+                  setStarredMsgIds((prev) =>
+                    prev.includes(msg.id)
+                      ? prev.filter((id) => id !== msg.id)
+                      : [...prev, msg.id]
+                  );
+                }
+              }}
+              className={`mr-auto inline-flex items-center gap-1 rounded p-0.5 transition ${
+                isClueFound
+                  ? 'text-emerald-300'
+                  : starredMsgIds.includes(msg.id)
+                    ? 'text-zinc-200'
+                    : 'text-white/30 hover:text-white/75'
+              }`}
+              aria-label={t.recordClue}
+              title={isClueFound ? t.recorded : t.recordClue}
+            >
+              {isClueFound ? (
+                <BookmarkCheck className="h-3 w-3" />
+              ) : (
+                <Bookmark
+                  className={`h-3 w-3 ${starredMsgIds.includes(msg.id) ? 'fill-current' : ''}`}
+                />
+              )}
+            </button>
             <span className="text-[9.5px] text-white/55">{msg.time}</span>
             {isOwner && <CheckCheck className="h-3 w-3 text-sky-400" />}
           </div>

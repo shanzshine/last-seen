@@ -14,7 +14,6 @@ import {
   MapsAppIcon,
   MessagesAppIcon,
   NotesAppIcon,
-  ReportAppIcon,
   SocialAppIcon,
 } from './AppIcons';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -34,7 +33,6 @@ interface PhoneFrameProps {
   onDiscoverClue: (clueId: string) => void;
   onUnlockNote: (noteId: string) => void;
   onRecoverThread: (threadId: string) => void;
-  onOpenDeduction: () => void;
 }
 
 export const PhoneFrame: React.FC<PhoneFrameProps> = ({
@@ -49,7 +47,6 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
   onDiscoverClue,
   onUnlockNote,
   onRecoverThread,
-  onOpenDeduction,
 }) => {
   const [activeApp, setActiveApp] = useState<ActiveApp>('home');
   const appHistoryRef = useRef<ActiveApp[]>([]);
@@ -556,8 +553,8 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                 )}
               </div>
 
-              {/* Bottom Frosted Dock (4 Core Apps with crisp labels) */}
-              <div className="relative z-10 grid grid-cols-4 gap-1 rounded-[24px] bg-white/12 px-2.5 py-2.5 backdrop-blur-2xl ring-1 ring-white/10">
+              {/* Bottom Frosted Dock (3 Core Victim Phone Apps) */}
+              <div className="relative z-10 grid grid-cols-3 gap-2 rounded-[24px] bg-white/12 px-4 py-2.5 backdrop-blur-2xl ring-1 ring-white/10">
                 <button
                   onClick={() => openApp('chat')}
                   className="group flex flex-col items-center gap-1"
@@ -596,21 +593,6 @@ export const PhoneFrame: React.FC<PhoneFrameProps> = ({
                     <NotesAppIcon />
                   </div>
                   <span className="text-[9px] font-medium text-white/85">{t.appNotes}</span>
-                </button>
-
-                <button
-                  onClick={() => {
-                    sound.playTap();
-                    onOpenDeduction();
-                  }}
-                  className="group flex flex-col items-center gap-1"
-                >
-                  <div className="h-[48px] w-[48px] overflow-hidden rounded-[13px] shadow-md transition group-hover:scale-105 group-active:scale-90">
-                    <ReportAppIcon />
-                  </div>
-                  <span className="text-[9px] font-medium text-white/85">
-                    {lang === 'en' ? 'Report' : 'Lapor'}
-                  </span>
                 </button>
               </div>
             </motion.div>

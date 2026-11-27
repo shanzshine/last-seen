@@ -1003,7 +1003,6 @@ export function App() {
             onDiscoverClue={handleDiscoverClue}
             onUnlockNote={handleUnlockNote}
             onRecoverThread={handleRecoverThread}
-            onOpenDeduction={() => setShowDeduction(true)}
           />
         </section>
 
