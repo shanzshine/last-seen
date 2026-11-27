@@ -21,7 +21,7 @@ export const CASE_6_EN: CaseData = {
   wallpaperGradient: 'from-slate-950 via-emerald-950 to-zinc-950',
   hints: [
     'Check the Post 3 trail sign photo in Gallery for the 4-digit elevation (MDPL) to unlock the encrypted Note.',
-    'There is a deleted message in the Fog Expedition Group. Use the 1-word expedition/peak name (KABUT) to recover it.',
+    'There is a deleted message in the Fog Expedition Group. Use the 1-word weather/expedition name from their group title to recover it.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -104,8 +104,8 @@ export const CASE_6_EN: CaseData = {
       avatarColor: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30',
       isGroup: true,
       statusText: '4 members',
-      recoveryKeyword: 'KABUT',
-      recoveryHint: 'Indonesian name of their expedition / peak (1 word: KABUT)',
+      recoveryKeyword: 'FOG',
+      recoveryHint: '1-word weather/expedition name from their group title',
       messages: [
         {
           id: 'c6-g1',
@@ -286,3 +286,4 @@ export const CASE_6_EN: CaseData = {
   epiloguePartial:
     'Case partially closed. SAR uncovered the illegal truck route, but missed key deductions delayed Bagas’s rescue.',
 };
+

@@ -20,8 +20,8 @@ export const CASE_8: CaseData = {
     'Dika Mahendra (25) menghilang saat melakukan livestream uji nyali di Bekas RS Tua Pelabuhan pukul 02:33 WIB. Penonton menduga ia diserang penunggu gedung tua itu, sementara penjaga gedung bersikeras gerbang digembok mati sejak jam 10 malam. Periksa postingan Sosmed, Voice Note panik Dika, pulihkan chat terhapus, dan temukan di lantai mana ia bersembunyi!',
   wallpaperGradient: 'from-zinc-950 via-red-950 to-black',
   hints: [
-    'Gunakan jam persis siaran Dika terputus (format 4 digit HHMM, yaitu 0233) sebagai PIN untuk membuka Catatan Darurat.',
-    'Di chat Pak Haris (Penjaga Gedung) ada pesan terhapus. Gunakan kata kunci 1 kata nama lantai bawah tanah gedung (BASEMEN) untuk memulihkannya.',
+    'Gunakan jam persis siaran Dika terputus (format 4 digit HHMM) sebagai PIN untuk membuka Catatan Darurat.',
+    'Di chat Pak Haris (Penjaga Gedung) ada pesan terhapus. Gunakan kata kunci 1 kata nama lantai bawah tanah gedung untuk memulihkannya.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -258,3 +258,4 @@ export const CASE_8: CaseData = {
   epiloguePartial:
     'Kasus ditutup sebagian. Dika berhasil ditemukan, namun anggota sindikat di basemen sempat kabur sebelum mobil boksnya berhasil dicegat.',
 };
+

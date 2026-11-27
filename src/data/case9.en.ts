@@ -20,8 +20,8 @@ export const CASE_9_EN: CaseData = {
     'Nurse Maya Lestari (27) vanished during her night shift at Medika Utama Hospital at 02:47 WIB. The Chief Surgeon insists Operating Room 09 was empty and locked since 11 PM. Check her Voice Note, Browser history, restore the deleted message, and uncover the truth behind Patient 09!',
   wallpaperGradient: 'from-slate-950 via-teal-950 to-zinc-950',
   hints: [
-    'Use the exact time Maya was last seen (4-digit HHMM format: 0247) as the PIN to unlock her Emergency Note.',
-    'There is a deleted message in Dr. Hendra’s chat. Use the 1-word Indonesian term from "rekam _____" (MEDIS) to restore it.',
+    'Use the exact time Maya was last seen (4-digit HHMM format) as the PIN to unlock her Emergency Note.',
+    'There is a deleted message in Dr. Hendra’s chat. Use the 1-word adjective from "_____ record" that Maya photographed in OR 09 to restore it.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -78,8 +78,8 @@ export const CASE_9_EN: CaseData = {
       avatarInitials: 'DH',
       avatarColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
       statusText: 'last seen 03:20',
-      recoveryKeyword: 'MEDIS',
-      recoveryHint: 'Indonesian word for "medical" in "rekam _____" (1 word: MEDIS)',
+      recoveryKeyword: 'MEDICAL',
+      recoveryHint: '1-word adjective from "_____ record" mentioned in Maya’s Voice Note',
       messages: [
         {
           id: 'c9-h1',
@@ -242,3 +242,4 @@ export const CASE_9_EN: CaseData = {
   epiloguePartial:
     'Case partially closed. Nurse Maya was found safely, though Dr. Hendra managed to wipe part of the ambulance dispatch log leading to #01.',
 };
+

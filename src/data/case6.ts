@@ -21,7 +21,7 @@ export const CASE_6: CaseData = {
   wallpaperGradient: 'from-slate-950 via-emerald-950 to-zinc-950',
   hints: [
     'Cek foto plang Pos 3 di Galeri untuk melihat angka ketinggian (MDPL) 4 digit sebagai PIN Catatan terkunci.',
-    'Di Grup Ekspedisi Kabut ada pesan terhapus. Gunakan kata kunci 1 kata nama jalur/ekspedisi mereka (KABUT) untuk memulihkannya.',
+    'Di Grup Ekspedisi Kabut ada pesan terhapus. Gunakan kata kunci 1 kata nama jalur/ekspedisi mereka untuk memulihkannya.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -286,3 +286,4 @@ export const CASE_6: CaseData = {
   epiloguePartial:
     'Kasus ditutup sebagian. Tim SAR menemukan jalur truk ilegal, namun beberapa titik deduksi masih meleset sehingga proses penyelamatan Bagas sempat tertunda.',
 };
+

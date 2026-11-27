@@ -21,7 +21,7 @@ export const CASE_7: CaseData = {
   wallpaperGradient: 'from-zinc-950 via-rose-950 to-slate-950',
   hints: [
     'Buka aplikasi Sosmed lalu pindah ke tab "Akun Kedua" untuk membaca curhatan Close Friends Clarina dan melihat angka kode PIN 4 digit.',
-    'Di chat Rendy (Manajer) ada pesan terhapus. Gunakan kata kunci 1 kata terkait kerja sama iklan Clarina (ENDORSE) untuk memulihkannya.',
+    'Di chat Rendy (Manajer) ada pesan terhapus. Gunakan kata kunci 1 kata terkait kerja sama iklan Clarina untuk memulihkannya.',
   ],
   totalClues: 6,
   liveAlert: {

@@ -20,8 +20,8 @@ export const CASE_8_EN: CaseData = {
     'Dika Mahendra (25) vanished during a midnight livestream at the Abandoned Harbor Hospital at 02:33 WIB. Viewers blamed a paranormal attack, while the caretaker insists the gates were padlocked at 10 PM. Check his Social post, panicked Voice Note, recover the deleted chat, and find which floor he is hiding on!',
   wallpaperGradient: 'from-zinc-950 via-red-950 to-black',
   hints: [
-    'Use the exact timestamp when Dika’s livestream cut off (4-digit HHMM format: 0233) as the PIN for his Emergency Note.',
-    'There is a deleted message in Pak Haris (Caretaker)’s chat. Use the 1-word Indonesian term for the underground floor (BASEMEN) to restore it.',
+    'Use the exact timestamp when Dika’s livestream cut off (4-digit HHMM format) as the PIN for his Emergency Note.',
+    'There is a deleted message in Pak Haris (Caretaker)’s chat. Use the 1-word name of the underground floor where the generator room is located to restore it.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -78,8 +78,8 @@ export const CASE_8_EN: CaseData = {
       avatarInitials: 'PH',
       avatarColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
       statusText: 'last seen 03:00',
-      recoveryKeyword: 'BASEMEN',
-      recoveryHint: 'Underground floor in Indonesian (1 word: BASEMEN)',
+      recoveryKeyword: 'BASEMENT',
+      recoveryHint: 'Underground floor of the building (1 word)',
       messages: [
         {
           id: 'c8-h1',
@@ -258,3 +258,4 @@ export const CASE_8_EN: CaseData = {
   epiloguePartial:
     'Case partially closed. Dika was rescued safely, though the syndicate operatives in the basement slipped away before the box truck could be intercepted.',
 };
+

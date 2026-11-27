@@ -21,7 +21,7 @@ export const CASE_7_EN: CaseData = {
   wallpaperGradient: 'from-zinc-950 via-rose-950 to-slate-950',
   hints: [
     'Open the Social app and switch to the "2nd Account" tab to read Clarina’s Close Friends post and spot the 4-digit PIN.',
-    'There is a deleted message in Rendy (Manager)’s chat. Use the 1-word term for brand promotions (ENDORSE) to restore it.',
+    'There is a deleted message in Rendy (Manager)’s chat. Use the 1-word term for brand promotions mentioned in Clarina’s post to restore it.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -39,7 +39,7 @@ export const CASE_7_EN: CaseData = {
       avatarColor: 'bg-amber-500/20 text-amber-300 border-amber-500/30',
       statusText: 'last seen 00:15',
       recoveryKeyword: 'ENDORSE',
-      recoveryHint: '1-word term for influencer brand promotion (ENDORSE)',
+      recoveryHint: '1-word term for influencer brand promotion mentioned in her post',
       messages: [
         {
           id: 'c7-r1',

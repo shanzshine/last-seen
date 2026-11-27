@@ -20,8 +20,8 @@ export const CASE_9: CaseData = {
     'Suster Maya Lestari (27) menghilang saat bertugas malam di RS Medika Utama pukul 02:47 WIB. Kepala Bedah bersikeras Kamar Operasi 09 kosong dan terkunci sejak jam 11 malam. Periksa Voice Note, riwayat Browser, pulihkan pesan terhapus, dan ungkap kejanggalan di balik pasien Kamar 09!',
   wallpaperGradient: 'from-slate-950 via-teal-950 to-zinc-950',
   hints: [
-    'Gunakan jam terakhir Maya terlihat (format 4 digit HHMM: 0247) sebagai PIN untuk membuka Catatan darurat yang terkunci.',
-    'Di chat Dr. Hendra ada pesan terhapus. Gunakan kata kunci 1 kata terkait dokumen riwayat pasien (MEDIS) untuk memulihkannya.',
+    'Gunakan jam terakhir Maya terlihat (format 4 digit HHMM) sebagai PIN untuk membuka Catatan darurat yang terkunci.',
+    'Di chat Dr. Hendra ada pesan terhapus. Gunakan kata kunci 1 kata terkait dokumen riwayat pasien untuk memulihkannya.',
   ],
   totalClues: 6,
   liveAlert: {
@@ -242,3 +242,4 @@ export const CASE_9: CaseData = {
   epiloguePartial:
     'Kasus ditutup sebagian. Suster Maya berhasil ditemukan, namun Dr. Hendra sempat menghapus sebagian daftar pengiriman ambulans menuju markas #01.',
 };
+
